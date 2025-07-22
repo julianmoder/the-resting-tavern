@@ -1,37 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
 import Header from "./comps/Header";
+import LandingPage from './pages/LandingPage';
+import TavernPage from './pages/TavernPage';
 
-function App() {
-  const [count, setCount] = useState(0)
+type SessionConfig = { hero: string };
+type QuestConfig = { quest: string; duration: number };
+
+export default function App() {
+  const [session, setSession] = useState<SessionConfig | null>(null);
+  const [questConfig, setQuestConfig] = useState<QuestConfig | null>(null);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div className="min-h-screen flex flex-col items-center justify-center bg-stone-800 p-6 mx-auto">
       <Header />
+      <main className="w-full max-w-2xl flex-1 flex flex-col items-center">
 
-export default App
+        {!session ? (
+          <LandingPage onEnterTavern={hero => setSession({ hero })} />
+        ) : !questConfig ? (
+          <TavernPage hero={session.hero} onStartQuest={cfg => setQuestConfig(cfg)} />
+        ) : (
+          <section className="text-white flex flex-col items-center gap-2">
+            <p>no content</p>
+          </section>
+        )}
+
+      </main>
+    </div>
+  );
+}
