@@ -1,69 +1,67 @@
-# React + TypeScript + Vite
+# The Resting Tavern
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**A gamified focus timer and productivity RPG – embark on quests, conquer boss fights, and collect loot… one session at a time!**
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## What is The Resting Tavern?
 
-## Expanding the ESLint configuration
+**The Resting Tavern** is an interactive web app that transforms your work and study sessions into an epic RPG adventure. Instead of fighting distractions, you’ll send your hero on a quest, focus on your real-life task, and battle a boss for loot and rewards at the end of each session. Designed for fun, flow, and frictionless productivity.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **No registration required**
+- **Easy to use**: Name your hero, set your quest, choose your timer – and start!
+- **Idle RPG elements**: Your character explores the dungeon while you work
+- **Active boss battles**: Face a mini-game at the end of each focus session
+- **Loot & upgrades**: Earn gold, experience points, and items to improve your hero
+- **Session persistence**: Your progress is saved in your browser
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+## Core Features
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- Custom hero and quest naming
+- Adjustable session timer (default: 25 minutes, flexible)
+- Idle adventure animation during focus time
+- Rhythmic fantasy soundtrack to keep you in the zone
+- Interactive boss fight after each session (mini-game)
+- Powerful loot, gold, and upgrades
+- All progress stored locally (no account needed)
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Why "The Resting Tavern"?
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Like in any good adventure, every hero needs a place to recover, plan, and improve.  
+**The Resting Tavern** is your digital hub for focused work, quests, and gamified motivation.
+
+---
+
+## Tech Stack
+
+- React + TypeScript
+- Vite
+- Tailwind CSS
+- Zustand for state management
+- Local Storage for persistent data
+
+---
+
+## Roadmap
+
+- [ ] quest animations
+- [ ] characters
+- [ ] boss types and mini-games
+- [ ] loot, upgrades, and shop items
+- [ ] daily quests
+- [ ] Session code export/import for multi-device use
+- [ ] Accessibility improvements
+
+---
+
+## License
+
+MIT
+
+---
+
+_Ready to turn your daily grind into an adventure? Welcome to The Resting Tavern!_
