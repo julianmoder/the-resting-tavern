@@ -7,13 +7,16 @@ type QuestPageProps = {
 
 export default function QuestPage({ config, onQuestComplete }: QuestPageProps) {
   const [secondsLeft, setSecondsLeft] = useState(config.duration * 60);
+  const [finished, setFinished] = useState(false);
 
   useEffect(() => {
+    if (finished) return;
+
     const interval = setInterval(() => {
       setSecondsLeft((prev) => {
         if (prev <= 1) {
           clearInterval(interval);
-          onQuestComplete();
+          setFinished(true);
           return 0;
         }
         return prev - 1;
@@ -21,9 +24,18 @@ export default function QuestPage({ config, onQuestComplete }: QuestPageProps) {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [onQuestComplete]);
+  }, [finished]);
 
-  // Keyboard Handler: Up / Down Arrows
+  useEffect(() => {
+    if (finished) {
+      onQuestComplete();
+    }
+  }, [finished, onQuestComplete]);
+
+  const minutes = Math.floor(secondsLeft / 60);
+  const seconds = secondsLeft % 60;
+
+  // START Keyboard Handler: Up / Down Arrows
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowDown') {
@@ -38,25 +50,18 @@ export default function QuestPage({ config, onQuestComplete }: QuestPageProps) {
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, []);
-
-  const minutes = Math.floor(secondsLeft / 60);
-  const seconds = secondsLeft % 60;
+  // END Keyboard Handler: Up / Down Arrows
 
   return (
     <>
-
       <p className="mb-3 text-4x1 font-bold text-emerald-400">{config.quest}</p>
-      
       <p className="text-2xl mb-6">🛡️ Quest in progress...</p>
-      
       <div className="mb-3 text-8xl font-mono font-bold">
         {minutes}:{seconds < 10 ? '0' : ''}{seconds}
       </div>
-
       <p className="text-sm text-gray-400">
         Focus time: {config.duration} min – Break after: {config.breakTime} min
       </p>
-
     </>
   );
 }

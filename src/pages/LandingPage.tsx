@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import { species } from 'fantastical';
 
-export default function LandingPage({ onEnterTavern }: { onEnterTavern: (hero: string) => void }) {
+type LandingPageProps = {
+  onEnterTavern: (hero: string) => void
+};
+
+export default function LandingPage({ onEnterTavern }: LandingPageProps) {
   const [hero, setHero] = useState('');
 
   const genHero = () => {

@@ -7,13 +7,22 @@ interface QuestConfig {
   breakTime: number;
 }
 
+interface Loot {
+  coins: number;
+  potions: number;
+  armor: Armor | null;
+  weapon: Weapon | null;
+}
+
 interface AppState {
-  stage: 'landing' | 'tavern' | 'quest' | 'boss';
+  stage: 'landing' | 'tavern' | 'quest' | 'boss' | 'loot' | 'break';
   hero?: string;
   questConfig?: QuestConfig;
   setStage: (s: AppState['stage']) => void;
   setHero: (h: string) => void;
   setQuestConfig: (q: QuestConfig) => void;
+  loot?: Loot;
+  setLoot: (l: Loot) => void;
 }
 
 export const useAppStore = create<AppState>()(
@@ -23,6 +32,15 @@ export const useAppStore = create<AppState>()(
       setStage: (stage) => set({ stage }),
       setHero: (hero) => set({ hero }),
       setQuestConfig: (questConfig) => set({ questConfig }),
+      setLoot: (newLoot) =>
+        set((state) => ({
+          loot: {
+            coins: (state.loot?.coins ?? 0) + (newLoot.coins ?? 0),
+            potions: (state.loot?.potions ?? 0) + (newLoot.potions ?? 0),
+            weapon: newLoot.weapon ?? state.loot?.weapon ?? null,
+            armor: newLoot.armor ?? state.loot?.armor ?? null,
+          },
+        }))
     }),
     {
       name: 'resting-tavern-store',
@@ -30,7 +48,9 @@ export const useAppStore = create<AppState>()(
         stage: state.stage,
         hero: state.hero,
         questConfig: state.questConfig,
+        loot: state.loot
       }),
     }
   )
+
 );

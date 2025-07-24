@@ -5,6 +5,8 @@ import LandingPage from './pages/LandingPage';
 import TavernPage from './pages/TavernPage';
 import QuestPage from './pages/QuestPage';
 import BossPage from './pages/BossPage';
+import LootPage from './pages/LootPage';
+import BreakPage from './pages/BreakPage';
 
 type SessionConfig = { hero: string };
 type QuestConfig = { quest: string; duration: number };
@@ -28,9 +30,13 @@ export default function App() {
             ) : stage === 'tavern' ? (
               <TavernPage hero={hero} onStartQuest={cfg => { setQuestConfig(cfg); setStage('quest'); }} />
             ) : stage === 'quest' ? (
-              <QuestPage config={questConfig} onQuestComplete={() => setStage('boss')} />
+              <QuestPage config={questConfig} onQuestComplete={() => { setStage('boss') }} />
             ) : stage === 'boss' ? (
-              <BossPage quest={questConfig.quest} onBossWin={() => { setQuestConfig(undefined!); setStage('tavern'); }} />
+              <BossPage quest={questConfig.quest} onBossWin={() => { setStage('loot'); }} />
+            ) : stage === 'loot' ? (
+              <LootPage onLootTake={() => { setStage('break'); }} />
+            ) : stage === 'break' ? (
+              <BreakPage onGoBack={() => { setQuestConfig(undefined!); setStage('tavern'); }}/>
             ) : (
               <p>no content</p>
             )
