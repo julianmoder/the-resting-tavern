@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 type BossPageProps = {
-  quest: string;
+  quest: Quest;
   onBossWin: () => void;
 };
 

@@ -6,9 +6,8 @@ type BreakPageProps = {
 };
 
 export default function BreakPage({ onGoBack }: BreakPageProps) {
-  const questConfig = useAppStore(s => s.questConfig!);
-  const setStage = useAppStore(s => s.setStage);
-  const [secondsLeft, setSecondsLeft] = useState(questConfig.breakTime * 60);
+  const quest = useAppStore(s => s.quest!);
+  const [secondsLeft, setSecondsLeft] = useState(quest.breakTime * 60);
 
   useEffect(() => {
     const iv = setInterval(() => {

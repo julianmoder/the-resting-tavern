@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 type QuestPageProps = {
-  config: { hero: string; quest: string; duration: number; breakTime: number };
+  quest: Quest;
   onQuestComplete: () => void;
 };
 
