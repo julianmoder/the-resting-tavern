@@ -1,50 +1,59 @@
 import { useState } from 'react';
 import { species } from 'fantastical';
+import { useHero } from '../hooks/useHero';
 
 type LandingPageProps = {
-  onEnterTavern: (hero: string) => void
+  onEnterTavern: () => void
 };
 
 export default function LandingPage({ onEnterTavern }: LandingPageProps) {
-  const [hero, setHero] = useState('');
+  const [name, setName] = useState('');
+  const hero = useHero();
 
-  const genHero = () => {
-    const randomHero = species.human({"allowMultipleNames":true})
-    setHero(randomHero);
+  const genHeroName = () => {
+    const randomHeroName = species.human({'allowMultipleNames':true})
+    setName(randomHeroName);
   };
 
-  const isHeroValid = hero.trim().length > 0;
+  const isHeroNameValid = name.trim().length > 0;
+
+  const enterTavern = (name: string) => {
+    hero.setName(name)
+    onEnterTavern()
+  };
+
+ 
 
   return (
     <>
 
-      <p className="mb-3 text-center font-bold">What is your name, weary traveler?</p>
+      <p className='mb-3 text-center font-bold'>What is your name, weary traveler?</p>
 
-      <div className="flex space-x-2 mt-6">
+      <div className='flex space-x-2 mt-6'>
 
-        <input className="p-2 rounded-x1 text-center text-amber-400 focus:text-amber-400 focus:outline-amber-400 focus:outline-2 font-semibold border-solid border-3 leading-1 rounded-xl"
-          type="text"
-          value={hero}
-          onChange={(e) => setHero(e.target.value)}
-          placeholder="Enter your hero's name"
+        <input className='p-2 text-center text-orange-500 focus:text-orange-500 focus:outline-orange-500 focus:outline-2 font-semibold border-solid border-3 leading-1 rounded-xl'
+          type='text'
+          value={name}
+          onChange={(e) => hero.setName(e.target.value)}
+          placeholder={'Enter your hero\'s name'}
         />
 
         <button
-          className="hover:bg-stone-600 text-white px-3 rounded-full font-normal text-4xl"
-          onClick={genHero}
+          className='hover:bg-orange-500 text-white px-3 rounded-full font-normal text-3xl'
+          onClick={genHeroName}
         >
           🎲
         </button>
 
       </div>
 
-      <button className={`mt-18 px-9 py-3 font-normal text-amber-900 rounded-full 
-        ${ isHeroValid
-            ? 'bg-amber-400 hover:bg-amber-500'
-            : 'bg-gray-500 cursor-not-allowed'
+      <button className={`mt-18 px-9 py-3 rounded-full font-semibold 
+        ${ isHeroNameValid
+            ? 'bg-orange-500 text-white :bg-orange-600'
+            : 'bg-gray-600 text-gray-400 cursor-not-allowed'
         }`}
-        onClick={() => isHeroValid && onEnterTavern(hero.trim())}
-        disabled={!isHeroValid}
+        onClick={() => isHeroNameValid && enterTavern(name.trim())}
+        disabled={!isHeroNameValid}
       >
         Enter the Tavern
       </button>

@@ -1,98 +1,53 @@
-// src/pages/LootPage.tsx
-import { useEffect, useState } from 'react';
-import { useAppStore } from '../store/useAppStore';
-import { largeItemWeapons } from '../utils/largeItemWeapons';
-import { largeItemArmors } from '../utils/largeItemArmors';
+import { useState } from 'react';
+import { useHero } from '../hooks/useHero';
+import type { Quest, Item } from '../types/types';
 
 type LootPageProps = {
+  quest: Quest;
   onLootTake: () => void;
 };
 
-type Armor = { 
-  name: string;
-  type: string; 
-  category: string; 
-  rarity: string,
-  chance: number, 
-  power: number 
-};
+export default function LootPage({ quest, onLootTake }: LootPageProps) {
+  const hero = useHero();
+  const [itemTaken, setItemTaken] = useState(false);
 
-type Weapon = { 
-  name: string;
-  type: string; 
-  category: string; 
-  rarity: string,
-  chance: number, 
-  power: number 
-};
-
-const weapons = largeItemWeapons;
-const armors = largeItemArmors;
-
-function randomChoice<T>(arr: T[]): T {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
-
-export default function LootPage({ onLootTake }: LootPageProps) {
-  const setLoot = useAppStore(s => s.setLoot);
-  const setStage = useAppStore(s => s.setStage);
-  const [armor, setArmor] = useState<Armor | null>(null);
-  const [weapon, setWeapon] = useState<Weapon | null>(null);
-  const [coins] = useState(Math.floor(Math.random() * 50) + 10);
-  const [potions] = useState(Math.floor(Math.random() * 3) + 1);
-
-  useEffect(() => {
-    setArmor({ type: 'armor', ...randomChoice(armors) });
-    setWeapon({ type: 'weapon', ...randomChoice(weapons) });
-  }, [])
-
-  const takeWeapon = (weapon: Weapon) => {
-    setLoot({ coins, potions, weapon, armor: undefined })
-  }
-
-  const takeArmor = (armor: Armor) => {
-    setLoot({ coins, potions, weapon: undefined, armor })
+  const takeItem = (item: Item) => {
+    if (itemTaken) return;
+    setItemTaken(true);
+    hero.inventory.addItem(item);
+    hero.inventory.addCoins(quest.loot.coins);
+    hero.addXp(quest.loot.xp);
   }
 
   return (
     <>
-      <h2 className="text-2xl font-bold mb-4">🎁 You found...</h2>
-      <p>💰 Coins: {coins}</p>
-      <p>🧪 Potions: {potions}</p>
+      <div className='mb-12 text-center'>
+        <p className='mb-3 text-lg font-bold'>Victory!</p>
+        <p className='font-bold text-emerald-400'>{quest.name}</p>
+        <p><span className='text-violet-500 font-bold'>XP earned: {quest.loot.xp}</span></p>
+      </div>
+      <div className='mb-3 text-center'>
+        <p>You found <span className='text-amber-400 font-bold'>{quest.loot.coins} coins</span> and may choose one of these precious items: </p>
+      </div>
 
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-        {weapon && (
-          <div className="rounded-xl p-4 flex flex-col items-center">
-            <p className="mb-2 text-lg font-semibold">
-              🗡️ {weapon.name} (Power {weapon.power})
+      <div className='mt-4 grid grid-cols-1 md:grid-cols-2 gap-4'>
+        { quest.loot.itemChoices && 
+          quest.loot.itemChoices.map((item: Item, i: number) => (
+            <div key={i} className='p-3 flex flex-col text-center'>
+            <p className='mb-3 text-lg font-bold'>
+              {item.name} <br/><span className='text-sm font-normal'>(Attack {item.power})</span>
             </p>
             <button
-              className="bg-indigo-500 hover:bg-indigo-600 px-6 py-2 rounded-full text-white"
+              className='bg-blue-500 hover:bg-blue-600 px-2 py-1 rounded-full text-white'
               onClick={() => {
-                takeWeapon(weapon);
+                takeItem(item);
                 onLootTake();
               }}
             >
-              Take the weapon
+              Take
             </button>
           </div>
-        )}
-        {armor && (
-          <div className="rounded-xl p-4 flex flex-col items-center">
-            <p className="mb-2 text-lg font-semibold">
-              🛡️ {armor.name} (Defense {armor.power})
-            </p>
-            <button
-              className="bg-emerald-500 hover:bg-emerald-600 px-6 py-2 rounded-full text-white"
-              onClick={() => {
-                takeArmor(armor);
-                onLootTake();
-              }}
-            >
-              Take the armor
-            </button>
-          </div>
-        )}
+          ))}
       </div>
     </>
   );
