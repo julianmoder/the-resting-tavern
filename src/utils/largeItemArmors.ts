@@ -1,6 +1,5 @@
 export const largeItemArmors = [
 
-
 // cloth armors
   {
     name: 'Rags',
@@ -27,7 +26,6 @@ export const largeItemArmors = [
     power: 50
   },
 
-
 // leather armors
   {
     name: 'Hide Armor',
@@ -53,7 +51,6 @@ export const largeItemArmors = [
     chance: 15,
     power: 50
   },
-
 
 // mail armors
   {

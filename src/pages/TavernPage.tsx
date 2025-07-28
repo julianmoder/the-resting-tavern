@@ -26,14 +26,14 @@ export default function TavernPage({ onStartQuest }: TavernPageProps) {
       <p>Welcome, <span className='text-orange-500 font-bold'>{hero.name}</span>.</p>
       <p className='mb-9 text-center'>{randomQuestion}</p>
 
-      <input className='w-lg mb-15 p-2 text-center text-emerald-400 focus:text-emerald-400 focus:outline-emerald-400 focus:outline-2 font-semibold border-solid border-3 leading-1 rounded-xl'
+      <input className='w-sm mb-15 p-2 text-center text-emerald-400 focus:text-emerald-400 focus:outline-emerald-400 focus:outline-2 font-semibold border-solid border-3 leading-1 rounded-xl'
         type='text'
         value={questNameInput}
         onChange={(e) => setQuestNameInput(e.target.value)}
         placeholder='Name you quest'
       />
 
-      <input className='w-lg mb-6 accent-emerald-400 hover:accent-emerald-400 cursor-pointer'
+      <input className='w-sm mb-6 accent-emerald-400 hover:accent-emerald-400 cursor-pointer'
         type='range'
         min={5}
         max={120}

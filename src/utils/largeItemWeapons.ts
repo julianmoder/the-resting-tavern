@@ -1,6 +1,5 @@
 export const largeItemWeapons = [
 
-
 // melee weapons
   {
     name: 'Wooden Sword',
@@ -27,7 +26,6 @@ export const largeItemWeapons = [
     power: 50
   },
 
-
 // ranged weapons
   {
     name: 'Simple Bow',
@@ -53,7 +51,6 @@ export const largeItemWeapons = [
     chance: 15,
     power: 50
   },
-
 
 // spell weapons
   {

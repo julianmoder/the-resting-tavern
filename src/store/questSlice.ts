@@ -2,7 +2,7 @@ import type { StateCreator } from 'zustand'
 import type { Hero, Quest } from '../types/types';
 import { questPrefixes } from '../utils/questPrefixes';
 import { largeItemWeapons } from '../utils/largeItemWeapons';
-// import { largeItemArmors } from '../utils/largeItemArmors';
+import { largeItemArmors } from '../utils/largeItemArmors';
 import { BASE_XP } from '../utils/levelProgression';
 
 export interface QuestSlice {
@@ -37,7 +37,7 @@ export const createQuestSlice: StateCreator<QuestSlice, [], [], QuestSlice> = (s
 
     const xp = BASE_XP * newLevel;
     const coins = Math.floor(Math.random() * 50) + 10 * newLevel;
-    const itemPool = largeItemWeapons; //+largeItemArmors
+    const itemPool = [...largeItemWeapons, ...largeItemArmors];
     const itemChoices = [randomChoice(itemPool), randomChoice(itemPool), randomChoice(itemPool), randomChoice(itemPool), randomChoice(itemPool)];
     const newLoot = {xp, coins, itemChoices};
 
