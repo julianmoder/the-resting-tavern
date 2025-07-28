@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import type { Quest } from '../types/types';
 
 type QuestPageProps = {
   quest: Quest;
@@ -14,6 +15,7 @@ export default function QuestPage({ config, onQuestComplete }: QuestPageProps) {
 
     const interval = setInterval(() => {
       setSecondsLeft((prev) => {
+      setSecondsLeft((prev: number) => {
         if (prev <= 1) {
           clearInterval(interval);
           setFinished(true);

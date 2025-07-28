@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { Quest } from '../types/types';
 
 type BossPageProps = {
   quest: Quest;
