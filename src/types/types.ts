@@ -1,3 +1,12 @@
+export enum Stage {
+  Landing = 'landing',
+  Tavern = 'tavern',
+  Quest = 'quest',
+  Boss = 'boss',
+  Loot = 'loot',
+  Break = 'break'
+}
+
 export interface Hero {
   name: string,
   xp: number,

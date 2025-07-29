@@ -1,11 +1,12 @@
 import type { StateCreator } from 'zustand'
+import { Stage } from '../types/types';
 
 export interface StageSlice {
-  stage: string;
-  setStage: (s: string) => void;
+  stage: Stage;
+  setStage: (s: Stage) => void;
 }
 
 export const createStageSlice: StateCreator<StageSlice, [], [], StageSlice> = (set) => ({
-  stage: 'landing',
-  setStage: (stage: string) => set({ stage }),
+  stage: Stage.Landing,
+  setStage: (stage: Stage) => set({ stage }),
 });

@@ -7,10 +7,7 @@ import { createHeroSlice } from './heroSlice';
 import type { QuestSlice } from './questSlice';
 import { createQuestSlice } from './questSlice';
 
-
-interface AppState extends StageSlice, HeroSlice, QuestSlice {
-  
-}
+interface AppState extends StageSlice, HeroSlice, QuestSlice {}
 
 export const useAppStore = create<AppState>()(
   persist(
