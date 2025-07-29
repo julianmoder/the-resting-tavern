@@ -1,0 +1,98 @@
+export const itemTemplatesWeapons = [
+
+// melee weapons
+  {
+    name: 'Wooden Sword',
+    type: 'weapon',
+    category: 'melee',
+    rarity: 'normal',
+    level: 1,
+    affixes: ['str', 'int', 'dex'],
+    fluff: 'This is the fluff text.',
+    dropChance: 1,
+  },
+  {
+    name: 'Steel Sword',
+    type: 'weapon',
+    category: 'melee',
+    rarity: 'normal',
+    level: 1,
+    affixes: ['str', 'int', 'dex'],
+    fluff: 'This is the fluff text.',
+    dropChance: 5,
+  },
+  {
+    name: 'Imbued Sword',
+    type: 'weapon',
+    category: 'melee',
+    rarity: 'rare',
+    level: 1,
+    affixes: ['str', 'int', 'dex'],
+    fluff: 'This is the fluff text.',
+    dropChance: 15,
+  },
+
+// ranged weapons
+  {
+    name: 'Simple Bow',
+    type: 'weapon',
+    category: 'ranged',
+    rarity: 'normal',
+    level: 1,
+    affixes: ['str', 'int', 'dex'],
+    fluff: 'This is the fluff text.',
+    dropChance: 1,
+  },
+  {
+    name: 'Recurve Bow',
+    type: 'weapon',
+    category: 'ranged',
+    rarity: 'normal',
+    level: 1,
+    affixes: ['str', 'int', 'dex'],
+    fluff: 'This is the fluff text.',
+    dropChance: 5,
+  },
+  {
+    name: 'Enchanted Bow',
+    type: 'weapon',
+    category: 'ranged',
+    rarity: 'rare',
+    level: 1,
+    affixes: ['str', 'int', 'dex'],
+    fluff: 'This is the fluff text.',
+    dropChance: 15,
+  },
+
+// spell weapons
+  {
+    name: 'Oak Staff',
+    type: 'weapon',
+    category: 'spell',
+    rarity: 'normal',
+    level: 1,
+    affixes: ['str', 'int', 'dex'],
+    fluff: 'This is the fluff text.',
+    dropChance: 1,
+  },
+  {
+    name: 'Silverwood Staff',
+    type: 'weapon',
+    category: 'spell',
+    rarity: 'normal',
+    level: 1,
+    affixes: ['str', 'int', 'dex'],
+    fluff: 'This is the fluff text.',
+    dropChance: 5,
+  },
+  {
+    name: 'Cursed Staff',
+    type: 'weapon',
+    category: 'spell',
+    rarity: 'rare',
+    level: 1,
+    affixes: ['str', 'int', 'dex'],
+    fluff: 'This is the fluff text.',
+    dropChance: 15,
+  }
+];

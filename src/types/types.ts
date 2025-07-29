@@ -20,13 +20,25 @@ export interface Inventory {
   items: Item[],
 }
 
-export interface Item {
+export interface Item extends ItemTemplate {
+  id: string,
+  power: number,
+  modifier: {
+    str: number,
+    int: number,
+    dex: number,
+  }
+}
+
+export interface ItemTemplate {
   name: string,
   type: string,
   category: string,
   rarity: string,
-  chance: number,
-  power: number,
+  level: number,
+  affixes: string[],
+  fluff: string,
+  dropChance: number,
 }
 
 export interface Quest {

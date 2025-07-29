@@ -1,0 +1,98 @@
+export const itemTemplatesArmors = [
+
+// cloth armors
+  {
+    name: 'Rags',
+    type: 'armor',
+    category: 'cloth',
+    rarity: 'normal',
+    level: 1,
+    affixes: ['str', 'int', 'dex'],
+    fluff: 'This is the fluff text',
+    dropChance: 1,
+  },
+  {
+    name: 'Silk Shirt',
+    type: 'armor',
+    category: 'cloth',
+    rarity: 'normal',
+    level: 1,
+    affixes: ['str', 'int', 'dex'],
+    fluff: 'This is the fluff text',
+    dropChance: 5,
+  },
+  {
+    name: 'Scholar\'s Robe',
+    type: 'armor',
+    category: 'cloth',
+    rarity: 'rare',
+    level: 1,
+    affixes: ['str', 'int', 'dex'],
+    fluff: 'This is the fluff text',
+    dropChance: 15,
+  },
+
+// leather armors
+  {
+    name: 'Hide Armor',
+    type: 'armor',
+    category: 'leather',
+    rarity: 'normal',
+    level: 1,
+    affixes: ['str', 'int', 'dex'],
+    fluff: 'This is the fluff text',
+    dropChance: 1,
+  },
+  {
+    name: 'Padded Vest',
+    type: 'armor',
+    category: 'leather',
+    rarity: 'normal',
+    level: 1,
+    affixes: ['str', 'int', 'dex'],
+    fluff: 'This is the fluff text',
+    dropChance: 5,
+  },
+  {
+    name: 'Runed Leather',
+    type: 'armor',
+    category: 'leather',
+    rarity: 'rare',
+    level: 1,
+    affixes: ['str', 'int', 'dex'],
+    fluff: 'This is the fluff text',
+    dropChance: 15,
+  },
+
+// mail armors
+  {
+    name: 'Chain Shirt',
+    type: 'armor',
+    category: 'mail',
+    rarity: 'normal',
+    level: 1,
+    affixes: ['str', 'int', 'dex'],
+    fluff: 'This is the fluff text',
+    dropChance: 1,
+  },
+  {
+    name: 'Scale Mail',
+    type: 'armor',
+    category: 'mail',
+    rarity: 'normal',
+    level: 1,
+    affixes: ['str', 'int', 'dex'],
+    fluff: 'This is the fluff text',
+    dropChance: 5,
+  },
+  {
+    name: 'Ornated Halfplate',
+    type: 'armor',
+    category: 'mail',
+    rarity: 'rare',
+    level: 1,
+    affixes: ['str', 'int', 'dex'],
+    fluff: 'This is the fluff text',
+    dropChance: 15,
+  }
+];
