@@ -41,7 +41,6 @@ export const createHeroSlice: StateCreator<HeroSlice, [], [], HeroSlice> = (set,
         leveledUp: tryLevelUpResult.leveledUp,
       }
     }))
-    const stateAfter = get();
   },
   addInvItem: (earnedItem: Item) => {
     set((state) => ({
