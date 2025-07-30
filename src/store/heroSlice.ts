@@ -126,6 +126,42 @@ export const createHeroSlice: StateCreator<HeroSlice, [], [], HeroSlice> = (set,
     }))
   },
   addInvItem: (addItem: Item) => {
+    const state = get();
+    const cols = 12;
+    const rows = 6;
+
+    const fitsAt = (x: number, y: number) => {
+      if (x + addItem.size.width > cols || y + addItem.size.height > rows) return false;
+
+      return !state.hero.inventory.items.some((other) => {
+        const ox = other.position.x;
+        const oy = other.position.y;
+        const ow = other.size.width;
+        const oh = other.size.height;
+        return (
+          x < ox + ow &&
+          x + addItem.size.width > ox &&
+          y < oy + oh &&
+          y + addItem.size.height > oy
+        );
+      });
+    };
+
+    let foundPos: { x: number; y: number } | null = null;
+    for (let y = 0; y <= rows - addItem.size.height && !foundPos; y++) {
+      for (let x = 0; x <= cols - addItem.size.width; x++) {
+        if (fitsAt(x, y)) {
+          foundPos = { x, y };
+          break;
+        }
+      }
+    }
+
+    if (!foundPos) {
+      console.warn('Inventory is full – cannot add item')
+      return;
+    }
+
     set((state) => ({
       hero: {
         ...state.hero,

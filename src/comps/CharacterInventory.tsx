@@ -3,10 +3,11 @@ import { useHero } from '../hooks/useHero';
 import type { Item } from '../types/types';
 
 type InventoryProps = {
-  onDropItem?: (id: string, clientX: number, clientY: number) => boolean;
+  weaponRef: React.RefObject<HTMLDivElement>;
+  armourRef: React.RefObject<HTMLDivElement>;
 };
 
-export default function Inventory({ onDropItem }: InventoryProps) {
+export default function Inventory({ weaponRef, armourRef }: InventoryProps) {
   const hero = useHero();
 
   // Inventory Grid Setup
@@ -29,7 +30,7 @@ export default function Inventory({ onDropItem }: InventoryProps) {
   }, []);
 
   const [dragState, setDragState] = useState<{
-    id: string;
+    draggedItem: Item;
     offsetX: number;
     offsetY: number;
     originalX: number;
@@ -72,7 +73,7 @@ export default function Inventory({ onDropItem }: InventoryProps) {
     const pixelX = (item.position.x ?? 0) * cellSize;
     const pixelY = (item.position.y ?? 0) * cellSize;
     setDragState({
-      id: item.id,
+      draggedItem: item,
       offsetX: pointerX - pixelX,
       offsetY: pointerY - pixelY,
       originalX: item.position.x ?? 0,
@@ -96,12 +97,11 @@ export default function Inventory({ onDropItem }: InventoryProps) {
 
   const handlePointerUp = (e: React.PointerEvent) => {
     if (!dragState) return;
-    const { id, pixelX, pixelY, originalX, originalY } = dragState;
-    const handledOutside = onDropItem?.(id, e.clientX, e.clientY);
-    if (!handledOutside) {
+    const { draggedItem, pixelX, pixelY, originalX, originalY } = dragState;
+    const handled = handleDropItem(draggedItem, e.clientX, e.clientY);
+    if (!handled) {
       const gridX = Math.round(pixelX / cellSize);
       const gridY = Math.round(pixelY / cellSize);
-      const draggedItem = hero.inventory.items.find((it) => it.id === id);
       if (draggedItem) {
         const w = draggedItem.size.width ?? 1;
         const h = draggedItem.size.height ?? 1;
@@ -114,6 +114,28 @@ export default function Inventory({ onDropItem }: InventoryProps) {
     }
     setDragState(null);
     (e.target as HTMLElement).releasePointerCapture(e.pointerId);
+  };
+
+  const handleDropItem = (item: Item, clientX: number, clientY: number): boolean => {
+    const slots = [
+      { ref: weaponRef, slot: 'weapon' as const },
+      { ref: armourRef, slot: 'armour' as const },
+    ];
+    for (const { ref, slot } of slots) {
+      const el = ref.current;
+      if (!el) continue;
+      const rect = el.getBoundingClientRect();
+      if (
+        clientX >= rect.left &&
+        clientX <= rect.right &&
+        clientY >= rect.top &&
+        clientY <= rect.bottom
+      ) {
+        hero.equipment.equipItem(item, slot);
+        return true;
+      }
+    }
+    return false;
   };
 
   return (
@@ -141,8 +163,8 @@ export default function Inventory({ onDropItem }: InventoryProps) {
       {hero.inventory.items.map((item) => {
         const pos = item.position ?? { x: 0, y: 0 };
         const size = item.size ?? { width: 1, height: 1 };
-        const x = dragState && dragState.id === item.id ? dragState.pixelX : pos.x * cellSize;
-        const y = dragState && dragState.id === item.id ? dragState.pixelY : pos.y * cellSize;
+        const x = dragState && dragState.draggedItem.id === item.id ? dragState.pixelX : pos.x * cellSize;
+        const y = dragState && dragState.draggedItem.id === item.id ? dragState.pixelY : pos.y * cellSize;
         const w = size.width * cellSize;
         const h = size.height * cellSize;
 

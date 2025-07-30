@@ -1,6 +1,11 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useHero } from '../hooks/useHero';
 import type { Quest, Item } from '../types/types';
+import CharacterInventory from '../comps/CharacterInventory';
+import CharacterOverview from '../comps/CharacterOverview';
+import { useUI } from '../hooks/useUI';
+import SideBar from '../comps/SideBar';
+
 
 type LootPageProps = {
   quest: Quest;
@@ -9,6 +14,9 @@ type LootPageProps = {
 
 export default function LootPage({ quest, onLootTake }: LootPageProps) {
   const hero = useHero();
+  const ui = useUI();
+  const weaponRef = useRef<HTMLDivElement | null>(null);
+  const armourRef = useRef<HTMLDivElement | null>(null);
   const [itemTaken, setItemTaken] = useState(false);
 
   const takeItem = (item: Item) => {
@@ -21,6 +29,17 @@ export default function LootPage({ quest, onLootTake }: LootPageProps) {
 
   return (
     <>
+
+      <SideBar />
+
+      {/* Charakter Overview + Inventory */}
+      {ui.sidebar.showCharacter && (
+        <div className="absolute justify-center z-20 bg-gray-800 p-4 rounded-lg shadow-lg">
+          <CharacterOverview weaponRef={weaponRef} armourRef={armourRef} />
+          <CharacterInventory weaponRef={weaponRef} armourRef={armourRef} />
+        </div>
+      )}
+
       <div className='mb-12 text-center'>
         <p className='mb-3 text-lg font-bold'>Victory!</p>
         <p className='font-bold text-emerald-400'>{quest.name}</p>
