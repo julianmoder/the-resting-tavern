@@ -1,4 +1,4 @@
-import type { ItemType, ItemRarity } from '../types/types';
+import { ItemType, ItemRarity } from '../types/types';
 
 export const itemTemplatesArmors = [
 

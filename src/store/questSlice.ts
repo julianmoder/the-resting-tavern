@@ -1,4 +1,4 @@
-import type { StateCreator } from 'zustand'
+import type { StateCreator } from 'zustand';
 import type { Hero, Quest } from '../types/types';
 import { questPrefixes } from '../utils/questPrefixes';
 import { randomItem } from '../utils/itemGeneration';

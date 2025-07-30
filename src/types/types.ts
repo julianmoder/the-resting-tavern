@@ -1,3 +1,11 @@
+export interface UIHelper {
+  ui: {
+    toolbar: {
+      showCharacter: boolean,
+    }
+  }
+}
+
 export enum Stage {
   Landing = 'landing',
   Tavern = 'tavern',
@@ -50,7 +58,7 @@ export interface Item extends ItemTemplate {
     str: number,
     int: number,
     dex: number,
-  }
+  },
   position: {
     x: number, 
     y: number,
@@ -73,17 +81,17 @@ export interface ItemTemplate {
 }
 
 export enum ItemType {
-  Weapon: 'weapon',
-  Armor: 'armor',
+  Weapon = 'weapon',
+  Armor = 'armor',
 }
 
 export enum ItemRarity {
-  Common: 'common',
-  Uncommon: 'uncommon',
-  Rare: 'rare',
-  Epic: 'epic',
-  Legendary: 'legendary',
-  Mythic: 'mythic',
+  Common = 'common',
+  Uncommon = 'uncommon',
+  Rare = 'rare',
+  Epic = 'epic',
+  Legendary = 'legendary',
+  Mythic = 'mythic',
 }
 
 export interface Quest {
