@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { species } from 'fantastical';
 import { useHero } from '../hooks/useHero';
+import { HeroClass } from '../types/types';
 
 type LandingPageProps = {
   onEnterTavern: () => void
@@ -8,6 +9,7 @@ type LandingPageProps = {
 
 export default function LandingPage({ onEnterTavern }: LandingPageProps) {
   const [name, setName] = useState('');
+  const [selectedClass, setSelectedClass] = useState<HeroClass>(HeroClass.Warrior);
   const hero = useHero();
 
   const genHeroName = () => {
@@ -17,14 +19,15 @@ export default function LandingPage({ onEnterTavern }: LandingPageProps) {
 
   const isHeroNameValid = name.trim().length > 0;
 
-  const enterTavern = (name: string) => {
-    hero.setName(name)
+  const heroClasses = Object.values(HeroClass);
+
+  const enterTavern = (heroName: string, heroClass: HeroClass ) => {
+    hero.setName(heroName)
+    hero.setClass(heroClass)
     onEnterTavern()
   };
 
- 
-
-  return (
+ return (
     <>
 
       <p className='mb-3 text-center font-bold'>What is your name, weary traveler?</p>
@@ -47,12 +50,30 @@ export default function LandingPage({ onEnterTavern }: LandingPageProps) {
 
       </div>
 
+      <div className="flex space-x-2 mt-9 justify-center">
+        {heroClasses.map((heroClass) => (
+          <button
+            key={heroClass}
+            className={`px-9 py-3 rounded-full font-semibold
+              ${selectedClass === heroClass
+                ? 'bg-orange-500 text-white hover:bg-orange-600'
+                : 'bg-gray-600 text-gray-400 hover:bg-orange-600 hover:text-white'}
+            `}
+            onClick={() => {
+              setSelectedClass(heroClass);
+            }}
+          >
+            {heroClass.charAt(0).toUpperCase() + heroClass.slice(1)}
+          </button>
+        ))}
+      </div>
+
       <button className={`mt-18 px-9 py-3 rounded-full font-semibold 
         ${ isHeroNameValid
             ? 'bg-orange-500 text-white :bg-orange-600'
             : 'bg-gray-600 text-gray-400 cursor-not-allowed'
         }`}
-        onClick={() => isHeroNameValid && enterTavern(name.trim())}
+        onClick={() => isHeroNameValid && enterTavern(name.trim(), selectedClass)}
         disabled={!isHeroNameValid}
       >
         Enter the Tavern
