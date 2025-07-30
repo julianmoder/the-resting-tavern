@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef, useCallback, PointerEvent } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useHero } from '../hooks/useHero';
-import type { Item, ItemType } from '../types/types';
+import type { Item } from '../types/types';
 
 type InventoryProps = {
   onDropItem?: (id: string, clientX: number, clientY: number) => boolean;
@@ -29,7 +29,7 @@ export default function Inventory({ onDropItem }: InventoryProps) {
   }, []);
 
   const [dragState, setDragState] = useState<{
-    Item: Item;
+    id: string;
     offsetX: number;
     offsetY: number;
     originalX: number;
@@ -48,10 +48,10 @@ export default function Inventory({ onDropItem }: InventoryProps) {
       // Überlappung mit anderen Items verhindern
       return !hero.inventory.items.some((someItem) => {
         if (someItem.id === item.id) return false;
-        const ix = someItem.x ?? 0;
-        const iy = someItem.y ?? 0;
-        const iw = someItem.width ?? 1;
-        const ih = someItem.height ?? 1;
+        const ix = someItem.position.x ?? 0;
+        const iy = someItem.position.y ?? 0;
+        const iw = someItem.size.width ?? 1;
+        const ih = someItem.size.height ?? 1;
         return (
           x < ix + iw &&
           x + widthCells > ix &&
@@ -63,27 +63,27 @@ export default function Inventory({ onDropItem }: InventoryProps) {
     [hero.inventory.items, cols, rows],
   );
 
-  const handlePointerDown = (e: PointerEvent, item: Item) => {
+  const handlePointerDown = (e: React.PointerEvent, item: Item) => {
     if (!item.id) return;
     const rect = containerRef.current?.getBoundingClientRect();
     if (!rect) return;
     const pointerX = e.clientX - rect.left;
     const pointerY = e.clientY - rect.top;
-    const pixelX = (item.x ?? 0) * cellSize;
-    const pixelY = (item.y ?? 0) * cellSize;
+    const pixelX = (item.position.x ?? 0) * cellSize;
+    const pixelY = (item.position.y ?? 0) * cellSize;
     setDragState({
       id: item.id,
       offsetX: pointerX - pixelX,
       offsetY: pointerY - pixelY,
-      originalX: item.x ?? 0,
-      originalY: item.y ?? 0,
+      originalX: item.position.x ?? 0,
+      originalY: item.position.y ?? 0,
       pixelX,
       pixelY,
     });
     (e.target as HTMLElement).setPointerCapture(e.pointerId);
   };
 
-  const handlePointerMove = (e: PointerEvent) => {
+  const handlePointerMove = (e: React.PointerEvent) => {
     if (!dragState) return;
     const rect = containerRef.current?.getBoundingClientRect();
     if (!rect) return;
@@ -94,7 +94,7 @@ export default function Inventory({ onDropItem }: InventoryProps) {
     setDragState({ ...dragState, pixelX: px, pixelY: py });
   };
 
-  const handlePointerUp = (e: PointerEvent) => {
+  const handlePointerUp = (e: React.PointerEvent) => {
     if (!dragState) return;
     const { id, pixelX, pixelY, originalX, originalY } = dragState;
     const handledOutside = onDropItem?.(id, e.clientX, e.clientY);
@@ -103,12 +103,12 @@ export default function Inventory({ onDropItem }: InventoryProps) {
       const gridY = Math.round(pixelY / cellSize);
       const draggedItem = hero.inventory.items.find((it) => it.id === id);
       if (draggedItem) {
-        const w = draggedItem.width ?? 1;
-        const h = draggedItem.height ?? 1;
-        if (canPlace(id, gridX, gridY, w, h)) {
-          setItemPosition(id, gridX, gridY);
+        const w = draggedItem.size.width ?? 1;
+        const h = draggedItem.size.height ?? 1;
+        if (canPlace(draggedItem, gridX, gridY, w, h)) {
+          hero.inventory.setPosition(draggedItem, gridX, gridY);
         } else {
-          setItemPosition(id, originalX, originalY);
+          hero.inventory.setPosition(draggedItem, originalX, originalY);
         }
       }
     }
@@ -119,7 +119,7 @@ export default function Inventory({ onDropItem }: InventoryProps) {
   return (
     <div
       ref={containerRef}
-      className="relative mt-6 w-full bg-gray-800 border border-gray-500 rounded-lg"
+      className="relative mt-6 w-full"
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
     >
@@ -128,7 +128,7 @@ export default function Inventory({ onDropItem }: InventoryProps) {
         {Array.from({ length: rows * cols }).map((_, idx) => (
           <div
             key={idx}
-            className="border border-gray-700 rounded-md m-px"
+            className="border border-gray-700"
             style={{
               width: `${cellSize}px`,
               height: `${cellSize}px`,
@@ -139,25 +139,27 @@ export default function Inventory({ onDropItem }: InventoryProps) {
 
       {/* Items als absolut positionierte DIVs */}
       {hero.inventory.items.map((item) => {
-        const x = dragState && dragState.id === item.id ? dragState.pixelX : (item.x ?? 0) * cellSize;
-        const y = dragState && dragState.id === item.id ? dragState.pixelY : (item.y ?? 0) * cellSize;
-        const w = (item.width ?? 1) * cellSize;
-        const h = (item.height ?? 1) * cellSize;
+        const pos = item.position ?? { x: 0, y: 0 };
+        const size = item.size ?? { width: 1, height: 1 };
+        const x = dragState && dragState.id === item.id ? dragState.pixelX : pos.x * cellSize;
+        const y = dragState && dragState.id === item.id ? dragState.pixelY : pos.y * cellSize;
+        const w = size.width * cellSize;
+        const h = size.height * cellSize;
 
         const classes =
           item.rarity === 'legendary'
-            ? 'bg-yellow-500'
+            ? 'border border-3 border-yellow-500 bg-yellow-900'
             : item.rarity === 'rare'
-            ? 'bg-blue-500'
+            ? 'border border-3 border-blue-500 bg-blue-900'
             : item.rarity === 'uncommon'
-            ? 'bg-green-500'
-            : 'bg-gray-500';
+            ? 'border border-3 border-green-500 bg-green-900'
+            : 'border border-3 border-gray-500 bg-gray-900';
 
         return (
           <div
             key={item.id}
             onPointerDown={(e) => handlePointerDown(e, item)}
-            className={`absolute rounded-md text-white text-xs flex items-center justify-center cursor-grab ${classes}`}
+            className={`absolute rounded-lg text-white text-xs flex items-center justify-center cursor-grab ${classes}`}
             style={{
               left: `${x}px`,
               top: `${y}px`,

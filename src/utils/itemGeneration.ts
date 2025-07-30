@@ -15,6 +15,10 @@ function generateItem(template: ItemTemplate): Item {
         int: template.affixes?.includes('int') ? calcModifier(template.level) : 0,
         dex: template.affixes?.includes('dex') ? calcModifier(template.level) : 0,
       },
+    position: {
+      x: 0,
+      y: 0,
+    }
   };
 
   return item;

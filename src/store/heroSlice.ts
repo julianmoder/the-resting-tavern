@@ -152,7 +152,7 @@ export const createHeroSlice: StateCreator<HeroSlice, [], [], HeroSlice> = (set,
     if (!state.hero) return;
 
     const repositionedItems = state.hero.inventory.items.map((mapItem) => {
-      mapItem.id === item.id ? { ...mapItem, position: { x, y } } : mapItem;
+      return mapItem.id === item.id ? { ...mapItem, position: { x, y } } : mapItem;
     });
 
     set((state) => ({
