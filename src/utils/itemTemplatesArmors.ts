@@ -1,11 +1,13 @@
+import type { ItemType, ItemRarity } from '../types/types';
+
 export const itemTemplatesArmors = [
 
 // cloth armors
   {
     name: 'Rags',
-    type: 'armor',
+    type: ItemType.Armor,
     category: 'cloth',
-    rarity: 'normal',
+    rarity: ItemRarity.Common,
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',
@@ -13,9 +15,9 @@ export const itemTemplatesArmors = [
   },
   {
     name: 'Silk Shirt',
-    type: 'armor',
+    type: ItemType.Armor,
     category: 'cloth',
-    rarity: 'normal',
+    rarity: ItemRarity.Uncommon,
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',
@@ -23,9 +25,9 @@ export const itemTemplatesArmors = [
   },
   {
     name: 'Scholar\'s Robe',
-    type: 'armor',
+    type: ItemType.Armor,
     category: 'cloth',
-    rarity: 'rare',
+    rarity: ItemRarity.Rare,
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',
@@ -35,9 +37,9 @@ export const itemTemplatesArmors = [
 // leather armors
   {
     name: 'Hide Armor',
-    type: 'armor',
+    type: ItemType.Armor,
     category: 'leather',
-    rarity: 'normal',
+    rarity: ItemRarity.Common,
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',
@@ -45,9 +47,9 @@ export const itemTemplatesArmors = [
   },
   {
     name: 'Padded Vest',
-    type: 'armor',
+    type: ItemType.Armor,
     category: 'leather',
-    rarity: 'normal',
+    rarity: ItemRarity.Uncommon,
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',
@@ -55,9 +57,9 @@ export const itemTemplatesArmors = [
   },
   {
     name: 'Runed Leather',
-    type: 'armor',
+    type: ItemType.Armor,
     category: 'leather',
-    rarity: 'rare',
+    rarity: ItemRarity.Rare,
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',
@@ -67,9 +69,9 @@ export const itemTemplatesArmors = [
 // mail armors
   {
     name: 'Chain Shirt',
-    type: 'armor',
+    type: ItemType.Armor,
     category: 'mail',
-    rarity: 'normal',
+    rarity: ItemRarity.Common,
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',
@@ -77,9 +79,9 @@ export const itemTemplatesArmors = [
   },
   {
     name: 'Scale Mail',
-    type: 'armor',
+    type: ItemType.Armor,
     category: 'mail',
-    rarity: 'normal',
+    rarity: ItemRarity.Uncommon,
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',
@@ -87,9 +89,9 @@ export const itemTemplatesArmors = [
   },
   {
     name: 'Ornated Halfplate',
-    type: 'armor',
+    type: ItemType.Armor,
     category: 'mail',
-    rarity: 'rare',
+    rarity: ItemRarity.Rare,
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',

@@ -1,14 +1,19 @@
 import type { StateCreator } from 'zustand'
 import { v4 as uuidv4 } from 'uuid';
-import type { Hero, Item } from '../types/types';
+import type { Hero, HeroClass, Item, ItemType } from '../types/types';
 import { tryLevelUp } from '../utils/levelProgression';
 
 export interface HeroSlice {
   hero: Hero;
-  setHeroName: (name: string) => void;
-  addHeroXp: (xp: number) => void;
-  addInvItem: (item: Item) => void;
-  addInvCoins: (coins: number) => void;
+  setHeroName: (heroName: string) => void;
+  setHeroClass: (heroClass: HeroClass) => void;
+  addHeroXp: (addXp: number) => void;
+  addInvItem: (addItem: Item) => void;
+  removeInvItem: (removeItem: Item) => void;
+  addInvCoins: (addCoins: number) => void;
+  removeInvCoins: (removeCoins: number) => void;
+  addEquipItem: (item: Item) => void;
+  removeEquipItem: (item: Item) => void;
 }
 
 export const createHeroSlice: StateCreator<HeroSlice, [], [], HeroSlice> = (set, get) => ({
@@ -56,7 +61,9 @@ export const createHeroSlice: StateCreator<HeroSlice, [], [], HeroSlice> = (set,
   addHeroXp: (addXp: number) => {
     const state = get();
     if (!state.hero) return;
+
     const tryLevelUpResult = tryLevelUp(state.hero.xp + addXp, state.hero.level);
+
     let newMaxHealth = state.hero.stats.maxHealth;
     let newMaxEnergy = state.hero.stats.maxEnergy;
     let newStr = state.hero.stats.str;
@@ -137,26 +144,44 @@ export const createHeroSlice: StateCreator<HeroSlice, [], [], HeroSlice> = (set,
       }
     }))
   },
-  addEquipItem: (item: Item) => {
+  addEquipItem: (item: Item, slot: ItemType.Weapon | ItemType.Armor) => {
     set((state) => ({
       hero: {
         ...state.hero,
         equipment: {
-          weapon: (item.type === 'weapon') ? item : state.hero.equipment.weapon,
-          armor: (item.type === 'armor') ? item : state.hero.equipment.armor,
+          weapon: slot === ItemType.Weapon ? item : state.hero.equipment.weapon,
+          armor: slot === ItemType.Armor ? item : state.hero.equipment.armor,
         },
       }
     }))
   },
-  removeEquipItem: (item: Item) => {
+  removeEquipItem: (item: Item, slot: ItemType.Weapon | ItemType.Armor) => {
     set((state) => ({
       hero: {
         ...state.hero,
         equipment: {
-          weapon: (item.type === 'weapon') ? null : state.hero.equipment.weapon,
-          armor: (item.type === 'armor') ? null : state.hero.equipment.armor,
+          weapon: slot === ItemType.Weapon ? null : state.hero.equipment.weapon,
+          armor: slot === ItemType.Armor ? null : state.hero.equipment.armor,
         },
       }
+    }))
+  },
+  setItemPosition: (id: string, x: number, y: number) => {
+    const state = get();
+    if (!state.hero) return;
+
+    const repositionedItems = state.hero.inventory.items.map((item) => {
+      item.id === id ? { ...item, position: { x, y } } : item;
+    });
+
+    set((state) => ({
+      hero: { 
+        ...state.hero, 
+        inventory: { 
+          ...state.hero.inventory, 
+          items: repositionedItems,
+        }, 
+      } 
     }))
   },
 });

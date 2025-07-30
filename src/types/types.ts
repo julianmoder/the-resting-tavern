@@ -51,17 +51,39 @@ export interface Item extends ItemTemplate {
     int: number,
     dex: number,
   }
+  position: {
+    x: number, 
+    y: number,
+  }
 }
 
 export interface ItemTemplate {
   name: string,
-  type: string,
+  type: ItemType,
   category: string,
   rarity: string,
   level: number,
   affixes: string[],
   fluff: string,
   dropChance: number,
+  size: {
+    width: number, 
+    height: number,
+  }
+}
+
+export enum ItemType {
+  Weapon: 'weapon',
+  Armor: 'armor',
+}
+
+export enum ItemRarity {
+  Common: 'common',
+  Uncommon: 'uncommon',
+  Rare: 'rare',
+  Epic: 'epic',
+  Legendary: 'legendary',
+  Mythic: 'mythic',
 }
 
 export interface Quest {

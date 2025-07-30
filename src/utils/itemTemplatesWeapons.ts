@@ -1,11 +1,13 @@
+import type { ItemType, ItemRarity } from '../types/types';
+
 export const itemTemplatesWeapons = [
 
 // melee weapons
   {
     name: 'Wooden Sword',
-    type: 'weapon',
+    type: ItemType.Weapon,
     category: 'melee',
-    rarity: 'normal',
+    rarity: ItemType.Common,
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text.',
@@ -13,9 +15,9 @@ export const itemTemplatesWeapons = [
   },
   {
     name: 'Steel Sword',
-    type: 'weapon',
+    type: ItemType.Weapon,
     category: 'melee',
-    rarity: 'normal',
+    rarity: ItemType.Uncommon,
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text.',
@@ -23,9 +25,9 @@ export const itemTemplatesWeapons = [
   },
   {
     name: 'Imbued Sword',
-    type: 'weapon',
+    type: ItemType.Weapon,
     category: 'melee',
-    rarity: 'rare',
+    rarity: ItemType.Rare,
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text.',
@@ -35,9 +37,9 @@ export const itemTemplatesWeapons = [
 // ranged weapons
   {
     name: 'Simple Bow',
-    type: 'weapon',
+    type: ItemType.Weapon,
     category: 'ranged',
-    rarity: 'normal',
+    rarity: ItemType.Common,
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text.',
@@ -45,9 +47,9 @@ export const itemTemplatesWeapons = [
   },
   {
     name: 'Recurve Bow',
-    type: 'weapon',
+    type: ItemType.Weapon,
     category: 'ranged',
-    rarity: 'normal',
+    rarity: ItemType.Uncommon,
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text.',
@@ -55,9 +57,9 @@ export const itemTemplatesWeapons = [
   },
   {
     name: 'Enchanted Bow',
-    type: 'weapon',
+    type: ItemType.Weapon,
     category: 'ranged',
-    rarity: 'rare',
+    rarity: ItemType.Rare,
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text.',
@@ -67,9 +69,9 @@ export const itemTemplatesWeapons = [
 // spell weapons
   {
     name: 'Oak Staff',
-    type: 'weapon',
+    type: ItemType.Weapon,
     category: 'spell',
-    rarity: 'normal',
+    rarity: ItemType.Common,
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text.',
@@ -77,9 +79,9 @@ export const itemTemplatesWeapons = [
   },
   {
     name: 'Silverwood Staff',
-    type: 'weapon',
+    type: ItemType.Weapon,
     category: 'spell',
-    rarity: 'normal',
+    rarity: ItemType.Uncommon,
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text.',
@@ -87,9 +89,9 @@ export const itemTemplatesWeapons = [
   },
   {
     name: 'Cursed Staff',
-    type: 'weapon',
+    type: ItemType.Weapon,
     category: 'spell',
-    rarity: 'rare',
+    rarity: ItemType.Rare,
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text.',
