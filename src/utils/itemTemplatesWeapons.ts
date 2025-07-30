@@ -12,6 +12,10 @@ export const itemTemplatesWeapons = [
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text.',
     dropChance: 1,
+    size: {
+      width: 1, 
+      height: 3,
+    }
   },
   {
     name: 'Steel Sword',
@@ -22,6 +26,10 @@ export const itemTemplatesWeapons = [
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text.',
     dropChance: 5,
+    size: {
+      width: 1, 
+      height: 3,
+    }
   },
   {
     name: 'Imbued Sword',
@@ -32,6 +40,10 @@ export const itemTemplatesWeapons = [
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text.',
     dropChance: 15,
+    size: {
+      width: 1, 
+      height: 4,
+    }
   },
 
 // ranged weapons
@@ -44,6 +56,10 @@ export const itemTemplatesWeapons = [
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text.',
     dropChance: 1,
+    size: {
+      width: 1, 
+      height: 3,
+    }
   },
   {
     name: 'Recurve Bow',
@@ -54,6 +70,10 @@ export const itemTemplatesWeapons = [
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text.',
     dropChance: 5,
+    size: {
+      width: 1, 
+      height: 3,
+    }
   },
   {
     name: 'Enchanted Bow',
@@ -64,6 +84,10 @@ export const itemTemplatesWeapons = [
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text.',
     dropChance: 15,
+    size: {
+      width: 1, 
+      height: 4,
+    }
   },
 
 // spell weapons
@@ -76,6 +100,10 @@ export const itemTemplatesWeapons = [
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text.',
     dropChance: 1,
+    size: {
+      width: 1, 
+      height: 3,
+    }
   },
   {
     name: 'Silverwood Staff',
@@ -86,6 +114,10 @@ export const itemTemplatesWeapons = [
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text.',
     dropChance: 5,
+    size: {
+      width: 1, 
+      height: 3,
+    }
   },
   {
     name: 'Cursed Staff',
@@ -96,5 +128,9 @@ export const itemTemplatesWeapons = [
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text.',
     dropChance: 15,
+    size: {
+      width: 1, 
+      height: 4,
+    }
   }
 ];

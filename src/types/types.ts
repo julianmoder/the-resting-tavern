@@ -1,7 +1,7 @@
 export interface UIHelper {
   ui: {
-    toolbar: {
-      showCharacter: boolean,
+    sidebar: {
+      showCharacter: boolean
     }
   }
 }

@@ -5,7 +5,7 @@ import { useHero } from '../hooks/useHero';
 import { useUI } from '../hooks/useUI';
 import CharacterInventory from '../comps/CharacterInventory';
 import CharacterOverview from '../comps/CharacterOverview';
-import Toolbar from '../comps/Toolbar';
+import SideBar from '../comps/SideBar';
 
 type TavernPageProps = {
   onStartQuest: () => void;
@@ -52,12 +52,12 @@ export default function TavernPage({ onStartQuest }: TavernPageProps) {
   return (
     <>
 
-      <Toolbar />
+      <SideBar />
 
       <div className="flex w-full h-full relative">
 
         {/* Charakter Overview + Inventory */}
-        {ui.toolbar.showCharacter && (
+        {ui.sidebar.showCharacter && (
           <div className="absolute right-0 top-0 z-20 bg-gray-800 p-4 rounded-lg shadow-lg">
             <CharacterOverview weaponRef={weaponRef} armourRef={armourRef} />
             <CharacterInventory onDropItem={handleDropItem} />

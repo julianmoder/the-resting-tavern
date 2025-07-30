@@ -1,6 +1,6 @@
 import { useUI } from '../hooks/useUI';
 
-export default function Toolbar() {
+export default function SideBar() {
   const ui = useUI();
 
   const buttonClasses = (active: boolean) =>
@@ -12,12 +12,12 @@ export default function Toolbar() {
   return (
     <nav
       className="fixed left-0 top-1/2 -translate-y-1/2 flex flex-col space-y-3 p-2 z-30"
-      aria-label="Toolbar navigation"
+      aria-label="Sidebar navigation"
     >
       <button
         aria-label="Toggle character overview"
-        className={buttonClasses(ui.toolbar.showCharacter)}
-        onClick={ui.toolbar.toggleCharacter}
+        className={buttonClasses(ui.sidebar.showCharacter)}
+        onClick={ui.sidebar.toggleCharacter}
       >
         C
       </button>

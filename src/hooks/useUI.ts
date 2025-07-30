@@ -2,15 +2,13 @@ import { useAppStore } from '../store/useAppStore';
 
 export function useUI() {
   const ui = useAppStore(s => s.ui);
-  const toggleToolbarCharacter = useAppStore(s => s.toggleToolbarCharacter);
+  const toggleSideBarCharacter = useAppStore(s => s.toggleSideBarCharacter);
   
   return {
-    ui: {
-      ...ui,
-      toolbar: {
-        ...ui.toolbar,
-        toggleCharacter: toggleToolbarCharacter,
-      }
+    ...ui,
+    sidebar: {
+      ...ui.sidebar,
+      toggleCharacter: toggleSideBarCharacter,
     }
   }
 }

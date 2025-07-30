@@ -4,14 +4,22 @@ import type { UIHelper } from '../types/types';
 
 interface UISlice {
   ui: UIHelper;
-  toggleToolbarCharacter: () => void;
+  toggleSideBarCharacter: () => void;
 }
 
 export const createUISlice: StateCreator<UISlice, [], [], UISlice> = (set, get) => ({
   ui: {
-    toolbar: {
+    sidebar: {
       showCharacter: false,
     }
   },
-  toggleToolbarCharacter: () => set((state) => ({ showCharacter: !state.ui.toolbar.showCharacter })),
+  toggleSideBarCharacter: () => set((state) => ({ 
+    ui: {
+      ...state.ui,
+      sidebar: {
+        ...state.ui.sidebar,
+        showCharacter: !state.ui.sidebar.showCharacter,
+      }
+    } 
+  })),
 });

@@ -12,6 +12,10 @@ export const itemTemplatesArmors = [
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',
     dropChance: 1,
+    size: {
+      width: 2, 
+      height: 2,
+    }
   },
   {
     name: 'Silk Shirt',
@@ -22,6 +26,10 @@ export const itemTemplatesArmors = [
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',
     dropChance: 5,
+    size: {
+      width: 2, 
+      height: 2,
+    }
   },
   {
     name: 'Scholar\'s Robe',
@@ -32,6 +40,10 @@ export const itemTemplatesArmors = [
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',
     dropChance: 15,
+    size: {
+      width: 2, 
+      height: 3,
+    },
   },
 
 // leather armors
@@ -44,6 +56,10 @@ export const itemTemplatesArmors = [
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',
     dropChance: 1,
+    size: {
+      width: 2, 
+      height: 2,
+    }
   },
   {
     name: 'Padded Vest',
@@ -54,6 +70,10 @@ export const itemTemplatesArmors = [
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',
     dropChance: 5,
+    size: {
+      width: 2, 
+      height: 2,
+    }
   },
   {
     name: 'Runed Leather',
@@ -64,6 +84,10 @@ export const itemTemplatesArmors = [
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',
     dropChance: 15,
+    size: {
+      width: 2, 
+      height: 3,
+    },
   },
 
 // mail armors
@@ -76,6 +100,10 @@ export const itemTemplatesArmors = [
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',
     dropChance: 1,
+    size: {
+      width: 2, 
+      height: 2,
+    }
   },
   {
     name: 'Scale Mail',
@@ -86,6 +114,10 @@ export const itemTemplatesArmors = [
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',
     dropChance: 5,
+    size: {
+      width: 2, 
+      height: 2,
+    }
   },
   {
     name: 'Ornated Halfplate',
@@ -96,5 +128,9 @@ export const itemTemplatesArmors = [
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',
     dropChance: 15,
+    size: {
+      width: 2, 
+      height: 3,
+    },
   }
 ];
