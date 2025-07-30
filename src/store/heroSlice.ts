@@ -165,12 +165,17 @@ export const createHeroSlice: StateCreator<HeroSlice, [], [], HeroSlice> = (set,
       return false;
     }
 
+    const newItem: Item = {
+      ...addItem,
+      position: foundPos,
+    };
+
     set((state) => ({
       hero: {
         ...state.hero,
         inventory: {
           ...state.hero.inventory,
-          items: [...state.hero.inventory.items, addItem]
+          items: [...state.hero.inventory.items, newItem]
         }
       }
     }))
