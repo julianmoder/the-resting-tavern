@@ -2,6 +2,7 @@ import type { StateCreator } from 'zustand';
 import { v4 as uuidv4 } from 'uuid';
 import type { Hero, HeroClass, Item, ItemType } from '../types/types';
 import { tryLevelUp } from '../utils/levelProgression';
+import { useModal } from '../hooks/useModal';
 
 export interface HeroSlice {
   hero: Hero;
@@ -102,6 +103,8 @@ export const createHeroSlice: StateCreator<HeroSlice, [], [], HeroSlice> = (set,
         },
       }
     }))
+    console.log('addHeroXp > state.hero.xp: ', state.hero.xp);
+    return tryLevelUpResult;
   },
   addInvCoins: (addCoins: number) => {
     set((state) => ({
@@ -158,8 +161,8 @@ export const createHeroSlice: StateCreator<HeroSlice, [], [], HeroSlice> = (set,
     }
 
     if (!foundPos) {
-      console.warn('Inventory is full – cannot add item')
-      return;
+      console.warn('Inventory is full – cannot add item');
+      return false;
     }
 
     set((state) => ({
@@ -171,6 +174,7 @@ export const createHeroSlice: StateCreator<HeroSlice, [], [], HeroSlice> = (set,
         }
       }
     }))
+    return true;
   },
   removeInvItem: (removeItem: Item) => {
     set((state) => ({

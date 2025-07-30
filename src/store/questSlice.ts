@@ -21,6 +21,8 @@ export const createQuestSlice: StateCreator<QuestSlice, [], [], QuestSlice> = (s
       coins: 0,
       itemChoices: [],
     },
+    xpEarned: false,
+    lootGained: false,
   },
   setQuest: (newName: string, newDuration: number, hero: Hero) => {
     const randomPrefix = questPrefixes[Math.floor(Math.random() * questPrefixes.length)];
@@ -43,10 +45,24 @@ export const createQuestSlice: StateCreator<QuestSlice, [], [], QuestSlice> = (s
       duration: newDuration,
       breakTime: newBreakTime, 
       level: newLevel,
-      loot: newLoot
+      loot: newLoot,
+      xpEarned: false,
+      lootGained: false,
     }
     
     set({ quest });
+  },
+  setXpEarned: () => {
+    console.log('setXpEarned > true');
+    set((state) => ({
+      quest: { ...state.quest, xpEarned: true },
+    }))
+  },
+  setLootGained: () => {
+    console.log('setLootGained > true');
+    set((state) => ({
+      quest: { ...state.quest, lootGained: true },
+    }))
   },
   resetQuest: () => {
     const quest = {
@@ -59,6 +75,8 @@ export const createQuestSlice: StateCreator<QuestSlice, [], [], QuestSlice> = (s
         coins: 0,
         itemChoices: [],
       },
+      xpEarned: false,
+      lootGained: false,
     }
     set({ quest });
   },

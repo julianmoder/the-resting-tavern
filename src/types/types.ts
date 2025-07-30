@@ -100,6 +100,8 @@ export interface Quest {
   breakTime: number,
   level: number,
   loot: Loot,
+  xpEarned: boolean,
+  lootGained: boolean,
 }
 
 export interface Loot {

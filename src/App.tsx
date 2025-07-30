@@ -1,5 +1,6 @@
 import { useAppStore } from './store/useAppStore';
 import Header from './comps/Header';
+import Modal from './comps/Modal';
 import LandingPage from './pages/LandingPage';
 import TavernPage from './pages/TavernPage';
 import QuestPage from './pages/QuestPage';
@@ -9,6 +10,9 @@ import BreakPage from './pages/BreakPage';
 import { Stage } from './types/types';
 
 export default function App() {
+  const modal = useAppStore((s) => s.modal);
+  const showModal = useAppStore((s) => s.showModal);
+  const hideModal = useAppStore((s) => s.hideModal);
   const stage = useAppStore((s) => s.stage);
   const setStage = useAppStore((s) => s.setStage);
   const quest = useAppStore((s) => s.quest);
@@ -36,6 +40,8 @@ export default function App() {
               <p>no content</p>
             )
           }
+
+          <Modal showModal={showModal} title={modal.title} message={modal.message} onClose={hideModal} />
 
         </div>
       </main>

@@ -1,10 +1,12 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { useAppStore } from '../store/useAppStore';
 import { useHero } from '../hooks/useHero';
 import type { Quest, Item } from '../types/types';
 import CharacterInventory from '../comps/CharacterInventory';
 import CharacterOverview from '../comps/CharacterOverview';
 import { useUI } from '../hooks/useUI';
 import SideBar from '../comps/SideBar';
+import { useModal } from '../hooks/useModal';
 
 
 type LootPageProps = {
@@ -15,16 +17,34 @@ type LootPageProps = {
 export default function LootPage({ quest, onLootTake }: LootPageProps) {
   const hero = useHero();
   const ui = useUI();
+  const modal = useModal();
   const weaponRef = useRef<HTMLDivElement | null>(null);
   const armourRef = useRef<HTMLDivElement | null>(null);
   const [itemTaken, setItemTaken] = useState(false);
+  const setXpEarned = useAppStore((s) => s.setXpEarned);
+  const setLootGained = useAppStore((s) => s.setLootGained);
+
+  useEffect(() => {
+    if (quest.xpEarned) return;
+    setXpEarned();
+    const tryLevelUpResult = hero.addXp(quest.loot.xp);
+    if(tryLevelUpResult.leveledUp) {
+      modal.sendModalMessage('Level Up!', `${hero.name} is now Level ${tryLevelUpResult.level}!`);
+    }
+  }, []);
 
   const takeItem = (item: Item) => {
-    if (itemTaken) return;
-    setItemTaken(true);
-    hero.inventory.addItem(item);
+    if (quest.lootGained) return;
+    setLootGained();
+
     hero.inventory.addCoins(quest.loot.coins);
-    hero.addXp(quest.loot.xp);
+    const itemAdded = hero.inventory.addItem(item);
+    if(!itemAdded) {
+      modal.sendModalMessage('Your Bags are full!', `There\'s no space for ${item.name}!`);
+      return;
+    }else{
+      onLootTake();
+    }
   }
 
   return (
@@ -60,7 +80,6 @@ export default function LootPage({ quest, onLootTake }: LootPageProps) {
               className='bg-blue-500 hover:bg-blue-600 px-2 py-1 rounded-full text-white'
               onClick={() => {
                 takeItem(item);
-                onLootTake();
               }}
             >
               Take
