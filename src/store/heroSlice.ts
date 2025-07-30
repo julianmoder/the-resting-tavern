@@ -103,7 +103,6 @@ export const createHeroSlice: StateCreator<HeroSlice, [], [], HeroSlice> = (set,
         },
       }
     }))
-    console.log('addHeroXp > state.hero.xp: ', state.hero.xp);
     return tryLevelUpResult;
   },
   addInvCoins: (addCoins: number) => {
@@ -161,7 +160,6 @@ export const createHeroSlice: StateCreator<HeroSlice, [], [], HeroSlice> = (set,
     }
 
     if (!foundPos) {
-      console.warn('Inventory is full – cannot add item');
       return false;
     }
 

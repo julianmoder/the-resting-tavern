@@ -10,12 +10,11 @@ type InventoryProps = {
 export default function Inventory({ weaponRef, armourRef }: InventoryProps) {
   const hero = useHero();
 
-  // Inventory Grid Setup
   const cols = 12;
   const rows = 6;
-  // Die Zellengröße wird über ein ref gemessen, damit sie responsiv sein kann
+
   const containerRef = useRef<HTMLDivElement>(null);
-  const [cellSize, setCellSize] = useState(40); // fallback in px
+  const [cellSize, setCellSize] = useState(40);
 
   useEffect(() => {
     const updateSize = () => {
@@ -43,10 +42,8 @@ export default function Inventory({ weaponRef, armourRef }: InventoryProps) {
 
   const canPlace = useCallback(
     (item: Item, x: number, y: number, widthCells: number, heightCells: number) => {
-      // Überprüfen, ob das Item innerhalb des Rasters bleibt
       if (x < 0 || y < 0 || x + widthCells > cols || y + heightCells > rows) return false;
 
-      // Überlappung mit anderen Items verhindern
       return !hero.inventory.items.some((someItem) => {
         if (someItem.id === item.id) return false;
         const ix = someItem.position.x ?? 0;
@@ -145,7 +142,6 @@ export default function Inventory({ weaponRef, armourRef }: InventoryProps) {
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
     >
-      {/* Gitterzellen als HTML‑Elemente */}
       <div className="grid w-full h-full" style={{ gridTemplateColumns: `repeat(${cols}, 1fr)`, gridTemplateRows: `repeat(${rows}, 1fr)` }}>
         {Array.from({ length: rows * cols }).map((_, idx) => (
           <div
@@ -159,7 +155,6 @@ export default function Inventory({ weaponRef, armourRef }: InventoryProps) {
         ))}
       </div>
 
-      {/* Items als absolut positionierte DIVs */}
       {hero.inventory.items.map((item) => {
         const pos = item.position ?? { x: 0, y: 0 };
         const size = item.size ?? { width: 1, height: 1 };
