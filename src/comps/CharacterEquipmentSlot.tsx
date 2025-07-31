@@ -36,7 +36,7 @@ export default function CharacterEquipmentSlot({ item, slotType, slotRef, cellSi
           dragState={dragState}
           cellSize={cellSize}
           inSlot={true}
-          handlePointerDown={onDragStart ? (e, item) => onDragStart(e, item) : undefined }
+          handlePointerDown={onDragStart ? (e, item) => onDragStart(e, item, slotType) : undefined }
         />
       ) : (
         <span className="text-xs text-gray-500 select-none">
