@@ -1,33 +1,18 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useHero } from '../hooks/useHero';
-import type { Item } from '../types/types';
 import Item from '../comps/Item';
 
 type InventoryProps = {
   weaponRef: React.RefObject<HTMLDivElement>;
   armourRef: React.RefObject<HTMLDivElement>;
+  cellSize: number; 
 };
 
-export default function Inventory({ weaponRef, armourRef }: InventoryProps) {
+export default function Inventory({ weaponRef, armourRef, cellSize }: InventoryProps) {
   const hero = useHero();
 
   const cols = 12;
   const rows = 6;
-
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [cellSize, setCellSize] = useState(40);
-
-  useEffect(() => {
-    const updateSize = () => {
-      if (containerRef.current) {
-        const widthPx = containerRef.current.clientWidth;
-        setCellSize(widthPx / cols);
-      }
-    };
-    updateSize();
-    window.addEventListener('resize', updateSize);
-    return () => window.removeEventListener('resize', updateSize);
-  }, []);
 
   const [dragState, setDragState] = useState<{
     draggedItem: Item;

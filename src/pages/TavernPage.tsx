@@ -34,10 +34,7 @@ export default function TavernPage({ onStartQuest }: TavernPageProps) {
 
       {/* Charakter Overview + Inventory */}
       {ui.sidebar.showCharacter && (
-        <div className="absolute justify-center z-20 bg-gray-800 p-4 rounded-lg shadow-lg">
           <CharacterOverview weaponRef={weaponRef} armourRef={armourRef} />
-          <CharacterInventory weaponRef={weaponRef} armourRef={armourRef} />
-        </div>
       )}
 
       {/* Main Content */}

@@ -2,14 +2,15 @@ type ItemProps = {
   item: Item;
   dragState?: State;
   cellSize: number;
+  inSlot?: boolean;
   handlePointerDown?: (e: React.PointerEvent, item: Item) => void;
 };
 
-export default function Item({ item, dragState, cellSize, handlePointerDown  }: ItemProps) {
+export default function Item({ item, dragState, cellSize, inSlot, handlePointerDown  }: ItemProps) {
   const position = item.position;
   const size = item.size;
-  const x = dragState && dragState.draggedItem?.id === item.id ? dragState.pixelX : pos.x * cellSize;
-  const y = dragState && dragState.draggedItem?.id === item.id ? dragState.pixelY : pos.y * cellSize;
+  const x = dragState && dragState.draggedItem?.id === item.id ? dragState.pixelX : position.x * cellSize;
+  const y = dragState && dragState.draggedItem?.id === item.id ? dragState.pixelY : position.y * cellSize;
   const w = size.width * cellSize;
   const h = size.height * cellSize;
 
@@ -26,12 +27,10 @@ export default function Item({ item, dragState, cellSize, handlePointerDown  }: 
     <div key={item.id}
       onPointerDown={handlePointerDown ? (e) => handlePointerDown(e, item) : undefined}
       className={`absolute rounded-lg text-white text-xs flex items-center justify-center cursor-grab ${rarityClasses}`}
-      style={{
-        left: `${x}px`,
-        top: `${y}px`,
-        width: `${w}px`,
-        height: `${h}px`,
-      }}
+      style={ inSlot
+        ? { width: `${w}px`, height: `${h}px` }
+        : { left: `${x}px`, top: `${y}px`, width: `${w}px`, height: `${h}px` }
+      }
     >
       {item.name}
     </div>
