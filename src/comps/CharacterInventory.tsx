@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useHero } from '../hooks/useHero';
 import type { Item } from '../types/types';
+import Item from '../comps/Item';
 
 type InventoryProps = {
   weaponRef: React.RefObject<HTMLDivElement>;
@@ -156,36 +157,8 @@ export default function Inventory({ weaponRef, armourRef }: InventoryProps) {
       </div>
 
       {hero.inventory.items.map((item) => {
-        const pos = item.position ?? { x: 0, y: 0 };
-        const size = item.size ?? { width: 1, height: 1 };
-        const x = dragState && dragState.draggedItem.id === item.id ? dragState.pixelX : pos.x * cellSize;
-        const y = dragState && dragState.draggedItem.id === item.id ? dragState.pixelY : pos.y * cellSize;
-        const w = size.width * cellSize;
-        const h = size.height * cellSize;
-
-        const classes =
-          item.rarity === 'legendary'
-            ? 'border border-3 border-yellow-500 bg-yellow-900'
-            : item.rarity === 'rare'
-            ? 'border border-3 border-blue-500 bg-blue-900'
-            : item.rarity === 'uncommon'
-            ? 'border border-3 border-green-500 bg-green-900'
-            : 'border border-3 border-gray-500 bg-gray-900';
-
         return (
-          <div
-            key={item.id}
-            onPointerDown={(e) => handlePointerDown(e, item)}
-            className={`absolute rounded-lg text-white text-xs flex items-center justify-center cursor-grab ${classes}`}
-            style={{
-              left: `${x}px`,
-              top: `${y}px`,
-              width: `${w}px`,
-              height: `${h}px`,
-            }}
-          >
-            {item.name}
-          </div>
+          <Item item={item} dragState={dragState} cellSize={cellSize} handlePointerDown={handlePointerDown} />
         );
       })}
     </div>
