@@ -12,12 +12,14 @@ export function useHero() {
   const setInvItemPosition = useAppStore(s => s.setInvItemPosition);
   const equipInvItem = useAppStore(s => s.equipInvItem);
   const unequipInvItem = useAppStore(s => s.unequipInvItem);
+  const getHeroEffectiveStats = useAppStore(s => s.getHeroEffectiveStats);
   
   return {
     ...hero,
     setName: setHeroName,
     setClass: setHeroClass,
     addXp: addHeroXp,
+    getEffectiveStats: getHeroEffectiveStats,
     inventory: {
       ...hero.inventory,
       addCoins: addInvCoins,

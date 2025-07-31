@@ -9,6 +9,7 @@ type Props = {
 
 export default function CharacterOverview({ weaponRef, armourRef }: Props) {
   const hero = useHero();
+  const effectiveStats = hero.getEffectiveStats()
 
   const weapon = hero.equipment?.weapon;
   const armour = hero.equipment?.armour;
@@ -20,11 +21,11 @@ export default function CharacterOverview({ weaponRef, armourRef }: Props) {
       <h2 className="text-xl font-bold text-orange-500 text-center">{hero.name}</h2>
       <h4 className="font-bold text-white mb-4 text-center">{hero.class.charAt(0).toUpperCase() + hero.class.slice(1)} Level {hero.level}</h4>
       <div className="space-y-1">
-        <div>Health: {hero.stats.maxHealth}</div>
-        <div>Energy: {hero.stats.maxEnergy}</div>
-        <div>Strength: {hero.stats.str}</div>
-        <div>Intelligence: {hero.stats.int}</div>
-        <div>Dexterity: {hero.stats.dex}</div>
+        <div>Health: {effectiveStats.maxHealth}</div>
+        <div>Energy: {effectiveStats.maxEnergy}</div>
+        <div>Strength: {effectiveStats.str}</div>
+        <div>Intelligence: {effectiveStats.int}</div>
+        <div>Dexterity: {effectiveStats.dex}</div>
       </div>
 
       {/* Ausrüstungsslots */}

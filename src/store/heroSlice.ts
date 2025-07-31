@@ -1,6 +1,7 @@
 import type { StateCreator } from 'zustand';
 import { v4 as uuidv4 } from 'uuid';
-import type { Hero, HeroClass, Item, ItemType } from '../types/types';
+import type { Hero, HeroClass, Item } from '../types/types';
+import { ItemType } from '../types/types';
 import { tryLevelUp } from '../utils/levelProgression';
 import { useModal } from '../hooks/useModal';
 
@@ -209,10 +210,94 @@ export const createHeroSlice: StateCreator<HeroSlice, [], [], HeroSlice> = (set,
     }))
   },
   equipInvItem: (item: Item, slot: ItemType.Weapon | ItemType.Armor) => {
-
+    set((state) => {
+      const newItems = state.hero.inventory.items.filter((it) => it.id !== item.id);
+      let oldItem: Item | null = null;
+      if (slot === ItemType.Weapon && state.hero.equipment.weapon) {
+        oldItem = state.hero.equipment.weapon;
+      }
+      if (slot === ItemType.Armor && state.hero.equipment.armor) {
+        oldItem = state.hero.equipment.armor;
+      }
+      const updatedItems = oldItem ? [...newItems, oldItem] : newItems;
+      return {
+        hero: {
+          ...state.hero,
+          inventory: {
+            ...state.hero.inventory,
+            items: updatedItems,
+          },
+          equipment: {
+            ...state.hero.equipment,
+            [slot === ItemType.Weapon ? 'weapon' : 'armor']: item,
+          },
+        },
+      };
+    });
   },
   unequipInvItem: (item: Item, slot: ItemType.Weapon | ItemType.Armor) => {
+    set((state) => {
+      const newEquipment = { ...state.hero.equipment };
+      newEquipment[slot === ItemType.Weapon ? 'weapon' : 'armor'] = null;
+      let foundPos: { x: number; y: number } | null = null;
+      const cols = 12, rows = 6;
+      const fitsAt = (x: number, y: number, w: number, h: number) => {
+        return !state.hero.inventory.items.some((other) => {
+          if (other.id === item.id) return false;
+          const ox = other.position.x ?? 0;
+          const oy = other.position.y ?? 0;
+          const ow = other.size.width ?? 1;
+          const oh = other.size.height ?? 1;
+          return (
+            x < ox + ow &&
+            x + (item.size.width ?? 1) > ox &&
+            y < oy + oh &&
+            y + (item.size.height ?? 1) > oy
+          );
+        });
+      };
+      for (let y = 0; y <= rows - (item.size.height ?? 1); y++) {
+        for (let x = 0; x <= cols - (item.size.width ?? 1); x++) {
+          if (fitsAt(x, y, item.size.width ?? 1, item.size.height ?? 1)) {
+            foundPos = { x, y };
+            break;
+          }
+        }
+        if (foundPos) break;
+      }
+      if (!foundPos) {
+        // Optional: Modaler Fehlerdialog, wenn Inventar voll!
+        return state;
+      }
+      const newItem = { ...item, position: foundPos };
+      return {
+        hero: {
+          ...state.hero,
+          equipment: newEquipment,
+          inventory: {
+            ...state.hero.inventory,
+            items: [...state.hero.inventory.items, newItem],
+          },
+        },
+      };
+    });
+  },
+  getHeroEffectiveStats: () => {
+    const state = get();
+    if (!state.hero) return;
 
+    let { str, int, dex, health, maxHealth, energy, maxEnergy } = state.hero.stats;
+    if (state.hero.equipment.weapon) {
+      str += state.hero.equipment.weapon.modifier.str ?? 0;
+      int += state.hero.equipment.weapon.modifier.int ?? 0;
+      dex += state.hero.equipment.weapon.modifier.dex ?? 0;
+    }
+    if (state.hero.equipment.armor) {
+      str += state.hero.equipment.armor.modifier.str ?? 0;
+      int += state.hero.equipment.armor.modifier.int ?? 0;
+      dex += state.hero.equipment.armor.modifier.dex ?? 0;
+    }
+    return { str, int, dex, health, maxHealth, energy, maxEnergy };
   },
   addEquipItem: (item: Item, slot: ItemType.Weapon | ItemType.Armor) => {
     set((state) => ({
