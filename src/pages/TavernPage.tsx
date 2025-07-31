@@ -3,7 +3,6 @@ import { questQuestions } from '../utils/questQuestions';
 import { useAppStore } from '../store/useAppStore';
 import { useHero } from '../hooks/useHero';
 import { useUI } from '../hooks/useUI';
-import CharacterInventory from '../comps/CharacterInventory';
 import CharacterOverview from '../comps/CharacterOverview';
 import SideBar from '../comps/SideBar';
 
@@ -32,7 +31,7 @@ export default function TavernPage({ onStartQuest }: TavernPageProps) {
 
       <SideBar />
 
-      {/* Charakter Overview + Inventory */}
+      {/* Charakter Overview */}
       {ui.sidebar.showCharacter && (
           <CharacterOverview weaponRef={weaponRef} armourRef={armourRef} />
       )}

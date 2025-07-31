@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from 'react';
 import { useAppStore } from '../store/useAppStore';
 import { useHero } from '../hooks/useHero';
 import type { Quest, Item } from '../types/types';
-import CharacterInventory from '../comps/CharacterInventory';
 import CharacterOverview from '../comps/CharacterOverview';
 import { useUI } from '../hooks/useUI';
 import SideBar from '../comps/SideBar';
