@@ -68,6 +68,19 @@ export default function CharacterOverview({ weaponRef, armourRef }: Props) {
     [hero.inventory.items, cols, rows],
   );
 
+  const handlePointerDownFromSlot = (e: React.PointerEvent, item: Item) => {
+    setDragState({
+      draggedItem: item,
+      offsetX: 0,
+      offsetY: 0,
+      originalX: item.position?.x ?? 0,
+      originalY: item.position?.y ?? 0,
+      pixelX: 0,
+      pixelY: 0,
+    });
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+  };
+
   const handlePointerDown = (e: React.PointerEvent, item: Item) => {
     if (!item.id) return;
     const rect = containerRef.current?.getBoundingClientRect();
@@ -160,15 +173,17 @@ export default function CharacterOverview({ weaponRef, armourRef }: Props) {
         <CharacterEquipmentSlot
           item={hero.equipment.weapon}
           slotType="weapon"
+          slotRef={weaponRef}
           cellSize={cellSize}
-          onDragStart={handlePointerDown}
+          onDragStart={handlePointerDownFromSlot}
           dragState={dragState}
         />
         <CharacterEquipmentSlot
           item={hero.equipment.armor}
           slotType="armor"
+          slotRef={armourRef}
           cellSize={cellSize}
-          onDragStart={handlePointerDown}
+          onDragStart={handlePointerDownFromSlot}
           dragState={dragState}
         />
       </div>
@@ -197,7 +212,7 @@ export default function CharacterOverview({ weaponRef, armourRef }: Props) {
           ))}
         </div>
         {hero.inventory.items.map((item) => (
-          <Item
+          <ItemComp
             key={item.id}
             item={item}
             dragState={dragState}
