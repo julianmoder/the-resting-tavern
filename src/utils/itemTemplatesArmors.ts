@@ -11,7 +11,7 @@ export const itemTemplatesArmors = [
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',
-    dropChance: 1,
+    dropChance: 100,
     size: {
       width: 2, 
       height: 2,
@@ -25,7 +25,7 @@ export const itemTemplatesArmors = [
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',
-    dropChance: 5,
+    dropChance: 50,
     size: {
       width: 2, 
       height: 2,
@@ -39,7 +39,7 @@ export const itemTemplatesArmors = [
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',
-    dropChance: 15,
+    dropChance: 25,
     size: {
       width: 2, 
       height: 3,
@@ -55,7 +55,7 @@ export const itemTemplatesArmors = [
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',
-    dropChance: 1,
+    dropChance: 100,
     size: {
       width: 2, 
       height: 2,
@@ -69,7 +69,7 @@ export const itemTemplatesArmors = [
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',
-    dropChance: 5,
+    dropChance: 50,
     size: {
       width: 2, 
       height: 2,
@@ -83,7 +83,7 @@ export const itemTemplatesArmors = [
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',
-    dropChance: 15,
+    dropChance: 25,
     size: {
       width: 2, 
       height: 3,
@@ -99,7 +99,7 @@ export const itemTemplatesArmors = [
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',
-    dropChance: 1,
+    dropChance: 100,
     size: {
       width: 2, 
       height: 2,
@@ -113,7 +113,7 @@ export const itemTemplatesArmors = [
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',
-    dropChance: 5,
+    dropChance: 50,
     size: {
       width: 2, 
       height: 2,
@@ -127,7 +127,7 @@ export const itemTemplatesArmors = [
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',
-    dropChance: 15,
+    dropChance: 25,
     size: {
       width: 2, 
       height: 3,

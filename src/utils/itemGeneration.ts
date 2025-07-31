@@ -39,6 +39,28 @@ function calcModifier(level: number): number {
   return Math.round(value);
 }
 
+export function randomItemWeighted(heroLevel: number, templateArray: ItemTemplate[] = defaultItemTemplates): Item {
+  const totalWeight = templateArray.reduce((sum: number, tpl: ItemTemplate) => {
+    if((heroLevel * 15) < tpl.dropChance){
+      return sum + (tpl.dropChance ?? 0)
+    }
+    return sum
+  }, 0);
+  console.log(`randomItemWeighted > totalWeight: ${totalWeight}`);
+
+  let threshold = Math.random() * totalWeight;
+  console.log(`randomItemWeighted > threshold: ${threshold}`);
+  for (const tpl of templateArray) {
+    threshold -= tpl.dropChance ?? 0;
+    if (threshold <= 0) {
+      console.log(`randomItemWeighted > tpl: ${tpl}`);
+      return generateItem(tpl);
+    }
+  }
+  return generateItem(templateArray[templateArray.length - 1]);
+}
+
+// deprecated
 export function randomItem(templateArray: ItemTemplate[] = defaultItemTemplates): Item {
   const template = templateArray[Math.floor(Math.random() * templateArray.length)];
   const item = generateItem(template);
