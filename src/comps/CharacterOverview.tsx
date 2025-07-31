@@ -1,5 +1,7 @@
 import { RefObject, useRef, useState, useEffect, useCallback } from 'react';
 import { useHero } from '../hooks/useHero';
+import ItemComp from '../comps/ItemComp';
+import type { Item } from '../types/types';
 import CharacterEquipmentSlot from '../comps/CharacterEquipmentSlot';
 
 

@@ -1,4 +1,4 @@
-import Item from '../comps/Item';
+import ItemComp from '../comps/ItemComp';
 
 type CharacterEquipmentSlotProps = {
   item: Item | null;

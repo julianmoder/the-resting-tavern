@@ -26,7 +26,7 @@ export default function Item({ item, dragState, cellSize, inSlot, handlePointerD
   return (
     <div key={item.id}
       onPointerDown={handlePointerDown ? (e) => handlePointerDown(e, item) : undefined}
-      className={`absolute rounded-lg text-white text-xs flex items-center justify-center cursor-grab ${rarityClasses}`}
+      className={`rounded-lg text-white text-xs flex items-center justify-center cursor-grab ${!inSlot ? "absolute" : ""} ${rarityClasses}`}
       style={ inSlot
         ? { width: `${w}px`, height: `${h}px` }
         : { left: `${x}px`, top: `${y}px`, width: `${w}px`, height: `${h}px` }
