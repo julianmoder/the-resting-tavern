@@ -42,7 +42,7 @@ function calcModifier(level: number): number {
 
 export function randomItemWeighted(heroLevel: number, templateArray: ItemTemplate[] = defaultItemTemplates): Item {
   const totalWeight = templateArray.reduce((sum: number, tpl: ItemTemplate) => {
-    if((heroLevel * 15) < tpl.dropChance){
+    if((heroLevel * 10) < tpl.dropChance){
       return sum + (tpl.dropChance ?? 0)
     }
     return sum
