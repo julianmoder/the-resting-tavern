@@ -1,33 +1,66 @@
 import { RefObject, useRef, useState, useEffect, useCallback } from 'react';
 import { useHero } from '../hooks/useHero';
 import ItemComp from '../comps/ItemComp';
-import type { Item } from '../types/types';
+import type { Item, ItemDragState } from '../types/types';
+import { ItemType } from '../types/types';
 import CharacterEquipmentSlot from '../comps/CharacterEquipmentSlot';
 
-
-type Props = {
-  weaponRef: RefObject<HTMLDivElement>;
-  armourRef: RefObject<HTMLDivElement>;
-};
-
-export default function CharacterOverview({ weaponRef, armourRef }: Props) {
+export default function CharacterOverview() {
   const hero = useHero();
   const effectiveStats = hero.getEffectiveStats()
-
-  const invCols = 12;
-  const invRows = 6;
-
-  const weapon = hero.equipment?.weapon;
-  const armour = hero.equipment?.armour;
+  const invCols = hero.inventory.cols;
+  const invRows = hero.inventory.rows;
+  const weapon = hero.inventory.equipment?.weapon;
+  const armor = hero.inventory.equipment?.armor;
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const inventoryRef = useRef<HTMLDivElement>(null);
+  const weaponRef = useRef<HTMLDivElement>(null);
+  const armorRef = useRef<HTMLDivElement>(null);
   const [cellSize, setCellSize] = useState(40);
+  const [invOffset, setInvOffset] = useState({ x: 0, y: 0 });
+  const [weaponOffset, setWeaponOffset] = useState({ x: 0, y: 0 });
+  const [armorOffset, setArmorOffset] = useState({ x: 0, y: 0 });
+  const [weaponSize, setWeaponSize] = useState({ x: 0, y: 0 });
+  const [armorSize, setArmorSize] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     const updateSize = () => {
-      if (containerRef.current) {
-        const widthPx = containerRef.current.clientWidth;
+      if (inventoryRef.current) {
+        const widthPx = inventoryRef.current.clientWidth;
         setCellSize(widthPx / invCols);
+      }
+      if (inventoryRef.current && containerRef.current) {
+        const inventoryRect = inventoryRef.current.getBoundingClientRect();
+        const containerRect = containerRef.current.getBoundingClientRect();
+        setInvOffset({
+          x: inventoryRect.left - containerRect.left,
+          y: inventoryRect.top - containerRect.top,
+        });
+      }
+      if (weaponRef.current && containerRef.current) {
+        const weaponRect = weaponRef.current.getBoundingClientRect();
+        const containerRect = containerRef.current.getBoundingClientRect();
+        setWeaponOffset({
+          x: weaponRect.left - containerRect.left,
+          y: weaponRect.top - containerRect.top,
+        });
+        setWeaponSize({
+          x: weaponRect.width,
+          y: weaponRect.height,
+        });
+      }
+      if (armorRef.current && containerRef.current) {
+        const armorRect = armorRef.current.getBoundingClientRect();
+        const containerRect = containerRef.current.getBoundingClientRect();
+        setArmorOffset({
+          x: armorRect.left - containerRect.left,
+          y: armorRect.top - containerRect.top,
+        });
+        setArmorSize({
+          x: armorRect.width,
+          y: armorRect.height,
+        });
       }
     };
     updateSize();
@@ -35,15 +68,25 @@ export default function CharacterOverview({ weaponRef, armourRef }: Props) {
     return () => window.removeEventListener('resize', updateSize);
   }, []);
 
-  const [dragState, setDragState] = useState<{
-    draggedItem: Item;
-    offsetX: number;
-    offsetY: number;
-    originalX: number;
-    originalY: number;
-    pixelX: number;
-    pixelY: number;
-  } | null>(null);
+  const newDragState = {
+    draggedItem: null,
+    state: 'up',
+    cursorItemOffset: {
+      x: 0,
+      y: 0,
+    },
+    position: {
+      x: null,
+      y: null,
+      pixel: {
+        x: 0,
+        y: 0,
+      }
+    },
+    fromSlot: null,
+  };
+
+  const [dragState, setDragState] = useState<ItemDragState | null>(newDragState);
 
   const canPlace = useCallback(
     (item: Item, x: number, y: number, widthCells: number, heightCells: number) => {
@@ -66,101 +109,108 @@ export default function CharacterOverview({ weaponRef, armourRef }: Props) {
     [hero.inventory.items, invCols, invRows],
   );
 
-  const handlePointerDownFromSlot = (e: React.PointerEvent, item: Item, slotType: 'weapon' | 'armor') => {
-    if (!item.id) return;
-
-    hero.equipment.unequipItem(item, slotType);
-
+  const handlePointerDown = (e: React.PointerEvent, item: Item, slotType?: 'weapon' | 'armor') => {
+    if (dragState.state === 'move' || dragState.state === null) return;
     const rect = containerRef.current?.getBoundingClientRect();
     if (!rect) return;
-
     const pointerX = e.clientX - rect.left;
     const pointerY = e.clientY - rect.top;
-
-    setDragState({
+    const targetRect = e.target.getBoundingClientRect();
+    const offsetX = -(pointerX - (targetRect.left - rect.left));
+    const offsetY = -(pointerY - (targetRect.top - rect.top));
+    const pixelX = slotType ? pointerX : null;
+    const pixelY = slotType ? pointerY : null;
+    const newDragState = {
       draggedItem: item,
-      offsetX: 0,
-      offsetY: 0,
-      originalX: item.position?.x ?? 0,
-      originalY: item.position?.y ?? 0,
-      pixelX: 0,
-      pixelY: 0,
-    });
-    (e.target as HTMLElement).setPointerCapture(e.pointerId);
-  };
+      state: 'down',
+      cursorItemOffset: {
+        x: offsetX,
+        y: offsetY,
+      },
+      position: {
+        x: item.position.x,
+        y: item.position.y,
+        pixel: {
+          x: pointerX + offsetX,
+          y: pointerY + offsetY,
+        }
+      },
+      fromSlot: slotType || null,
+    };
 
-  const handlePointerDown = (e: React.PointerEvent, item: Item) => {
-    if (!item.id) return;
-
-    const rect = containerRef.current?.getBoundingClientRect();
-    if (!rect) return;
-
-    const pointerX = e.clientX - rect.left;
-    const pointerY = e.clientY - rect.top;
-    const pixelX = (item.position.x ?? 0) * cellSize;
-    const pixelY = (item.position.y ?? 0) * cellSize;
-
-    setDragState({
-      draggedItem: item,
-      offsetX: pointerX - pixelX,
-      offsetY: pointerY - pixelY,
-      originalX: item.position.x ?? 0,
-      originalY: item.position.y ?? 0,
-      pixelX,
-      pixelY,
-    });
+    setDragState(newDragState);
     (e.target as HTMLElement).setPointerCapture(e.pointerId);
   };
 
   const handlePointerMove = (e: React.PointerEvent) => {
-    if (!dragState) return;
+    if (dragState.state === 'up') return;
     const rect = containerRef.current?.getBoundingClientRect();
     if (!rect) return;
     const pointerX = e.clientX - rect.left;
     const pointerY = e.clientY - rect.top;
-    const px = pointerX - dragState.offsetX;
-    const py = pointerY - dragState.offsetY;
-    setDragState({ ...dragState, pixelX: px, pixelY: py });
+    const px = pointerX + dragState.cursorItemOffset.x;
+    const py = pointerY + dragState.cursorItemOffset.y;
+    const newDragState = {
+      ...dragState,
+      state: 'move',
+      position: {
+        ...dragState.position,
+        pixel: {
+          x: px,
+          y: py,
+        }
+      },
+    };
+    setDragState(newDragState);
   };
 
   const handlePointerUp = (e: React.PointerEvent) => {
-    if (!dragState) return;
-    const { draggedItem, pixelX, pixelY, originalX, originalY } = dragState;
-    const handled = handleDropItem(draggedItem, e.clientX, e.clientY);
-    if (!handled) {
-      const gridX = Math.round(pixelX / cellSize);
-      const gridY = Math.round(pixelY / cellSize);
-      if (draggedItem) {
-        const w = draggedItem.size.width ?? 1;
-        const h = draggedItem.size.height ?? 1;
-        if (canPlace(draggedItem, gridX, gridY, w, h)) {
-          hero.inventory.setPosition(draggedItem, gridX, gridY);
-        } else {
-          hero.inventory.setPosition(draggedItem, originalX, originalY);
-        }
-      }
-    }
-    setDragState(null);
+    if (dragState.state === 'up') return;
+    const handled = handleDropItem(dragState, e.clientX, e.clientY);
+
+    const newDragState = {
+      ...dragState,
+      state: 'up',
+    };
+    setDragState(newDragState);
     (e.target as HTMLElement).releasePointerCapture(e.pointerId);
   };
 
-  const handleDropItem = (item: Item, clientX: number, clientY: number): boolean => {
+  const handleDropItem = (dragState: ItemDragState, clientX: number, clientY: number): boolean => {
     const slots = [
-      { ref: weaponRef, slot: 'weapon' as const },
-      { ref: armourRef, slot: 'armour' as const },
+      { ref: inventoryRef, slot: 'inventory' },
+      { ref: weaponRef, slot: ItemType.Weapon },
+      { ref: armorRef, slot: ItemType.Armor },
     ];
     for (const { ref, slot } of slots) {
+      if (!ref) continue;
+      if (!ref.current) continue;
       const el = ref.current;
-      if (!el) continue;
       const rect = el.getBoundingClientRect();
-      if (
-        clientX >= rect.left &&
+      if ( clientX >= rect.left &&
         clientX <= rect.right &&
         clientY >= rect.top &&
-        clientY <= rect.bottom
-      ) {
-        hero.equipment.equipItem(item, slot);
-        return true;
+        clientY <= rect.bottom ) {
+          if(slot === dragState.draggedItem.type) {
+            if(hero.inventory.equipment[slot]) {
+              hero.inventory.equipment.unequipItem(slot);
+              hero.inventory.addItem(hero.inventory.equipment[slot]); 
+            }
+            hero.inventory.equipment.equipItem(dragState.draggedItem, slot);
+            hero.inventory.addItem(dragState.draggedItem, 0, 0, slot);          
+            return true;
+          }
+          if (slot === 'inventory') {
+            // client - rect (cursor relative to inventory) - offset (initial click offset) - cellSize (fix) - 10 (UX fix)
+            const pointerX = (clientX - rect.left) + (dragState.cursorItemOffset.x / 2);
+            const pointerY = (clientY - rect.top) + (dragState.cursorItemOffset.y / 2);
+            const gridX = Math.floor(pointerX / cellSize);
+            const gridY = Math.floor(pointerY / cellSize);
+            dragState.draggedItem.type ? hero.inventory.equipment.unequipItem(dragState.draggedItem.position.slot) : '';
+            console.log(`handleDropItem > dragState.draggedItem.position.slot: ${dragState.draggedItem.position.slot}`);
+            hero.inventory.addItem(dragState.draggedItem, gridX, gridY);
+            return true;
+          }
       }
     }
     return false;
@@ -168,8 +218,12 @@ export default function CharacterOverview({ weaponRef, armourRef }: Props) {
 
   return (
 
-    <div className="absolute justify-center z-20 bg-gray-800 p-4 rounded-lg shadow-lg">
-      <div className="bg-gray-700 text-sm rounded-md p-4 shadow-md w-full mx-auto">
+    <div className="absolute justify-center z-20 bg-gray-800 p-4 rounded-lg shadow-lg" 
+      ref={containerRef}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+    >
+      <div id="character-sheet" className="bg-gray-700 text-sm rounded-md p-4 shadow-md w-full mx-auto">
         <h2 className="text-xl font-bold text-orange-500 text-center">{hero.name}</h2>
         <h4 className="font-bold text-white mb-4 text-center">{hero.class.charAt(0).toUpperCase() + hero.class.slice(1)} Level {hero.level}</h4>
         <div className="space-y-1">
@@ -178,60 +232,37 @@ export default function CharacterOverview({ weaponRef, armourRef }: Props) {
           <div>Strength: {effectiveStats.str}</div>
           <div>Intelligence: {effectiveStats.int}</div>
           <div>Dexterity: {effectiveStats.dex}</div>
+          <div id="character-equipment-slots" className="relative mt-6 flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
+            <CharacterEquipmentSlot
+              slotType="weapon"
+              slotRef={weaponRef}
+              cellSize={cellSize}
+              onDragStart={handlePointerDown}
+              dragState={dragState}
+            />
+            <CharacterEquipmentSlot
+              slotType="armor"
+              slotRef={armorRef}
+              cellSize={cellSize}
+              onDragStart={handlePointerDown}
+              dragState={dragState}
+            />
+          </div>
         </div>
       </div>
-      <div
-        ref={containerRef}
-        className="relative mt-6 w-full"
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-      >
-        <div className="mt-6 mb-6 flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
-          <CharacterEquipmentSlot
-            item={hero.equipment.weapon}
-            slotType="weapon"
-            slotRef={weaponRef}
-            cellSize={cellSize}
-            onDragStart={handlePointerDownFromSlot}
-            dragState={dragState}
-          />
-          <CharacterEquipmentSlot
-            item={hero.equipment.armor}
-            slotType="armor"
-            slotRef={armourRef}
-            cellSize={cellSize}
-            onDragStart={handlePointerDownFromSlot}
-            dragState={dragState}
-          />
-        </div>
-        <div
-          className="grid w-full h-full"
-          style={{
-            gridTemplateColumns: `repeat(${invCols}, 1fr)`,
-            gridTemplateRows: `repeat(${invRows}, 1fr)`,
-          }}
-        >
+      <div id="character-inventory-grid" className="mt-6 w-full">
+        <div className="relative grid w-full h-full" 
+          ref={inventoryRef}
+          onDragStart={handlePointerDown}
+          style={{ gridTemplateColumns: `repeat(${invCols}, 1fr)`, gridTemplateRows: `repeat(${invRows}, 1fr)`, }} >
           {Array.from({ length: invRows * invCols }).map((_, idx) => (
-            <div
-              key={idx}
-              className="border border-gray-700"
-              style={{
-                width: `${cellSize}px`,
-                height: `${cellSize}px`,
-              }}
-            />
+            <div key={idx} className="border border-gray-700" style={{ width: `${cellSize}px`, height: `${cellSize}px`, }} />
           ))}
         </div>
-        {hero.inventory.items.map((item) => (
-          <ItemComp
-            key={item.id}
-            item={item}
-            dragState={dragState}
-            cellSize={cellSize}
-            handlePointerDown={handlePointerDown}
-          />
-        ))}
       </div>
+      {hero.inventory.items.map((item) => (
+        <ItemComp key={item.id} item={item} dragState={dragState} cellSize={cellSize} handlePointerDown={handlePointerDown} offset={invOffset} slotOffsets={{ weapon: weaponOffset, armor: armorOffset }} slotSizes={{ weapon: weaponSize, armor: armorSize }} />
+      ))}
     </div>
   );
 }

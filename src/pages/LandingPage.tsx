@@ -24,6 +24,7 @@ export default function LandingPage({ onEnterTavern }: LandingPageProps) {
   const enterTavern = (heroName: string, heroClass: HeroClass ) => {
     hero.setName(heroName)
     hero.setClass(heroClass)
+    hero.inventory.resetMatrix()
     onEnterTavern()
   };
 

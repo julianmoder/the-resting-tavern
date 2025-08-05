@@ -8,10 +8,12 @@ import type { StageSlice } from './stageSlice';
 import { createStageSlice } from './stageSlice';
 import type { HeroSlice } from './heroSlice';
 import { createHeroSlice } from './heroSlice';
+import type { InventorySlice } from './inventorySlice';
+import { createInventorySlice } from './inventorySlice';
 import type { QuestSlice } from './questSlice';
 import { createQuestSlice } from './questSlice';
 
-interface AppState extends UISlice, ModalSlice, StageSlice, HeroSlice, QuestSlice {}
+interface AppState extends UISlice, ModalSlice, StageSlice, HeroSlice, InventorySlice, QuestSlice {}
 
 export const useAppStore = create<AppState>()(
   persist(
@@ -20,6 +22,7 @@ export const useAppStore = create<AppState>()(
       ...createModalSlice(...a),
       ...createStageSlice(...a),
       ...createHeroSlice(...a),
+      ...createInventorySlice(...a),
       ...createQuestSlice(...a)
     }),
     {

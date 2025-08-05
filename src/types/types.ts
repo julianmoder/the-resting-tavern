@@ -38,12 +38,15 @@ export interface Hero {
   level: number,
   leveledUp: boolean,
   inventory: Inventory,
-  equipment: Equipment,
 }
 
 export interface Inventory {
   coins: number,
   items: Item[],
+  equipment: Equipment,
+  cols: number,
+  rows: number,
+  matrix: [ { x: number, y: number, id: string } ]
 }
 
 export interface Equipment {
@@ -62,6 +65,7 @@ export interface Item extends ItemTemplate {
   position: {
     x: number, 
     y: number,
+    slot: ItemType,
   }
 }
 
@@ -92,6 +96,25 @@ export enum ItemRarity {
   Epic = 'epic',
   Legendary = 'legendary',
   Mythic = 'mythic',
+}
+
+export interface ItemDragState {
+  draggedItem: Item;
+  state: string,
+  cursorItemOffset: {
+    x: number,
+    y: number,
+  },
+  position: {
+    x: number,
+    y: number,
+  }
+  fromSlot: string;
+}
+
+export interface Vector2D {
+  x: number,
+  y: number,
 }
 
 export interface Quest {

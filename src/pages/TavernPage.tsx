@@ -14,8 +14,6 @@ export default function TavernPage({ onStartQuest }: TavernPageProps) {
   const [randomQuestion] = useState(questQuestions[Math.floor(Math.random() * questQuestions.length)]);
   const [questNameInput, setQuestNameInput] = useState('');
   const [questDuration, setQuestDuration] = useState(25);
-  const weaponRef = useRef<HTMLDivElement | null>(null);
-  const armourRef = useRef<HTMLDivElement | null>(null);
   const canStart = questNameInput.trim().length > 0;
   const setQuest = useAppStore(s => s.setQuest);
   const hero = useHero();
@@ -33,7 +31,7 @@ export default function TavernPage({ onStartQuest }: TavernPageProps) {
 
       {/* Charakter Overview */}
       {ui.sidebar.showCharacter && (
-          <CharacterOverview weaponRef={weaponRef} armourRef={armourRef} />
+          <CharacterOverview />
       )}
 
       {/* Main Content */}
