@@ -11,7 +11,7 @@ export const itemTemplatesArmors = [
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',
-    dropChance: 100,
+    dropChance: 500,
     size: {
       width: 2, 
       height: 2,
@@ -25,7 +25,7 @@ export const itemTemplatesArmors = [
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',
-    dropChance: 50,
+    dropChance: 200,
     size: {
       width: 2, 
       height: 2,
@@ -55,7 +55,7 @@ export const itemTemplatesArmors = [
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',
-    dropChance: 100,
+    dropChance: 500,
     size: {
       width: 2, 
       height: 2,
@@ -69,7 +69,7 @@ export const itemTemplatesArmors = [
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',
-    dropChance: 50,
+    dropChance: 200,
     size: {
       width: 2, 
       height: 2,
@@ -99,7 +99,7 @@ export const itemTemplatesArmors = [
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',
-    dropChance: 100,
+    dropChance: 500,
     size: {
       width: 2, 
       height: 2,
@@ -113,7 +113,7 @@ export const itemTemplatesArmors = [
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text',
-    dropChance: 50,
+    dropChance: 200,
     size: {
       width: 2, 
       height: 2,

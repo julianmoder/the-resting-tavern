@@ -4,14 +4,14 @@ export const itemTemplatesWeapons = [
 
 // melee weapons
   {
-    name: 'Wooden Sword',
+    name: 'Wooden Club',
     type: ItemType.Weapon,
     category: 'melee',
     rarity: ItemRarity.Common,
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text.',
-    dropChance: 100,
+    dropChance: 500,
     size: {
       width: 1, 
       height: 3,
@@ -25,10 +25,10 @@ export const itemTemplatesWeapons = [
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text.',
-    dropChance: 50,
+    dropChance: 200,
     size: {
       width: 1, 
-      height: 3,
+      height: 4,
     }
   },
   {
@@ -48,16 +48,16 @@ export const itemTemplatesWeapons = [
 
 // ranged weapons
   {
-    name: 'Simple Bow',
+    name: 'Simple Crossbow',
     type: ItemType.Weapon,
     category: 'ranged',
     rarity: ItemRarity.Common,
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text.',
-    dropChance: 100,
+    dropChance: 500,
     size: {
-      width: 1, 
+      width: 2, 
       height: 3,
     }
   },
@@ -69,10 +69,10 @@ export const itemTemplatesWeapons = [
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text.',
-    dropChance: 50,
+    dropChance: 200,
     size: {
-      width: 1, 
-      height: 3,
+      width: 2, 
+      height: 4,
     }
   },
   {
@@ -92,14 +92,14 @@ export const itemTemplatesWeapons = [
 
 // spell weapons
   {
-    name: 'Oak Staff',
+    name: 'Oak Wand',
     type: ItemType.Weapon,
     category: 'spell',
     rarity: ItemRarity.Common,
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text.',
-    dropChance: 100,
+    dropChance: 500,
     size: {
       width: 1, 
       height: 3,
@@ -113,10 +113,10 @@ export const itemTemplatesWeapons = [
     level: 1,
     affixes: ['str', 'int', 'dex'],
     fluff: 'This is the fluff text.',
-    dropChance: 50,
+    dropChance: 200,
     size: {
       width: 1, 
-      height: 3,
+      height: 4,
     }
   },
   {
