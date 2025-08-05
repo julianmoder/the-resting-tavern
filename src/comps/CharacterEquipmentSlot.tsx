@@ -22,7 +22,7 @@ export default function CharacterEquipmentSlot({ item, slotType, slotRef, cellSi
       : 'border border-3 border-gray-500 bg-gray-900';
 
   return (
-    <div ref={slotRef} className="relative flex-1 h-32 border-2 border-gray-700 rounded-lg bg-gray-800 flex items-center justify-center">
+    <div ref={slotRef} className="relative flex-1 max-w-42 h-42 border-2 border-gray-700 rounded-lg bg-gray-800 flex items-center justify-center">
       <span className="text-xs text-gray-500 select-none">
         {slotType === 'weapon' ? 'Weapon' : 'Armor'}
       </span>

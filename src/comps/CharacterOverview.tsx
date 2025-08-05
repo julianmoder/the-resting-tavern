@@ -207,7 +207,6 @@ export default function CharacterOverview() {
             const gridX = Math.floor(pointerX / cellSize);
             const gridY = Math.floor(pointerY / cellSize);
             dragState.draggedItem.type ? hero.inventory.equipment.unequipItem(dragState.draggedItem.position.slot) : '';
-            console.log(`handleDropItem > dragState.draggedItem.position.slot: ${dragState.draggedItem.position.slot}`);
             hero.inventory.addItem(dragState.draggedItem, gridX, gridY);
             return true;
           }
@@ -232,7 +231,7 @@ export default function CharacterOverview() {
           <div>Strength: {effectiveStats.str}</div>
           <div>Intelligence: {effectiveStats.int}</div>
           <div>Dexterity: {effectiveStats.dex}</div>
-          <div id="character-equipment-slots" className="relative mt-6 flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
+          <div id="character-equipment-slots" className="relative mt-6 flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0 items-center justify-center">
             <CharacterEquipmentSlot
               slotType="weapon"
               slotRef={weaponRef}
