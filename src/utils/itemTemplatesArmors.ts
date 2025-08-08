@@ -92,7 +92,7 @@ export const itemTemplatesArmors = [
 
 // heavy armors
   {
-    name: 'Chain Shirt',
+    name: 'Chainmail',
     type: ItemType.Armor,
     class: ItemClass.Heavy,
     rarity: ItemRarity.Common,
@@ -106,7 +106,7 @@ export const itemTemplatesArmors = [
     }
   },
   {
-    name: 'Scale Mail',
+    name: 'Scale Armor',
     type: ItemType.Armor,
     class: ItemClass.Heavy,
     rarity: ItemRarity.Uncommon,
