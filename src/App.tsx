@@ -1,12 +1,13 @@
 import { useAppStore } from './store/useAppStore';
 import Header from './comps/Header';
+import Modal from './comps/Modal';
 import LandingPage from './pages/LandingPage';
 import TavernPage from './pages/TavernPage';
 import QuestPage from './pages/QuestPage';
 import BossPage from './pages/BossPage';
 import LootPage from './pages/LootPage';
 import BreakPage from './pages/BreakPage';
-import { Stage } from './types/types';
+import { Stage } from './types/base';
 
 export default function App() {
   const stage = useAppStore((s) => s.stage);
@@ -36,6 +37,8 @@ export default function App() {
               <p>no content</p>
             )
           }
+
+          <Modal />
 
         </div>
       </main>

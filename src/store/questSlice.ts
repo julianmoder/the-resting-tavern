@@ -1,13 +1,14 @@
-import type { StateCreator } from 'zustand'
-import type { Hero, Quest } from '../types/types';
-import { prefixQuestName } from '../utils/questPrefixes';
-import { largeItemWeapons } from '../utils/largeItemWeapons';
-import { largeItemArmors } from '../utils/largeItemArmors';
+import type { StateCreator } from 'zustand';
+import type { Hero, Quest, Item } from '../types/base';
+import { questPrefixes } from '../utils/questPrefixes';
+import { randomItemWeighted } from '../utils/itemGeneration';
 import { BASE_XP } from '../utils/levelProgression';
 
 export interface QuestSlice {
   quest: Quest;
   setQuest: (n: string, d: number, h: Hero) => void;
+  setXpEarned: () => void;
+  setLootGained: () => void;
   resetQuest: () => void;
 }
 
@@ -22,20 +23,34 @@ export const createQuestSlice: StateCreator<QuestSlice, [], [], QuestSlice> = (s
       coins: 0,
       itemChoices: [],
     },
+    xpEarned: false,
+    lootGained: false,
   },
   setQuest: (newName: string, newDuration: number, hero: Hero) => {
-    const prefixedName = prefixQuestName(newName);
+    const randomPrefix = questPrefixes[Math.floor(Math.random() * questPrefixes.length)];
+    const prefixedName = newName.trim() ? `${randomPrefix} ${newName.trim()}` : '';
     const newBreakTime = Math.floor(newDuration / 5);
     const newLevel = Math.floor(Math.random() + 0.5) + hero.level;
-
-    function randomChoice<T>(arr: T[]): T {
-      return arr[Math.floor(Math.random() * arr.length)];
-    }
-
     const xp = BASE_XP * newLevel;
     const coins = Math.floor(Math.random() * 50) + 10 * newLevel;
-    const itemPool = [...largeItemWeapons, ...largeItemArmors];
-    const itemChoices = [randomChoice(itemPool), randomChoice(itemPool), randomChoice(itemPool), randomChoice(itemPool), randomChoice(itemPool)];
+
+    let itemChoiceCount = 2;
+
+    if (newLevel > 99) {
+      itemChoiceCount = 6;
+    } else if (newLevel > 44) {
+      itemChoiceCount = 5;
+    } else if (newLevel > 14) {
+      itemChoiceCount = 4;
+    } else if (newLevel > 4) {
+      itemChoiceCount = 3;
+    }
+
+    const itemChoices: Item[] = [];
+    for (let i = 0; i < itemChoiceCount; i++) {
+      itemChoices.push(randomItemWeighted(hero.level));
+    }
+
     const newLoot = {xp, coins, itemChoices};
 
     const quest = {
@@ -43,10 +58,22 @@ export const createQuestSlice: StateCreator<QuestSlice, [], [], QuestSlice> = (s
       duration: newDuration,
       breakTime: newBreakTime, 
       level: newLevel,
-      loot: newLoot
+      loot: newLoot,
+      xpEarned: false,
+      lootGained: false,
     }
     
     set({ quest });
+  },
+  setXpEarned: () => {
+    set((state) => ({
+      quest: { ...state.quest, xpEarned: true },
+    }))
+  },
+  setLootGained: () => {
+    set((state) => ({
+      quest: { ...state.quest, lootGained: true },
+    }))
   },
   resetQuest: () => {
     const quest = {
@@ -59,6 +86,8 @@ export const createQuestSlice: StateCreator<QuestSlice, [], [], QuestSlice> = (s
         coins: 0,
         itemChoices: [],
       },
+      xpEarned: false,
+      lootGained: false,
     }
     set({ quest });
   },

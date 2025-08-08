@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { Quest } from '../types/types';
+import type { Quest } from '../types/base';
 
 type QuestPageProps = {
   quest: Quest;
