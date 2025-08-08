@@ -11,6 +11,10 @@ export default function CharacterEquipmentSlot({ item, slotType, slotRef, cellSi
   const rarityClasses =
     item?.rarity === 'legendary'
       ? 'border-yellow-700 bg-yellow-950'
+      : item?.rarity === 'mythic'
+      ? 'border-rose-700 bg-rose-950'
+      : item?.rarity === 'epic'
+      ? 'border-purple-700 bg-purple-950'
       : item?.rarity === 'rare'
       ? 'border-blue-700 bg-blue-950'
       : item?.rarity === 'uncommon'

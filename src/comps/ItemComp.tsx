@@ -59,11 +59,15 @@ export default function ItemComp({ item, dragState, cellSize, handlePointerDown,
   }
   
   const rarityClasses =
-    item.rarity === 'legendary'
+    item?.rarity === 'legendary'
       ? 'border border-3 border-yellow-500 bg-yellow-900'
-      : item.rarity === 'rare'
+      : item?.rarity === 'mythic'
+      ? 'border border-3 border-rose-500 bg-rose-900'
+      : item?.rarity === 'epic'
+      ? 'border border-3 border-purple-500 bg-purple-900'
+      : item?.rarity === 'rare'
       ? 'border border-3 border-blue-500 bg-blue-900'
-      : item.rarity === 'uncommon'
+      : item?.rarity === 'uncommon'
       ? 'border border-3 border-green-500 bg-green-900'
       : 'border border-3 border-stone-400 bg-stone-800';
 

@@ -40,11 +40,15 @@ export default function ItemCard({ item, visible, x, y, anchorRef, onRequestClos
   const [pos, setPos] = useState<{ left: number; top: number }>({ left: 0, top: 0 });
 
   const rarityClasses =
-    item.rarity === 'legendary'
+    item?.rarity === 'legendary'
       ? 'border border-3 border-yellow-500'
-      : item.rarity === 'rare'
-      ? 'border border-3 border-blue-500'
-      : item.rarity === 'uncommon'
+      : item?.rarity === 'mythic'
+      ? 'border border-3 border-rose-500'
+      : item?.rarity === 'epic'
+      ? 'border border-3 border-purple-500'
+      : item?.rarity === 'rare'
+      ? 'border border-3 border-blue-50-950'
+      : item?.rarity === 'uncommon'
       ? 'border border-3 border-green-500'
       : 'border border-3 border-stone-400';
 
