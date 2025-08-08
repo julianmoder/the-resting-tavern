@@ -41,7 +41,7 @@ export default function LandingPage({ onEnterTavern }: LandingPageProps) {
         <input className='p-2 text-center text-orange-500 focus:text-orange-500 focus:outline-orange-500 focus:outline-2 font-semibold border-solid border-3 leading-1 rounded-xl'
           type='text'
           value={name}
-          onChange={(e) => hero.setName(e.target.value)}
+          onChange={(e) => setName(e.target.value)}
           placeholder={'Enter your hero\'s name'}
         />
 
