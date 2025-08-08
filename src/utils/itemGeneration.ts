@@ -6,6 +6,26 @@ import { itemTemplatesArmors } from '../utils/itemTemplatesArmors';
 
 const defaultItemTemplates = [...itemTemplatesWeapons, ...itemTemplatesArmors];
 
+const defaultConfig: DropConfig = {
+  levelWindow: 5,
+  hardClamp: true,
+  rarityWeights: {
+    legendary: 1,
+    epic: 1,
+    rare: 1,
+    uncommon: 1,
+    common: 1,
+  },
+  classWeights: {
+    melee: 1,
+    ranged: 1,
+    spell: 1,
+    light: 1,
+    medium: 1,
+    heavy: 1,
+  },
+};
+
 function generateItem(template: ItemTemplate): Item {
   const item = {
     ...template,
@@ -43,21 +63,46 @@ function calcModifier(level: number): number {
   return Math.round(value);
 }
 
-export function randomItemWeighted(heroLevel: number, templateArray: ItemTemplate[] = defaultItemTemplates): Item {
-  const totalWeight = templateArray.reduce((sum: number, tpl: ItemTemplate) => {
-    if((heroLevel * 10) < tpl.dropChance){
-      return sum + (tpl.dropChance ?? 0)
-    }
-    return sum
-  }, 0);
+function rarityWeight(rarity: string, cfg: DropConfig) {
+  return cfg.rarityWeights?.[rarity] ?? 1;
+}
 
-  let threshold = Math.random() * totalWeight;
-  for (const tpl of templateArray) {
-    threshold -= tpl.dropChance ?? 0;
+function classWeight(cls: string, cfg: DropConfig) {
+  return cfg.classWeights?.[cls] ?? 1;
+}
+
+function softLevelPenalty(tplLevel: number, heroLevel: number, cfg: DropConfig) {
+  if (cfg.hardClamp) return 1; 
+  const w = cfg.levelWindow ?? defaultConfig.levelWindow!;
+  const distance = Math.max(0, Math.abs(tplLevel - heroLevel) - w);
+  return 1 / (1 + 0.15 * distance);
+}
+
+export function randomItemWeighted(heroLevel: number, templateArray: ItemTemplate[] = defaultItemTemplates, cfg: DropConfig = defaultConfig): Item {
+  const pool = templateArray.filter(tpl => eligibleByLevel(tpl, heroLevel, cfg));
+  const effectivePool = pool.length > 0 ? pool : templateArray;
+
+  const weights = effectivePool.map((tpl) => {
+    const base = tpl.dropChance ?? 0;
+    const wR = rarityWeight(String(tpl.rarity), cfg);
+    const wC = classWeight(String(tpl.class), cfg);
+    const wL = softLevelPenalty(tpl.level, heroLevel, cfg);
+    return Math.max(0, base * wR * wC * wL);
+  });
+
+  const total = weights.reduce((s, w) => s + w, 0);
+  if (total <= 0) {
+    return generateItem(effectivePool[effectivePool.length - 1]);
+  }
+
+  let threshold = Math.random() * total;
+  for (let i = 0; i < effectivePool.length; i++) {
+    threshold -= weights[i];
     if (threshold <= 0) {
-      return generateItem(tpl);
+      return generateItem(effectivePool[i]);
     }
   }
+
   return generateItem(templateArray[templateArray.length - 1]);
 }
 

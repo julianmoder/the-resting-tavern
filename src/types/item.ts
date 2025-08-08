@@ -65,3 +65,10 @@ export interface ItemDragState {
   pixel: Vector2D;
   fromSlot: string | null;
 }
+
+export interface DropConfig {
+  levelWindow?: number;
+  hardClamp?: boolean;
+  rarityWeights?: Partial<Record<string, number>>;
+  classWeights?: Partial<Record<string, number>>;
+};

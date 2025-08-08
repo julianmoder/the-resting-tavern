@@ -5,7 +5,7 @@ export type { Modal } from './modal';
 export { HeroClass } from './hero';
 export type { Hero, HeroStats, Equipment } from './hero';
 export { ItemType, ItemClass, ItemRarity } from './item';
-export type { Item, ItemModifier, ItemTemplate, ItemDragState } from './item';
+export type { Item, ItemModifier, ItemTemplate, ItemDragState, DropConfig } from './item';
 export type { Inventory, Vector2D } from './inventory';
 export type { Quest, Loot } from './quest';
 
