@@ -3,8 +3,9 @@ export { ModalType } from './modal';
 export type { Modal } from './modal';
 export { HeroClass } from './hero';
 export type { Hero, HeroStats, Equipment } from './hero';
-export { ItemType, ItemRarity } from './inventory';
-export type { Item, ItemDragState, Inventory, Vector2D } from './inventory';
+export { ItemType, ItemClass, ItemRarity } from './item';
+export type { Item, ItemDragState } from './item';
+export type { Inventory, Vector2D } from './inventory';
 export type { Quest, Loot } from './quest';
 
 export enum Stage {
