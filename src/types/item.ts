@@ -27,13 +27,15 @@ export enum ItemRarity {
 export interface Item extends ItemTemplate {
   id: string,
   power: number,
-  modifier: {
-    str: number,
-    int: number,
-    dex: number,
-  },
+  modifier: ItemModifier,
   position: Vector2D,
   slot: ItemType | null,
+}
+
+export interface ItemModifier {
+  str: number,
+  int: number,
+  dex: number,
 }
 
 export interface ItemTemplate {
