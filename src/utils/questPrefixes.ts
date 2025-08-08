@@ -1,4 +1,4 @@
-export function prefixQuestName (name) {
+export function prefixQuestName (name: string) {
   const randomPrefix = questPrefixes[Math.floor(Math.random() * questPrefixes.length)];
   const prefixedName = name.trim() ? `${randomPrefix} ${name.trim()}` : '';
 

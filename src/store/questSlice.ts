@@ -1,6 +1,6 @@
 import type { StateCreator } from 'zustand';
 import type { Hero, Quest, Item } from '../types/base';
-import { questPrefixes } from '../utils/questPrefixes';
+import { prefixQuestName } from '../utils/questPrefixes';
 import { randomItemWeighted } from '../utils/itemGeneration';
 import { BASE_XP } from '../utils/levelProgression';
 
@@ -27,8 +27,7 @@ export const createQuestSlice: StateCreator<QuestSlice, [], [], QuestSlice> = (s
     lootGained: false,
   },
   setQuest: (newName: string, newDuration: number, hero: Hero) => {
-    const randomPrefix = questPrefixes[Math.floor(Math.random() * questPrefixes.length)];
-    const prefixedName = newName.trim() ? `${randomPrefix} ${newName.trim()}` : '';
+    const prefixedName = prefixQuestName(newName);
     const newBreakTime = Math.floor(newDuration / 5);
     const newLevel = Math.floor(Math.random() + 0.5) + hero.level;
     const xp = BASE_XP * newLevel;

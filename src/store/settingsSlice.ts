@@ -1,7 +1,10 @@
 import type { StateCreator } from 'zustand';
+import type { AppSettings } from '../types/base';
+
 
 export interface SettingsSlice {
   settings: AppSettings;
+  setInvCellSize: (newCellSize: number) => void;
 }
 
 export const DEFAULT_SETTINGS = {
