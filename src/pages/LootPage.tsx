@@ -33,7 +33,7 @@ export default function LootPage({ quest, onLootTake }: LootPageProps) {
     if (quest.lootGained) return;
     setLootGained();
 
-    hero.inventory.addCoins(quest.loot.coins);
+    hero.addCoins(quest.loot.coins);
     const itemAdded = hero.inventory.addItem(item);
     if(!itemAdded) {
       modal.sendModalMessage('Your Bags are full!', `There\'s no space for ${item.name}!`);

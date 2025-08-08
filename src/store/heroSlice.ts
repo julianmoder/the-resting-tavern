@@ -9,6 +9,8 @@ export interface HeroSlice {
   setHeroClass: (newClass: HeroClass) => void;
   addHeroXp: (addXp: number) => { xp: number, level: number, leveledUp: boolean };
   getHeroEffectiveStats: () => HeroStats;
+  addHeroCoins: (addCoins: number) => void;
+  removeHeroCoins: (removeCoins: number) => void;
 }
 
 export const createHeroSlice: StateCreator<HeroSlice, [], [], HeroSlice> = (set, get) => ({
@@ -129,5 +131,21 @@ export const createHeroSlice: StateCreator<HeroSlice, [], [], HeroSlice> = (set,
     }
 
     return { str, int, dex, health, maxHealth, energy, maxEnergy };
+  },
+  addHeroCoins: (addCoins: number) => {
+    set((state) => ({
+      hero: {
+        ...state.hero,
+        coins: state.hero.inventory.coins + addCoins,
+      }
+    }))
+  },
+  removeHeroCoins: (removeCoins: number) => {
+    set((state) => ({
+      hero: {
+        ...state.hero,
+        coins: state.hero.inventory.coins - removeCoins,
+      }
+    }))
   },
 });

@@ -4,8 +4,6 @@ import { ItemType } from '../types/base';
 
 export interface InventorySlice {
   resetInvMatrix: () => void;
-  addInvCoins: (addCoins: number) => void;
-  removeInvCoins: (removeCoins: number) => void;
   addInvItem: (addItem: Item, targetX?: number, targetY?: number, equipSlot?: ItemType) => Vector2D;
   removeInvItem: (removeItem: Item) => void;
   equipInvItem: (item: Item, slot: ItemType) => void;
@@ -81,28 +79,6 @@ export const createInventorySlice: StateCreator<InventorySlice, [], [], Inventor
           rows: rows,
           cols: cols,
           matrix: resetMatrix,
-        }
-      }
-    }))
-  },
-  addInvCoins: (addCoins: number) => {
-    set((state) => ({
-      hero: {
-        ...state.hero,
-        inventory: {
-          ...state.hero.inventory,
-          coins: state.hero.inventory.coins + addCoins,
-        }
-      }
-    }))
-  },
-  removeInvCoins: (removeCoins: number) => {
-    set((state) => ({
-      hero: {
-        ...state.hero,
-        inventory: {
-          ...state.hero.inventory,
-          coins: state.hero.inventory.coins - removeCoins,
         }
       }
     }))
