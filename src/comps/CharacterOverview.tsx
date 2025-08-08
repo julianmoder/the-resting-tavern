@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
+import { useSettings } from '../hooks/useSettings';
 import { useHero } from '../hooks/useHero';
 import { useInventory } from '../hooks/useInventory';
 import ItemComp from '../comps/ItemComp';
@@ -7,6 +8,7 @@ import { ItemType } from '../types/base';
 import CharacterEquipmentSlot from '../comps/CharacterEquipmentSlot';
 
 export default function CharacterOverview() {
+  const settings = useSettings();
   const hero = useHero();
   const inventory = useInventory(hero.inventoryID);
   const effectiveStats = hero.getEffectiveStats()
@@ -18,7 +20,7 @@ export default function CharacterOverview() {
   const inventoryRef = useRef<HTMLDivElement>(null);
   const weaponRef = useRef<HTMLDivElement>(null);
   const armorRef = useRef<HTMLDivElement>(null);
-  const [cellSize, setCellSize] = useState(32);
+  const cellSize = settings.inventory.cellSize;
   const [invOffset, setInvOffset] = useState({ x: 0, y: 0 });
   const [weaponOffset, setWeaponOffset] = useState({ x: 0, y: 0 });
   const [armorOffset, setArmorOffset] = useState({ x: 0, y: 0 });
@@ -47,7 +49,7 @@ export default function CharacterOverview() {
     const updateSize = () => {
       if (inventoryRef.current) {
         const widthPx = inventoryRef.current.clientWidth;
-        setCellSize(widthPx / invCols);
+        settings.inventory.setCellSize(widthPx / invCols);
       }
       if (inventoryRef.current && containerRef.current) {
         const inventoryRect = inventoryRef.current.getBoundingClientRect();

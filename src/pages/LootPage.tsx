@@ -1,9 +1,11 @@
 import { useEffect } from 'react';
 import { useAppStore } from '../store/useAppStore';
+import { useSettings } from '../hooks/useSettings';
 import { useHero } from '../hooks/useHero';
 import { useInventory } from '../hooks/useInventory'
 import type { Quest, Item } from '../types/base';
 import CharacterOverview from '../comps/CharacterOverview';
+import ItemComp from '../comps/ItemComp';
 import { useUI } from '../hooks/useUI';
 import SideBar from '../comps/SideBar';
 import { useModal } from '../hooks/useModal';
@@ -15,6 +17,8 @@ type LootPageProps = {
 };
 
 export default function LootPage({ quest, onLootTake }: LootPageProps) {
+  const settings = useSettings();
+  const cellSize = settings.inventory.cellSize;
   const hero = useHero();
   const inventory = useInventory(hero.inventoryID);
   const ui = useUI();
@@ -52,9 +56,7 @@ export default function LootPage({ quest, onLootTake }: LootPageProps) {
 
       {/* Charakter Overview + Inventory */}
       {ui.sidebar.showCharacter && (
-        <div className="absolute justify-center z-20 bg-gray-800 p-4 rounded-lg shadow-lg">
-          <CharacterOverview />
-        </div>
+        <CharacterOverview />
       )}
 
       <div className='mb-12 text-center'>
@@ -69,20 +71,18 @@ export default function LootPage({ quest, onLootTake }: LootPageProps) {
       <div className='mt-4 grid grid-cols-1 md:grid-cols-2 gap-4'>
         { quest.loot.itemChoices && 
           quest.loot.itemChoices.map((item: Item, i: number) => (
-            <div key={i} className='p-3 flex flex-col text-center'>
-            <p className='mb-3 text-lg font-bold'>
-              {item.name} <br/><span className='text-sm font-normal'>(Attack {item.power})</span>
-            </p>
-            <button
-              className='bg-blue-500 hover:bg-blue-600 px-2 py-1 rounded-full text-white'
-              onClick={() => {
-                takeItem(item);
-              }}
-            >
-              Take
-            </button>
-          </div>
-          ))}
+        <div key={i} className='p-3 flex flex-col text-center items-center justify-end'>
+          <ItemComp key={item.id} item={item} cellSize={cellSize} />
+          <button
+            className='bg-blue-500 hover:bg-blue-600 mt-2 px-6 py-2 rounded-full text-white'
+            onClick={() => {
+              takeItem(item);
+            }}
+          >
+            Take
+          </button>
+        </div>
+        ))}
       </div>
     </>
   );
