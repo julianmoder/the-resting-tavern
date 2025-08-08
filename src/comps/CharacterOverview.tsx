@@ -170,8 +170,8 @@ export default function CharacterOverview() {
         clientY <= rect.bottom ) {
           if(dragState.draggedItem && slot === dragState.draggedItem.type) {
             if(hero.equipment[slot]) {
-              hero.unequipItem(slot);
               inventory.addItem(hero.equipment[slot]); 
+              hero.unequipItem(slot);
             }
             hero.equipItem(dragState.draggedItem, slot);
             inventory.addItem(dragState.draggedItem, 0, 0, slot);
