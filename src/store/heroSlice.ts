@@ -1,6 +1,7 @@
 import type { StateCreator } from 'zustand';
 import { v4 as uuidv4 } from 'uuid';
-import type { Hero, HeroStats, HeroClass } from '../types/base';
+import type { Hero, HeroStats, HeroClass, Item } from '../types/base';
+import { ItemType } from '../types/base';
 import { tryLevelUp } from '../utils/levelProgression';
 
 export interface HeroSlice {
@@ -8,9 +9,12 @@ export interface HeroSlice {
   setHeroName: (newName: string) => void;
   setHeroClass: (newClass: HeroClass) => void;
   addHeroXp: (addXp: number) => { xp: number, level: number, leveledUp: boolean };
+  attachHeroInventory: (id: string) => void;
   getHeroEffectiveStats: () => HeroStats;
   addHeroCoins: (addCoins: number) => void;
   removeHeroCoins: (removeCoins: number) => void;
+  equipHeroItem: (item: Item, slot: ItemType) => void;
+  unequipHeroItem: (slot: ItemType) => void;
 }
 
 export const createHeroSlice: StateCreator<HeroSlice, [], [], HeroSlice> = (set, get) => ({
@@ -30,17 +34,11 @@ export const createHeroSlice: StateCreator<HeroSlice, [], [], HeroSlice> = (set,
       int: 5,
       dex: 5,
     },
-    inventory: {
-      coins: 0,
-      items: [],
-      equipment: {
-        weapon: null,
-        armor: null,
-      },
-      cols: 0,
-      rows: 0,
-      matrix: [],
+    equipment: {
+      weapon: null,
+      armor: null,
     },
+    inventoryID: null,
   },
   setHeroName: (newName: string) => {
     set((state) => ({
@@ -61,15 +59,12 @@ export const createHeroSlice: StateCreator<HeroSlice, [], [], HeroSlice> = (set,
   addHeroXp: (addXp: number):{ xp: number, level: number, leveledUp: boolean } => {
     const state = get();
     if (!state.hero) return{ xp: 0, level: 0, leveledUp: false };
-
     const tryLevelUpResult = tryLevelUp(state.hero.xp + addXp, state.hero.level);
-
     let newMaxHealth = state.hero.stats.maxHealth;
     let newMaxEnergy = state.hero.stats.maxEnergy;
     let newStr = state.hero.stats.str;
     let newInt = state.hero.stats.int;
     let newDex = state.hero.stats.dex;
-
     if(tryLevelUpResult.leveledUp) {
       newMaxHealth = newMaxHealth + Math.floor(tryLevelUpResult.level / 2);
       newMaxEnergy = newMaxEnergy + Math.floor(tryLevelUpResult.level / 2);
@@ -83,7 +78,6 @@ export const createHeroSlice: StateCreator<HeroSlice, [], [], HeroSlice> = (set,
         ? newDex + Math.floor(tryLevelUpResult.level / 2) 
         : newDex + Math.floor(tryLevelUpResult.level / 3);
     }
-    
     set((state) => ({
       hero: {
         ...state.hero,
@@ -102,6 +96,14 @@ export const createHeroSlice: StateCreator<HeroSlice, [], [], HeroSlice> = (set,
     }))
     return tryLevelUpResult;
   },
+  attachHeroInventory: (id: string) => {
+    set((state) => ({
+      hero: {
+        ...state.hero,
+        inventoryID: id,
+      }
+    }))
+  },
   getHeroEffectiveStats: ():HeroStats  => {
     const state = get();
     const baseStats = state.hero?.stats ?? {
@@ -113,30 +115,26 @@ export const createHeroSlice: StateCreator<HeroSlice, [], [], HeroSlice> = (set,
       energy: 0, 
       maxEnergy: 0,
     };
-
     let { str, int, dex, health, maxHealth, energy, maxEnergy } = baseStats;
-
-    const weapon = state.hero?.inventory?.equipment?.weapon;
-    const armor = state.hero?.inventory?.equipment?.armor;
-
+    const weapon = state.hero?.equipment?.weapon;
+    const armor = state.hero?.equipment?.armor;
     if (weapon) {
       str += weapon?.modifier?.str ?? 0;
       int += weapon?.modifier?.int ?? 0;
       dex += weapon?.modifier?.dex ?? 0;
     }
-    if (state.hero?.inventory.equipment.armor) {
+    if (state.hero?.equipment.armor) {
       str += armor?.modifier?.str ?? 0;
       int += armor?.modifier?.int ?? 0;
       dex += armor?.modifier?.dex ?? 0;
     }
-
     return { str, int, dex, health, maxHealth, energy, maxEnergy };
   },
   addHeroCoins: (addCoins: number) => {
     set((state) => ({
       hero: {
         ...state.hero,
-        coins: state.hero.inventory.coins + addCoins,
+        coins: state.hero.coins + addCoins,
       }
     }))
   },
@@ -144,8 +142,30 @@ export const createHeroSlice: StateCreator<HeroSlice, [], [], HeroSlice> = (set,
     set((state) => ({
       hero: {
         ...state.hero,
-        coins: state.hero.inventory.coins - removeCoins,
+        coins: state.hero.coins - removeCoins,
       }
     }))
   },
+  equipHeroItem: (item: Item, slot: ItemType) => {
+    set((state) => ({
+      hero: {
+        ...state.hero,
+        equipment: {
+          ...state.hero.equipment,
+          [slot]: item,
+        },
+      }
+    }));
+  },
+  unequipHeroItem: (slot: ItemType) => {
+    set((state) => ({
+      hero: {
+        ...state.hero,
+        equipment: {
+          ...state.hero.equipment,
+          [slot]: null,
+        },
+      }
+    }));
+  }
 });

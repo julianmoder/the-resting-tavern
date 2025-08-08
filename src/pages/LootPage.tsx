@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useAppStore } from '../store/useAppStore';
 import { useHero } from '../hooks/useHero';
+import { useInventory } from '../hooks/useInventory'
 import type { Quest, Item } from '../types/base';
 import CharacterOverview from '../comps/CharacterOverview';
 import { useUI } from '../hooks/useUI';
@@ -15,6 +16,7 @@ type LootPageProps = {
 
 export default function LootPage({ quest, onLootTake }: LootPageProps) {
   const hero = useHero();
+  const inventory = useInventory(hero.inventoryID);
   const ui = useUI();
   const modal = useModal();
   const setXpEarned = useAppStore((s) => s.setXpEarned);
@@ -34,7 +36,7 @@ export default function LootPage({ quest, onLootTake }: LootPageProps) {
     setLootGained();
 
     hero.addCoins(quest.loot.coins);
-    const itemAdded = hero.inventory.addItem(item);
+    const itemAdded = inventory.addItem(item);
     if(!itemAdded) {
       modal.sendModalMessage('Your Bags are full!', `There\'s no space for ${item.name}!`);
       return;

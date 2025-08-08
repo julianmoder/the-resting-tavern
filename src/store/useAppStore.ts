@@ -32,6 +32,7 @@ export const useAppStore = create<AppState>()(
         modal: state.modal,
         stage: state.stage,
         hero: state.hero,
+        inventories: state.inventories, 
         quest: state.quest,
       }),
     }

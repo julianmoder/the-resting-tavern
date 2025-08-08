@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { species } from 'fantastical';
 import { useHero } from '../hooks/useHero';
+import { useInventory } from '../hooks/useInventory'
 import { HeroClass } from '../types/base';
 
 type LandingPageProps = {
@@ -11,6 +12,7 @@ export default function LandingPage({ onEnterTavern }: LandingPageProps) {
   const [name, setName] = useState('');
   const [selectedClass, setSelectedClass] = useState<HeroClass>(HeroClass.Warrior);
   const hero = useHero();
+  const inventory = useInventory();
 
   const genHeroName = () => {
     const randomHeroName = species.human({'allowMultipleNames':true})
@@ -22,10 +24,11 @@ export default function LandingPage({ onEnterTavern }: LandingPageProps) {
   const heroClasses = Object.values(HeroClass);
 
   const enterTavern = (heroName: string, heroClass: HeroClass ) => {
-    hero.setName(heroName)
-    hero.setClass(heroClass)
-    hero.inventory.resetMatrix()
-    onEnterTavern()
+    hero.setName(heroName);
+    hero.setClass(heroClass);
+    const invID = inventory.create(10, 6);
+    const inv = hero.attachInventory(invID);
+    onEnterTavern();
   };
 
  return (

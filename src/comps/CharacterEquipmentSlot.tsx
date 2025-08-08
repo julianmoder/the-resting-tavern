@@ -4,9 +4,10 @@ type CharacterEquipmentSlotProps = {
   item?: Item | null,
   slotType: 'weapon' | 'armor'; 
   slotRef: React.RefObject<HTMLDivElement | null>;
+  cellSize: number,
 };
 
-export default function CharacterEquipmentSlot({ item, slotType, slotRef }: CharacterEquipmentSlotProps) {
+export default function CharacterEquipmentSlot({ item, slotType, slotRef, cellSize }: CharacterEquipmentSlotProps) {
   const rarityClasses =
     item?.rarity === 'legendary'
       ? 'border-yellow-700 bg-yellow-950'
@@ -17,9 +18,9 @@ export default function CharacterEquipmentSlot({ item, slotType, slotRef }: Char
       : 'border-stone-500 bg-stone-900';
 
   return (
-    <div ref={slotRef} className={`relative flex flex-1 max-w-42 h-42 rounded-lg items-center justify-center border border-3 ${rarityClasses}`}>
+    <div ref={slotRef} className={`relative flex flex-1 rounded-lg items-center justify-center border border-3 ${rarityClasses}`} style={{ width: `${cellSize * 4.5}px`, height: `${cellSize * 4.5}px` }}>
       <span className="text-xs text-stone-500 select-none">
-        {slotType === 'weapon' ? 'Weapon' : 'Armor'}
+        {item ? '' : slotType === 'weapon' ? 'Weapon' : 'Armor'}
       </span>
     </div>
   );

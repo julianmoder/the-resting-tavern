@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 import { useHero } from '../hooks/useHero';
+import { useInventory } from '../hooks/useInventory';
 import ItemComp from '../comps/ItemComp';
 import type { Item, ItemDragState } from '../types/base';
 import { ItemType } from '../types/base';
@@ -7,16 +8,17 @@ import CharacterEquipmentSlot from '../comps/CharacterEquipmentSlot';
 
 export default function CharacterOverview() {
   const hero = useHero();
+  const inventory = useInventory(hero.inventoryID);
   const effectiveStats = hero.getEffectiveStats()
-  const invCols = hero.inventory.cols;
-  const invRows = hero.inventory.rows;
-  const weapon = hero.inventory.equipment?.weapon;
-  const armor = hero.inventory.equipment?.armor;
+  const invCols = inventory.cols;
+  const invRows = inventory.rows;
+  const weapon = hero.equipment?.weapon;
+  const armor = hero.equipment?.armor;
   const containerRef = useRef<HTMLDivElement>(null);
   const inventoryRef = useRef<HTMLDivElement>(null);
   const weaponRef = useRef<HTMLDivElement>(null);
   const armorRef = useRef<HTMLDivElement>(null);
-  const [cellSize, setCellSize] = useState(40);
+  const [cellSize, setCellSize] = useState(32);
   const [invOffset, setInvOffset] = useState({ x: 0, y: 0 });
   const [weaponOffset, setWeaponOffset] = useState({ x: 0, y: 0 });
   const [armorOffset, setArmorOffset] = useState({ x: 0, y: 0 });
@@ -93,7 +95,6 @@ export default function CharacterOverview() {
     const pointerX = e.clientX - rect.left;
     const pointerY = e.clientY - rect.top;
     const targetRect = (e.target as HTMLElement).getBoundingClientRect();
-    console.log('handlePointerDown > targetRect', targetRect);
     const offsetX = -(pointerX - (targetRect.left - rect.left));
     const offsetY = -(pointerY - (targetRect.top - rect.top));
     const newDragState = {
@@ -113,7 +114,6 @@ export default function CharacterOverview() {
       },
       fromSlot: slotType || null,
     };
-
     setDragState(newDragState);
     (e.target as HTMLElement).setPointerCapture(e.pointerId);
   };
@@ -167,12 +167,12 @@ export default function CharacterOverview() {
         clientY >= rect.top &&
         clientY <= rect.bottom ) {
           if(dragState.draggedItem && slot === dragState.draggedItem.type) {
-            if(hero.inventory.equipment[slot]) {
-              hero.inventory.equipment.unequipItem(slot);
-              hero.inventory.addItem(hero.inventory.equipment[slot]); 
+            if(hero.equipment[slot]) {
+              hero.unequipItem(slot);
+              inventory.addItem(hero.equipment[slot]); 
             }
-            hero.inventory.equipment.equipItem(dragState.draggedItem, slot);
-            hero.inventory.addItem(dragState.draggedItem, 0, 0, slot);
+            hero.equipItem(dragState.draggedItem, slot);
+            inventory.addItem(dragState.draggedItem, 0, 0, slot);
             return true;
           }
           if (dragState.draggedItem && slot === 'inventory') {
@@ -181,8 +181,8 @@ export default function CharacterOverview() {
             const pointerY = (clientY - rect.top) + (dragState.cursorItemOffset.y / 2);
             const gridX = Math.floor(pointerX / cellSize);
             const gridY = Math.floor(pointerY / cellSize);
-            dragState.draggedItem.slot ? hero.inventory.equipment.unequipItem(dragState.draggedItem.slot) : '';
-            hero.inventory.addItem(dragState.draggedItem, gridX, gridY);
+            dragState.draggedItem.slot ? hero.unequipItem(dragState.draggedItem.slot) : '';
+            inventory.addItem(dragState.draggedItem, gridX, gridY);
             return true;
           }
       }
@@ -211,25 +211,27 @@ export default function CharacterOverview() {
               item={weapon ? weapon : null}
               slotType="weapon"
               slotRef={weaponRef}
+              cellSize ={cellSize}
             />
             <CharacterEquipmentSlot
               item={armor ? armor : null}
               slotType="armor"
               slotRef={armorRef}
+              cellSize ={cellSize}
             />
           </div>
         </div>
       </div>
-      <div id="character-inventory-grid" className="mt-6 w-full">
-        <div className="relative grid w-full h-full" 
+      <div id="character-inventory-grid" className="mt-2 w-full flex justify-center bg-stone-800 rounded-md p-4">
+        <div className="relative grid" 
           ref={inventoryRef}
-          style={{ gridTemplateColumns: `repeat(${invCols}, 1fr)`, gridTemplateRows: `repeat(${invRows}, 1fr)` }} >
+          style={{ gridTemplateColumns: `repeat(${invCols}, ${cellSize}px)`, gridTemplateRows: `repeat(${invRows}, ${cellSize}px)` }} >
           {Array.from({ length: invRows * invCols }).map((_, idx) => (
             <div key={idx} className="border border-stone-600" style={{ width: `${cellSize}px`, height: `${cellSize}px` }} />
           ))}
         </div>
       </div>
-      {hero.inventory.items.map((item) => (
+      {inventory.items.map((item) => (
         <ItemComp key={item.id} item={item} dragState={dragState} cellSize={cellSize} handlePointerDown={handlePointerDown} offset={invOffset} slotOffsets={{ weapon: weaponOffset, armor: armorOffset }} slotSizes={{ weapon: weaponSize, armor: armorSize }} />
       ))}
     </div>

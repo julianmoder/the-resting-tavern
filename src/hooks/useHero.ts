@@ -5,13 +5,11 @@ export function useHero() {
   const setHeroName = useAppStore(s => s.setHeroName);
   const setHeroClass = useAppStore(s => s.setHeroClass);
   const addHeroXp = useAppStore(s => s.addHeroXp);
-  const resetInvMatrix = useAppStore(s => s.resetInvMatrix);
+  const attachHeroInventory = useAppStore(s => s.attachHeroInventory);
   const addHeroCoins = useAppStore(s => s.addHeroCoins);
   const removeHeroCoins = useAppStore(s => s.removeHeroCoins);
-  const addInvItem = useAppStore(s => s.addInvItem);
-  const removeInvItem = useAppStore(s => s.removeInvItem);
-  const equipInvItem = useAppStore(s => s.equipInvItem);
-  const unequipInvItem = useAppStore(s => s.unequipInvItem);
+  const equipHeroItem = useAppStore(s => s.equipHeroItem);
+  const unequipHeroItem = useAppStore(s => s.unequipHeroItem);
   const getHeroEffectiveStats = useAppStore(s => s.getHeroEffectiveStats);
   
   return {
@@ -19,19 +17,11 @@ export function useHero() {
     setName: setHeroName,
     setClass: setHeroClass,
     addXp: addHeroXp,
+    attachInventory: attachHeroInventory,
     getEffectiveStats: getHeroEffectiveStats,
     addCoins: addHeroCoins,
     removeCoins: removeHeroCoins,
-    inventory: {
-      ...hero.inventory,
-      resetMatrix: resetInvMatrix,
-      addItem: addInvItem,
-      removeItem: removeInvItem,
-      equipment: {
-        ...hero.inventory.equipment,
-        equipItem: equipInvItem,
-        unequipItem: unequipInvItem,
-      },
-    },
+    equipItem: equipHeroItem,
+    unequipItem: unequipHeroItem,
   }
 }
