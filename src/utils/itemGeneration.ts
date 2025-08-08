@@ -19,8 +19,8 @@ function generateItem(template: ItemTemplate): Item {
     position: {
       x: 0,
       y: 0,
-      slot: null,
-    }
+    },
+    slot: null,
   };
 
   return item;

@@ -132,8 +132,8 @@ export const createInventorySlice: StateCreator<InventorySlice, [], [], Inventor
       position: {
         x: foundPos.x,
         y: foundPos.y,
-        slot: equipSlot ? equipSlot : null,
       },
+      slot: equipSlot ? equipSlot : null,
     };
     !equipSlot ? updatedMatrix = addInvMatrixItem(newItem, state.hero.inventory) : '';
     set((state) => ({

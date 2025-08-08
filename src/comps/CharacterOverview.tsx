@@ -181,7 +181,7 @@ export default function CharacterOverview() {
             const pointerY = (clientY - rect.top) + (dragState.cursorItemOffset.y / 2);
             const gridX = Math.floor(pointerX / cellSize);
             const gridY = Math.floor(pointerY / cellSize);
-            dragState.draggedItem.position.slot ? hero.inventory.equipment.unequipItem(dragState.draggedItem.position.slot) : '';
+            dragState.draggedItem.slot ? hero.inventory.equipment.unequipItem(dragState.draggedItem.slot) : '';
             hero.inventory.addItem(dragState.draggedItem, gridX, gridY);
             return true;
           }

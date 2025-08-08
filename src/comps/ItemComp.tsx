@@ -26,10 +26,10 @@ export default function ItemComp({ item, dragState, cellSize, handlePointerDown,
   if (isDragged) {
     x = dragState.pixel.x;
     y = dragState.pixel.y;
-  } else if (item.position.slot === 'weapon' && slotOffsets && slotSizes) {
+  } else if (item.slot === 'weapon' && slotOffsets && slotSizes) {
     x = slotOffsets.weapon.x + ((slotSizes.weapon.x - w) / 2);
     y = slotOffsets.weapon.y + ((slotSizes.weapon.y - h) / 2);
-  } else if (item.position.slot === 'armor' && slotOffsets && slotSizes) {
+  } else if (item.slot === 'armor' && slotOffsets && slotSizes) {
     x = slotOffsets.armor.x + ((slotSizes.armor.x - w) / 2);;
     y = slotOffsets.armor.y + ((slotSizes.armor.y - h) / 2);;
   } else {
