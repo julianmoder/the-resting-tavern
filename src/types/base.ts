@@ -1,3 +1,4 @@
+export type { AppSettings } from './settings';
 export type { UIHelper } from './ui';
 export { ModalType } from './modal';
 export type { Modal } from './modal';

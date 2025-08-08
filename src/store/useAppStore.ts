@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import type { SettingsSlice } from './settingsSlice';
+import { createSettingsSlice } from './settingsSlice';
 import type { UISlice } from './uiSlice';
 import { createUISlice } from './uiSlice';
 import type { ModalSlice } from './modalSlice';
@@ -13,11 +15,12 @@ import { createInventorySlice } from './inventorySlice';
 import type { QuestSlice } from './questSlice';
 import { createQuestSlice } from './questSlice';
 
-interface AppState extends UISlice, ModalSlice, StageSlice, HeroSlice, InventorySlice, QuestSlice {}
+interface AppState extends SettingsSlice, UISlice, ModalSlice, StageSlice, HeroSlice, InventorySlice, QuestSlice {}
 
 export const useAppStore = create<AppState>()(
   persist(
     (...a) => ({
+      ...createSettingsSlice(...a),
       ...createUISlice(...a),
       ...createModalSlice(...a),
       ...createStageSlice(...a),
@@ -28,6 +31,7 @@ export const useAppStore = create<AppState>()(
     {
       name: 'resting-tavern-store',
       partialize: (state) => ({
+        settings: state.settings,
         ui: state.ui,
         modal: state.modal,
         stage: state.stage,

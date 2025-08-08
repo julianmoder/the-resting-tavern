@@ -14,11 +14,7 @@ export interface InventorySlice {
 }
 
 export const createInventorySlice: StateCreator<InventorySlice, [], [], InventorySlice> = (set, get) => ({
-  inventories: { 
-    'settings': {
-      cellSize: 32,
-    }
-  },
+  inventories: {},
   createInventory: (cols = 12, rows = 6) => {
     const invID = uuidv4();
     let newMatrix = new Array();
