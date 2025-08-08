@@ -42,6 +42,7 @@ export interface ItemTemplate {
   class: string,
   rarity: string,
   level: number,
+  basePower: number,
   affixes: string[],
   fluff: string,
   dropChance: number,

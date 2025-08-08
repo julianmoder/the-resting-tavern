@@ -9,7 +9,8 @@ export const itemTemplatesWeapons = [
     class: ItemClass.Melee,
     rarity: ItemRarity.Common,
     level: 1,
-    affixes: ['str', 'int', 'dex'],
+    basePower: 2,
+    affixes: [],
     fluff: 'This is the fluff text.',
     dropChance: 500,
     size: {
@@ -23,7 +24,8 @@ export const itemTemplatesWeapons = [
     class: ItemClass.Melee,
     rarity: ItemRarity.Uncommon,
     level: 1,
-    affixes: ['str', 'int', 'dex'],
+    basePower: 2,
+    affixes: ['str'],
     fluff: 'This is the fluff text.',
     dropChance: 200,
     size: {
@@ -37,7 +39,8 @@ export const itemTemplatesWeapons = [
     class: ItemClass.Melee,
     rarity: ItemRarity.Rare,
     level: 1,
-    affixes: ['str', 'int', 'dex'],
+    basePower: 3,
+    affixes: ['str', 'dex'],
     fluff: 'This is the fluff text.',
     dropChance: 25,
     size: {
@@ -53,7 +56,8 @@ export const itemTemplatesWeapons = [
     class: ItemClass.Ranged,
     rarity: ItemRarity.Common,
     level: 1,
-    affixes: ['str', 'int', 'dex'],
+    basePower: 2,
+    affixes: [],
     fluff: 'This is the fluff text.',
     dropChance: 500,
     size: {
@@ -67,7 +71,8 @@ export const itemTemplatesWeapons = [
     class: ItemClass.Ranged,
     rarity: ItemRarity.Uncommon,
     level: 1,
-    affixes: ['str', 'int', 'dex'],
+    basePower: 2,
+    affixes: ['dex'],
     fluff: 'This is the fluff text.',
     dropChance: 200,
     size: {
@@ -81,7 +86,8 @@ export const itemTemplatesWeapons = [
     class: ItemClass.Ranged,
     rarity: ItemRarity.Rare,
     level: 1,
-    affixes: ['str', 'int', 'dex'],
+    basePower: 3,
+    affixes: ['int', 'dex'],
     fluff: 'This is the fluff text.',
     dropChance: 25,
     size: {
@@ -97,7 +103,8 @@ export const itemTemplatesWeapons = [
     class: ItemClass.Spell,
     rarity: ItemRarity.Common,
     level: 1,
-    affixes: ['str', 'int', 'dex'],
+    basePower: 1,
+    affixes: ['int'],
     fluff: 'This is the fluff text.',
     dropChance: 500,
     size: {
@@ -111,7 +118,8 @@ export const itemTemplatesWeapons = [
     class: ItemClass.Spell,
     rarity: ItemRarity.Uncommon,
     level: 1,
-    affixes: ['str', 'int', 'dex'],
+    basePower: 2,
+    affixes: ['int', 'dex'],
     fluff: 'This is the fluff text.',
     dropChance: 200,
     size: {
@@ -125,7 +133,8 @@ export const itemTemplatesWeapons = [
     class: ItemClass.Spell,
     rarity: ItemRarity.Rare,
     level: 1,
-    affixes: ['str', 'int', 'dex'],
+    basePower: 3,
+    affixes: ['int'],
     fluff: 'This is the fluff text.',
     dropChance: 25,
     size: {

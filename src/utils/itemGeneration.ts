@@ -10,7 +10,7 @@ function generateItem(template: ItemTemplate): Item {
   const item = {
     ...template,
     id: uuidv4(),
-    power: calcPower(template.level, template.type),
+    power: calcPower(template.level, template.type, template.basePower),
       modifier: {
         str: template.affixes?.includes('str') ? calcModifier(template.level) : 0,
         int: template.affixes?.includes('int') ? calcModifier(template.level) : 0,
@@ -26,13 +26,13 @@ function generateItem(template: ItemTemplate): Item {
   return item;
 }
 
-function calcPower(level: number, type: ItemType): number {
+function calcPower(level: number, type: ItemType, basePower: number): number {
   // Sigmoid-Kurve
   const min = 10, max = 50;
   const curve = (max - min) * Math.tanh(level / 10) + min;
   const value = curve * (0.9 + Math.random() * 0.2);
 
-  const power = (type === 'armor') ? value/2 : value;
+  const power = (type === 'armor') ? basePower + (value / 2) : basePower + value;
 
   return Math.round(power);
 }
