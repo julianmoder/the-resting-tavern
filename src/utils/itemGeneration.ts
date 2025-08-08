@@ -1,5 +1,5 @@
 import { ItemType } from '../types/base';
-import type { Item, ItemTemplate } from '../types/base';
+import type { Item, ItemTemplate, DropConfig } from '../types/base';
 import { v4 as uuidv4 } from 'uuid';
 import { itemTemplatesWeapons } from '../utils/itemTemplatesWeapons';
 import { itemTemplatesArmors } from '../utils/itemTemplatesArmors';
@@ -76,6 +76,14 @@ function softLevelPenalty(tplLevel: number, heroLevel: number, cfg: DropConfig) 
   const w = cfg.levelWindow ?? defaultConfig.levelWindow!;
   const distance = Math.max(0, Math.abs(tplLevel - heroLevel) - w);
   return 1 / (1 + 0.15 * distance);
+}
+
+function eligibleByLevel(tpl: ItemTemplate, heroLevel: number, cfg: DropConfig): boolean {
+  const w = cfg.levelWindow ?? defaultConfig.levelWindow!;
+  if (cfg.hardClamp) {
+    return Math.abs(tpl.level - heroLevel) <= w;
+  }
+  return true;
 }
 
 export function randomItemWeighted(heroLevel: number, templateArray: ItemTemplate[] = defaultItemTemplates, cfg: DropConfig = defaultConfig): Item {
