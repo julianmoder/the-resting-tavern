@@ -1,3 +1,6 @@
+import type { Vector2D } from './base';
+
+
 export enum ItemType {
   Weapon = 'weapon',
   Armor = 'armor',

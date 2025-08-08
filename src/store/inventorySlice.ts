@@ -5,14 +5,16 @@ import { ItemType } from '../types/base';
 import { fitsAt, findInvPos, addInvMatrixItem, removeInvMatrixItem } from '../utils/inventory';
 
 export interface InventorySlice {
+  inventories: Record<string, Inventory>;
   createInventory: (cols: number, rows: number) => string;
   removeInventory: (id: string) => void;
   resetInvMatrix: (id: string) => void;
-  addInvItem: (id: string, addItem: Item, targetX?: number, targetY?: number, equipSlot?: ItemType) => Vector2D;
+  addInvItem: (id: string, addItem: Item, targetX?: number, targetY?: number, equipSlot?: ItemType) => Vector2D | boolean;
   removeInvItem: (id: string, removeItem: Item) => void;
 }
 
 export const createInventorySlice: StateCreator<InventorySlice, [], [], InventorySlice> = (set, get) => ({
+  inventories: {},
   createInventory: (cols = 12, rows = 6) => {
     const id = uuidv4();
     let newMatrix = new Array();
@@ -64,10 +66,10 @@ export const createInventorySlice: StateCreator<InventorySlice, [], [], Inventor
       } 
     }))
   },
-  addInvItem: (id: string, addItem: Item, targetX?: number, targetY?: number, equipSlot?: ItemType):Vector2D => {
+  addInvItem: (id: string, addItem: Item, targetX?: number, targetY?: number, equipSlot?: ItemType):Vector2D | boolean => {
     const state = get();
     const inv = state.inventories[id];
-    if (!inv) return;
+    if (!inv) return false;
     const isRepositioning = inv.items.some(i => i.id === addItem.id);
     let updatedMatrix = new Array();
     if(isRepositioning) { updatedMatrix = removeInvMatrixItem(addItem, inv) };
@@ -85,7 +87,6 @@ export const createInventorySlice: StateCreator<InventorySlice, [], [], Inventor
       foundPos = findInvPos(addItem, inv);
     }
     if (!foundPos) return false;
-    const itemIndex = inv.items.findIndex(i => i.id === addItem.id);
     const newItem: Item = {
       ...addItem,
       position: {
@@ -111,7 +112,7 @@ export const createInventorySlice: StateCreator<InventorySlice, [], [], Inventor
     const state = get();
     const inv = state.inventories[id];
     if (!inv) return;
-    const updatedMatrix = removeInvMatrixItem(newItem, inv)
+    const updatedMatrix = removeInvMatrixItem(removeItem, inv)
     set((state) => ({
       inventories: { 
         ...state.inventories, 

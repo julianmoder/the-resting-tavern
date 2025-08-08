@@ -1,6 +1,9 @@
 import { useAppStore } from '../store/useAppStore';
+import type { Item } from '../types/base';
+import { ItemType } from '../types/base';
 
-export function useInventory(id?: string) {
+
+export function useInventory(id?: string | null) {
   const inv = useAppStore(s => id ? s.inventories[id] : undefined);
   const createInventory = useAppStore(s => s.createInventory);
   const resetInvMatrix = useAppStore(s => s.resetInvMatrix);

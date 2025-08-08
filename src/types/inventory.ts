@@ -1,3 +1,5 @@
+import type { Item } from './base';
+
 export interface Inventory {
   id: string,
   cols: number,

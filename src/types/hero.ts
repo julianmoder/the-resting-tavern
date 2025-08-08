@@ -1,3 +1,5 @@
+import type { Item } from './base';
+
 export enum HeroClass {
   Warrior = 'warrior',
   Wizzard = 'wizzard',
@@ -12,7 +14,7 @@ export interface Hero {
   xp: number,
   level: number,
   leveledUp: boolean,
-  inventory: Inventory,
+  inventoryID: string | null,
   equipment: Equipment,
   coins: number,
 }

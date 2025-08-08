@@ -1,3 +1,5 @@
+import type { Item } from './base';
+
 export interface Quest {
   name: string,
   duration: number,

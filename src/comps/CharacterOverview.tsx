@@ -10,8 +10,8 @@ export default function CharacterOverview() {
   const hero = useHero();
   const inventory = useInventory(hero.inventoryID);
   const effectiveStats = hero.getEffectiveStats()
-  const invCols = inventory.cols;
-  const invRows = inventory.rows;
+  const invCols = inventory?.cols ?? 10;
+  const invRows = inventory?.rows ?? 6;
   const weapon = hero.equipment?.weapon;
   const armor = hero.equipment?.armor;
   const containerRef = useRef<HTMLDivElement>(null);
@@ -231,7 +231,7 @@ export default function CharacterOverview() {
           ))}
         </div>
       </div>
-      {inventory.items.map((item) => (
+      {(inventory?.items ?? []).map((item: Item) => (
         <ItemComp key={item.id} item={item} dragState={dragState} cellSize={cellSize} handlePointerDown={handlePointerDown} offset={invOffset} slotOffsets={{ weapon: weaponOffset, armor: armorOffset }} slotSizes={{ weapon: weaponSize, armor: armorSize }} />
       ))}
     </div>

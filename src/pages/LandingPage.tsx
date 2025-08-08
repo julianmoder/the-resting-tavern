@@ -27,7 +27,7 @@ export default function LandingPage({ onEnterTavern }: LandingPageProps) {
     hero.setName(heroName);
     hero.setClass(heroClass);
     const invID = inventory.create(10, 6);
-    const inv = hero.attachInventory(invID);
+    hero.attachInventory(invID);
     onEnterTavern();
   };
 

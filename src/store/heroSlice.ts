@@ -38,6 +38,7 @@ export const createHeroSlice: StateCreator<HeroSlice, [], [], HeroSlice> = (set,
       weapon: null,
       armor: null,
     },
+    coins: 0,
     inventoryID: null,
   },
   setHeroName: (newName: string) => {
