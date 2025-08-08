@@ -7,16 +7,20 @@ import { fitsAt, findInvPos, addInvMatrixItem, removeInvMatrixItem } from '../ut
 export interface InventorySlice {
   inventories: Record<string, Inventory>;
   createInventory: (cols: number, rows: number) => string;
-  removeInventory: (id: string) => void;
-  resetInvMatrix: (id: string) => void;
-  addInvItem: (id: string, addItem: Item, targetX?: number, targetY?: number, equipSlot?: ItemType) => Vector2D | boolean;
-  removeInvItem: (id: string, removeItem: Item) => void;
+  removeInventory: (invID: string) => void;
+  resetInvMatrix: (invID: string) => void;
+  addInvItem: (invID: string, addItem: Item, targetX?: number, targetY?: number, equipSlot?: ItemType) => Vector2D | boolean;
+  removeInvItem: (invID: string, removeItem: Item) => void;
 }
 
 export const createInventorySlice: StateCreator<InventorySlice, [], [], InventorySlice> = (set, get) => ({
-  inventories: {},
+  inventories: { 
+    'settings': {
+      cellSize: 32,
+    }
+  },
   createInventory: (cols = 12, rows = 6) => {
-    const id = uuidv4();
+    const invID = uuidv4();
     let newMatrix = new Array();
     for (var y = 0; y < rows; y++) {
       const newRow = new Array();
@@ -26,24 +30,24 @@ export const createInventorySlice: StateCreator<InventorySlice, [], [], Inventor
         newRow.push(newSlot);
       }
     }
-    const inv: Inventory = { id, cols, rows, items: [], matrix: newMatrix };
+    const inv: Inventory = { id: invID, cols, rows, items: [], matrix: newMatrix };
     set((state) => ({ 
       inventories: { 
         ...state.inventories, 
-        [id]: inv 
+        [invID]: inv 
       } 
     }));
-    return id;
+    return invID;
   },
-  removeInventory: (id: string) => {
+  removeInventory: (invID: string) => {
     const { inventories } = get();
     const copy = { ...inventories };
-    delete copy[id];
+    delete copy[invID];
     set({ inventories: copy });
   },
-  resetInvMatrix: (id: string) => {
+  resetInvMatrix: (invID: string) => {
     const state = get();
-    const inv = state.inventories[id];
+    const inv = state.inventories[invID];
     if (!inv) return;
     const cols = inv.cols;
     const rows = inv.rows;
@@ -66,9 +70,9 @@ export const createInventorySlice: StateCreator<InventorySlice, [], [], Inventor
       } 
     }))
   },
-  addInvItem: (id: string, addItem: Item, targetX?: number, targetY?: number, equipSlot?: ItemType):Vector2D | boolean => {
+  addInvItem: (invID: string, addItem: Item, targetX?: number, targetY?: number, equipSlot?: ItemType):Vector2D | boolean => {
     const state = get();
-    const inv = state.inventories[id];
+    const inv = state.inventories[invID];
     if (!inv) return false;
     const isRepositioning = inv.items.some(i => i.id === addItem.id);
     let updatedMatrix = new Array();
@@ -108,9 +112,9 @@ export const createInventorySlice: StateCreator<InventorySlice, [], [], Inventor
     }))
     return foundPos;
   },
-  removeInvItem: (id: string, removeItem: Item) => {
+  removeInvItem: (invID: string, removeItem: Item) => {
     const state = get();
-    const inv = state.inventories[id];
+    const inv = state.inventories[invID];
     if (!inv) return;
     const updatedMatrix = removeInvMatrixItem(removeItem, inv)
     set((state) => ({
