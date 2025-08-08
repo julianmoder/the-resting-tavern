@@ -1,8 +1,8 @@
-import type { Item, ItemDragState } from '../types/types';
+import type { Item, ItemDragState, Vector2D } from '../types/base';
 
 type ItemProps = {
   item: Item;
-  dragState?: ItemDragState;
+  dragState?: ItemDragState | null;
   cellSize: number;
   handlePointerDown?: (e: React.PointerEvent, item: Item) => void;
   offset: Vector2D;
@@ -24,8 +24,8 @@ export default function ItemComp({ item, dragState, cellSize, handlePointerDown,
   let x = 0;
   let y = 0;
   if (isDragged) {
-    x = dragState.position.pixel.x;
-    y = dragState.position.pixel.y;
+    x = dragState.pixel.x;
+    y = dragState.pixel.y;
   } else if (item.position.slot === 'weapon' && slotOffsets && slotSizes) {
     x = slotOffsets.weapon.x + ((slotSizes.weapon.x - w) / 2);
     y = slotOffsets.weapon.y + ((slotSizes.weapon.y - h) / 2);
@@ -36,6 +36,7 @@ export default function ItemComp({ item, dragState, cellSize, handlePointerDown,
     x = offset.x + (item.position.x * cellSize);
     y = offset.y + (item.position.y * cellSize);
   }
+  
   const rarityClasses =
     item.rarity === 'legendary'
       ? 'border border-3 border-yellow-500 bg-yellow-900'
@@ -43,7 +44,7 @@ export default function ItemComp({ item, dragState, cellSize, handlePointerDown,
       ? 'border border-3 border-blue-500 bg-blue-900'
       : item.rarity === 'uncommon'
       ? 'border border-3 border-green-500 bg-green-900'
-      : 'border border-3 border-gray-500 bg-gray-900';
+      : 'border border-3 border-stone-400 bg-stone-800';
 
   return (
     <div key={item.id}

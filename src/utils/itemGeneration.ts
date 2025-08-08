@@ -1,4 +1,4 @@
-import type { Item, ItemTemplate } from '../types/types';
+import type { Item, ItemTemplate } from '../types/base';
 import { v4 as uuidv4 } from 'uuid';
 import { itemTemplatesWeapons } from '../utils/itemTemplatesWeapons';
 import { itemTemplatesArmors } from '../utils/itemTemplatesArmors';

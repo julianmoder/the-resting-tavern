@@ -1,16 +1,14 @@
 import type { StateCreator } from 'zustand';
 import { v4 as uuidv4 } from 'uuid';
-import type { Hero, HeroClass, Item } from '../types/types';
-import { ItemType } from '../types/types';
+import type { Hero, HeroStats, HeroClass } from '../types/base';
 import { tryLevelUp } from '../utils/levelProgression';
-import { useModal } from '../hooks/useModal';
 
 export interface HeroSlice {
   hero: Hero;
   setHeroName: (newName: string) => void;
   setHeroClass: (newClass: HeroClass) => void;
-  addHeroXp: (addXp: number) => void;
-  getHeroEffectiveStats: () => void;
+  addHeroXp: (addXp: number) => { xp: number, level: number, leveledUp: boolean };
+  getHeroEffectiveStats: () => HeroStats;
 }
 
 export const createHeroSlice: StateCreator<HeroSlice, [], [], HeroSlice> = (set, get) => ({
@@ -58,9 +56,9 @@ export const createHeroSlice: StateCreator<HeroSlice, [], [], HeroSlice> = (set,
       }
     }))
   },
-  addHeroXp: (addXp: number) => {
+  addHeroXp: (addXp: number):{ xp: number, level: number, leveledUp: boolean } => {
     const state = get();
-    if (!state.hero) return;
+    if (!state.hero) return{ xp: 0, level: 0, leveledUp: false };
 
     const tryLevelUpResult = tryLevelUp(state.hero.xp + addXp, state.hero.level);
 
@@ -91,6 +89,7 @@ export const createHeroSlice: StateCreator<HeroSlice, [], [], HeroSlice> = (set,
         level: tryLevelUpResult.level,
         leveledUp: tryLevelUpResult.leveledUp,
         stats: {
+          ...state.hero.stats,
           maxHealth: newMaxHealth,
           maxEnergy: newMaxEnergy,
           str: newStr,
@@ -101,21 +100,34 @@ export const createHeroSlice: StateCreator<HeroSlice, [], [], HeroSlice> = (set,
     }))
     return tryLevelUpResult;
   },
-  getHeroEffectiveStats: () => {
+  getHeroEffectiveStats: ():HeroStats  => {
     const state = get();
-    if (!state.hero) return;
+    const baseStats = state.hero?.stats ?? {
+      str: 0, 
+      int: 0, 
+      dex: 0,
+      health: 0, 
+      maxHealth: 0,
+      energy: 0, 
+      maxEnergy: 0,
+    };
 
-    let { str, int, dex, health, maxHealth, energy, maxEnergy } = state.hero.stats;
-    if (state.hero.inventory.equipment.weapon) {
-      str += state.hero.inventory.equipment.weapon.modifier.str ?? 0;
-      int += state.hero.inventory.equipment.weapon.modifier.int ?? 0;
-      dex += state.hero.inventory.equipment.weapon.modifier.dex ?? 0;
+    let { str, int, dex, health, maxHealth, energy, maxEnergy } = baseStats;
+
+    const weapon = state.hero?.inventory?.equipment?.weapon;
+    const armor = state.hero?.inventory?.equipment?.armor;
+
+    if (weapon) {
+      str += weapon?.modifier?.str ?? 0;
+      int += weapon?.modifier?.int ?? 0;
+      dex += weapon?.modifier?.dex ?? 0;
     }
-    if (state.hero.inventory.equipment.armor) {
-      str += state.hero.inventory.equipment.armor.modifier.str ?? 0;
-      int += state.hero.inventory.equipment.armor.modifier.int ?? 0;
-      dex += state.hero.inventory.equipment.armor.modifier.dex ?? 0;
+    if (state.hero?.inventory.equipment.armor) {
+      str += armor?.modifier?.str ?? 0;
+      int += armor?.modifier?.int ?? 0;
+      dex += armor?.modifier?.dex ?? 0;
     }
+
     return { str, int, dex, health, maxHealth, energy, maxEnergy };
   },
 });

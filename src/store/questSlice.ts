@@ -1,5 +1,5 @@
 import type { StateCreator } from 'zustand';
-import type { Hero, Quest } from '../types/types';
+import type { Hero, Quest, Item } from '../types/base';
 import { questPrefixes } from '../utils/questPrefixes';
 import { randomItemWeighted } from '../utils/itemGeneration';
 import { BASE_XP } from '../utils/levelProgression';
@@ -7,6 +7,8 @@ import { BASE_XP } from '../utils/levelProgression';
 export interface QuestSlice {
   quest: Quest;
   setQuest: (n: string, d: number, h: Hero) => void;
+  setXpEarned: () => void;
+  setLootGained: () => void;
   resetQuest: () => void;
 }
 

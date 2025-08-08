@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { questQuestions } from '../utils/questQuestions';
 import { useAppStore } from '../store/useAppStore';
 import { useHero } from '../hooks/useHero';

@@ -1,9 +1,21 @@
 export interface UIHelper {
-  ui: {
-    sidebar: {
-      showCharacter: boolean
-    }
+  sidebar: {
+    showCharacter: boolean
   }
+}
+
+export interface Modal {
+  showModal: boolean;
+  title: string;
+  message: string;
+  type?: ModalType,
+  onClose?: () => void,
+};
+
+export enum ModalType {
+  Default = 'default',
+  Warning = 'warning',
+  Alert = 'alert',
 }
 
 export enum Stage {
@@ -25,19 +37,21 @@ export interface Hero {
   id: string,
   name: string,
   class: HeroClass | null,
-  stats: {
-    health: number,
-    maxHealth: number,
-    energy: number,
-    maxEnergy: number,
-    str: number,
-    int: number,
-    dex: number,
-  },
+  stats: HeroStats,
   xp: number,
   level: number,
   leveledUp: boolean,
   inventory: Inventory,
+}
+
+export interface HeroStats {
+  health: number,
+  maxHealth: number,
+  energy: number,
+  maxEnergy: number,
+  str: number,
+  int: number,
+  dex: number,
 }
 
 export interface Inventory {
@@ -46,7 +60,7 @@ export interface Inventory {
   equipment: Equipment,
   cols: number,
   rows: number,
-  matrix: [ { x: number, y: number, id: string } ]
+  matrix: Array<Array<{ x: number; y: number; id: string | null }>>
 }
 
 export interface Equipment {
@@ -65,7 +79,7 @@ export interface Item extends ItemTemplate {
   position: {
     x: number, 
     y: number,
-    slot: ItemType,
+    slot: ItemType | null,
   }
 }
 
@@ -99,17 +113,15 @@ export enum ItemRarity {
 }
 
 export interface ItemDragState {
-  draggedItem: Item;
+  draggedItem: Item | null;
   state: string,
   cursorItemOffset: {
     x: number,
     y: number,
   },
-  position: {
-    x: number,
-    y: number,
-  }
-  fromSlot: string;
+  position: Vector2D;
+  pixel: Vector2D;
+  fromSlot: string | null;
 }
 
 export interface Vector2D {

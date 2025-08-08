@@ -6,7 +6,7 @@ export default function SideBar() {
   const buttonClasses = (active: boolean) =>
     `w-12 h-12 flex items-center justify-center rounded-full text-xl font-bold ` +
     (active
-      ? 'bg-emerald-600 text-white'
+      ? 'bg-orange-600 text-white'
       : 'bg-gray-600 text-gray-300 hover:bg-gray-500 hover:text-white');
 
   return (

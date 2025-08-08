@@ -1,7 +1,7 @@
-import { useState, useRef, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useAppStore } from '../store/useAppStore';
 import { useHero } from '../hooks/useHero';
-import type { Quest, Item } from '../types/types';
+import type { Quest, Item } from '../types/base';
 import CharacterOverview from '../comps/CharacterOverview';
 import { useUI } from '../hooks/useUI';
 import SideBar from '../comps/SideBar';
@@ -17,9 +17,6 @@ export default function LootPage({ quest, onLootTake }: LootPageProps) {
   const hero = useHero();
   const ui = useUI();
   const modal = useModal();
-  const weaponRef = useRef<HTMLDivElement | null>(null);
-  const armourRef = useRef<HTMLDivElement | null>(null);
-  const [itemTaken, setItemTaken] = useState(false);
   const setXpEarned = useAppStore((s) => s.setXpEarned);
   const setLootGained = useAppStore((s) => s.setLootGained);
 
@@ -54,7 +51,7 @@ export default function LootPage({ quest, onLootTake }: LootPageProps) {
       {/* Charakter Overview + Inventory */}
       {ui.sidebar.showCharacter && (
         <div className="absolute justify-center z-20 bg-gray-800 p-4 rounded-lg shadow-lg">
-          <CharacterOverview weaponRef={weaponRef} armourRef={armourRef} />
+          <CharacterOverview />
         </div>
       )}
 

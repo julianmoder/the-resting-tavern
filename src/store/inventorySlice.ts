@@ -1,13 +1,12 @@
 import type { StateCreator } from 'zustand';
-import { v4 as uuidv4 } from 'uuid';
-import type { Item, Inventory } from '../types/types';
-import { ItemType } from '../types/types';
-import { useModal } from '../hooks/useModal';
+import type { Item, Inventory, Vector2D } from '../types/base';
+import { ItemType } from '../types/base';
 
 export interface InventorySlice {
+  resetInvMatrix: () => void;
   addInvCoins: (addCoins: number) => void;
   removeInvCoins: (removeCoins: number) => void;
-  addInvItem: (addItem: Item, targetX?: number, targetY?: number, equipSlot?: ItemType) => void;
+  addInvItem: (addItem: Item, targetX?: number, targetY?: number, equipSlot?: ItemType) => Vector2D;
   removeInvItem: (removeItem: Item) => void;
   equipInvItem: (item: Item, slot: ItemType) => void;
   unequipInvItem: (slot: ItemType) => void;
@@ -63,7 +62,7 @@ export const createInventorySlice: StateCreator<InventorySlice, [], [], Inventor
   resetInvMatrix: () => {
     const rows = 6;
     const cols = 12;
-    let resetMatrix = [];
+    let resetMatrix = new Array();
 
     for (var y = 0; y < rows; y++) {
       const newRow = new Array();
@@ -108,10 +107,10 @@ export const createInventorySlice: StateCreator<InventorySlice, [], [], Inventor
       }
     }))
   },
-  addInvItem: (addItem: Item, targetX?: number, targetY?: number, equipSlot?: ItemType) => {
+  addInvItem: (addItem: Item, targetX?: number, targetY?: number, equipSlot?: ItemType):Vector2D => {
     const state = get();
     const isRepositioning = state.hero.inventory.items.some(i => i.id === addItem.id);
-    let updatedMatrix = [];
+    let updatedMatrix = new Array();
     if(isRepositioning) { updatedMatrix = removeInvMatrixItem(addItem, state.hero.inventory) };
     let foundPos: { x: number; y: number } | null = null;
     equipSlot === ItemType.Weapon ? foundPos = { x: -1, y: -1 } : '';

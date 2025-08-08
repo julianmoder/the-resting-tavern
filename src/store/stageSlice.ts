@@ -1,5 +1,5 @@
 import type { StateCreator } from 'zustand';
-import { Stage } from '../types/types';
+import { Stage } from '../types/base';
 
 export interface StageSlice {
   stage: Stage;

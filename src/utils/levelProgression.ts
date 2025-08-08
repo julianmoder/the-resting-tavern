@@ -23,7 +23,7 @@ export function getNextLevelThreshold(level: number) {
   return levelThresholds[level] ?? levelThresholds[level];
 }
 
-export function tryLevelUp(xp: number, level: number) {
+export function tryLevelUp(xp: number, level: number):{ xp: number, level: number, leveledUp: boolean } {
   const xpNeeded = getNextLevelThreshold(level);
   let leveledUp = false;
 

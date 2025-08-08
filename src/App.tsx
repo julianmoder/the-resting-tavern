@@ -7,12 +7,9 @@ import QuestPage from './pages/QuestPage';
 import BossPage from './pages/BossPage';
 import LootPage from './pages/LootPage';
 import BreakPage from './pages/BreakPage';
-import { Stage } from './types/types';
+import { Stage } from './types/base';
 
 export default function App() {
-  const modal = useAppStore((s) => s.modal);
-  const showModal = useAppStore((s) => s.showModal);
-  const hideModal = useAppStore((s) => s.hideModal);
   const stage = useAppStore((s) => s.stage);
   const setStage = useAppStore((s) => s.setStage);
   const quest = useAppStore((s) => s.quest);
@@ -41,7 +38,7 @@ export default function App() {
             )
           }
 
-          <Modal showModal={showModal} title={modal.title} message={modal.message} onClose={hideModal} />
+          <Modal />
 
         </div>
       </main>

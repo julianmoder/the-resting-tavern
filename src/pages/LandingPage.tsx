@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { species } from 'fantastical';
 import { useHero } from '../hooks/useHero';
-import { HeroClass } from '../types/types';
+import { HeroClass } from '../types/base';
 
 type LandingPageProps = {
   onEnterTavern: () => void
