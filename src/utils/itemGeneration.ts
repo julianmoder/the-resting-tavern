@@ -1,3 +1,4 @@
+import { ItemType } from '../types/base';
 import type { Item, ItemTemplate } from '../types/base';
 import { v4 as uuidv4 } from 'uuid';
 import { itemTemplatesWeapons } from '../utils/itemTemplatesWeapons';
@@ -9,7 +10,7 @@ function generateItem(template: ItemTemplate): Item {
   const item = {
     ...template,
     id: uuidv4(),
-    power: calcPower(template.level),
+    power: calcPower(template.level, template.type),
       modifier: {
         str: template.affixes?.includes('str') ? calcModifier(template.level) : 0,
         int: template.affixes?.includes('int') ? calcModifier(template.level) : 0,
@@ -25,13 +26,15 @@ function generateItem(template: ItemTemplate): Item {
   return item;
 }
 
-function calcPower(level: number): number {
+function calcPower(level: number, type: ItemType): number {
   // Sigmoid-Kurve
   const min = 10, max = 50;
   const curve = (max - min) * Math.tanh(level / 10) + min;
-  const value = Math.floor(curve * (0.9 + Math.random() * 0.2));
+  const value = curve * (0.9 + Math.random() * 0.2);
 
-  return Math.round(value);
+  const power = (type === 'armor') ? value/2 : value;
+
+  return Math.round(power);
 }
 
 function calcModifier(level: number): number {

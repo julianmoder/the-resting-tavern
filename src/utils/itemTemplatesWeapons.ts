@@ -1,4 +1,4 @@
-import { ItemType, ItemRarity } from '../types/base';
+import { ItemType, ItemClass, ItemRarity } from '../types/base';
 
 export const itemTemplatesWeapons = [
 
@@ -6,7 +6,7 @@ export const itemTemplatesWeapons = [
   {
     name: 'Wooden Club',
     type: ItemType.Weapon,
-    category: 'melee',
+    class: ItemClass.Melee,
     rarity: ItemRarity.Common,
     level: 1,
     affixes: ['str', 'int', 'dex'],
@@ -20,7 +20,7 @@ export const itemTemplatesWeapons = [
   {
     name: 'Steel Sword',
     type: ItemType.Weapon,
-    category: 'melee',
+    class: ItemClass.Melee,
     rarity: ItemRarity.Uncommon,
     level: 1,
     affixes: ['str', 'int', 'dex'],
@@ -34,7 +34,7 @@ export const itemTemplatesWeapons = [
   {
     name: 'Imbued Sword',
     type: ItemType.Weapon,
-    category: 'melee',
+    class: ItemClass.Melee,
     rarity: ItemRarity.Rare,
     level: 1,
     affixes: ['str', 'int', 'dex'],
@@ -50,7 +50,7 @@ export const itemTemplatesWeapons = [
   {
     name: 'Simple Crossbow',
     type: ItemType.Weapon,
-    category: 'ranged',
+    class: ItemClass.Ranged,
     rarity: ItemRarity.Common,
     level: 1,
     affixes: ['str', 'int', 'dex'],
@@ -64,7 +64,7 @@ export const itemTemplatesWeapons = [
   {
     name: 'Recurve Bow',
     type: ItemType.Weapon,
-    category: 'ranged',
+    class: ItemClass.Ranged,
     rarity: ItemRarity.Uncommon,
     level: 1,
     affixes: ['str', 'int', 'dex'],
@@ -78,7 +78,7 @@ export const itemTemplatesWeapons = [
   {
     name: 'Enchanted Bow',
     type: ItemType.Weapon,
-    category: 'ranged',
+    class: ItemClass.Ranged,
     rarity: ItemRarity.Rare,
     level: 1,
     affixes: ['str', 'int', 'dex'],
@@ -94,7 +94,7 @@ export const itemTemplatesWeapons = [
   {
     name: 'Oak Wand',
     type: ItemType.Weapon,
-    category: 'spell',
+    class: ItemClass.Spell,
     rarity: ItemRarity.Common,
     level: 1,
     affixes: ['str', 'int', 'dex'],
@@ -108,7 +108,7 @@ export const itemTemplatesWeapons = [
   {
     name: 'Silverwood Staff',
     type: ItemType.Weapon,
-    category: 'spell',
+    class: ItemClass.Spell,
     rarity: ItemRarity.Uncommon,
     level: 1,
     affixes: ['str', 'int', 'dex'],
@@ -122,7 +122,7 @@ export const itemTemplatesWeapons = [
   {
     name: 'Cursed Staff',
     type: ItemType.Weapon,
-    category: 'spell',
+    class: ItemClass.Spell,
     rarity: ItemRarity.Rare,
     level: 1,
     affixes: ['str', 'int', 'dex'],

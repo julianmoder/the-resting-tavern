@@ -1,12 +1,12 @@
-import { ItemType, ItemRarity } from '../types/base';
+import { ItemType, ItemClass, ItemRarity } from '../types/base';
 
 export const itemTemplatesArmors = [
 
-// cloth armors
+// light armors
   {
     name: 'Rags',
     type: ItemType.Armor,
-    category: 'cloth',
+    class: ItemClass.Light,
     rarity: ItemRarity.Common,
     level: 1,
     affixes: ['str', 'int', 'dex'],
@@ -20,7 +20,7 @@ export const itemTemplatesArmors = [
   {
     name: 'Silk Shirt',
     type: ItemType.Armor,
-    category: 'cloth',
+    class: ItemClass.Light,
     rarity: ItemRarity.Uncommon,
     level: 1,
     affixes: ['str', 'int', 'dex'],
@@ -34,7 +34,7 @@ export const itemTemplatesArmors = [
   {
     name: 'Scholar\'s Robe',
     type: ItemType.Armor,
-    category: 'cloth',
+    class: ItemClass.Light,
     rarity: ItemRarity.Rare,
     level: 1,
     affixes: ['str', 'int', 'dex'],
@@ -46,11 +46,11 @@ export const itemTemplatesArmors = [
     },
   },
 
-// leather armors
+// medium armors
   {
     name: 'Hide Armor',
     type: ItemType.Armor,
-    category: 'leather',
+    class: ItemClass.Medium,
     rarity: ItemRarity.Common,
     level: 1,
     affixes: ['str', 'int', 'dex'],
@@ -64,7 +64,7 @@ export const itemTemplatesArmors = [
   {
     name: 'Padded Vest',
     type: ItemType.Armor,
-    category: 'leather',
+    class: ItemClass.Medium,
     rarity: ItemRarity.Uncommon,
     level: 1,
     affixes: ['str', 'int', 'dex'],
@@ -78,7 +78,7 @@ export const itemTemplatesArmors = [
   {
     name: 'Runed Leather',
     type: ItemType.Armor,
-    category: 'leather',
+    class: ItemClass.Medium,
     rarity: ItemRarity.Rare,
     level: 1,
     affixes: ['str', 'int', 'dex'],
@@ -90,11 +90,11 @@ export const itemTemplatesArmors = [
     },
   },
 
-// mail armors
+// heavy armors
   {
     name: 'Chain Shirt',
     type: ItemType.Armor,
-    category: 'mail',
+    class: ItemClass.Heavy,
     rarity: ItemRarity.Common,
     level: 1,
     affixes: ['str', 'int', 'dex'],
@@ -108,7 +108,7 @@ export const itemTemplatesArmors = [
   {
     name: 'Scale Mail',
     type: ItemType.Armor,
-    category: 'mail',
+    class: ItemClass.Heavy,
     rarity: ItemRarity.Uncommon,
     level: 1,
     affixes: ['str', 'int', 'dex'],
@@ -122,7 +122,7 @@ export const itemTemplatesArmors = [
   {
     name: 'Ornated Halfplate',
     type: ItemType.Armor,
-    category: 'mail',
+    class: ItemClass.Heavy,
     rarity: ItemRarity.Rare,
     level: 1,
     affixes: ['str', 'int', 'dex'],
