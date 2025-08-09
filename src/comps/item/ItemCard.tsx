@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import type { Item, ItemModifier } from '../types/base';
+import type { Item, ItemModifier } from '../../types/base';
 
 type ItemCardProps = {
   item: Item;

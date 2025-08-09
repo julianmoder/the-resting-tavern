@@ -1,11 +1,11 @@
 import { useRef, useState, useEffect } from 'react';
-import { useSettings } from '../hooks/useSettings';
-import { useHero } from '../hooks/useHero';
-import { useInventory } from '../hooks/useInventory';
-import ItemComp from '../comps/ItemComp';
-import type { Item, ItemDragState } from '../types/base';
-import { ItemType } from '../types/base';
-import CharacterEquipmentSlot from '../comps/CharacterEquipmentSlot';
+import { useSettings } from '../../hooks/useSettings';
+import { useHero } from '../../hooks/useHero';
+import { useInventory } from '../../hooks/useInventory';
+import ItemComp from '../../comps/item/ItemComp';
+import type { Item, ItemDragState } from '../../types/base';
+import { ItemType } from '../../types/base';
+import CharacterEquipmentSlot from '../../comps/character/CharacterEquipmentSlot';
 
 export default function CharacterOverview() {
   const settings = useSettings();
@@ -194,7 +194,7 @@ export default function CharacterOverview() {
 
   return (
 
-    <div className="absolute justify-center z-20 bg-stone-700 p-4 rounded-lg shadow-lg" 
+    <div className="absolute top-40 justify-center z-20 bg-stone-700 p-4 rounded-lg shadow-lg" 
       ref={containerRef}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}

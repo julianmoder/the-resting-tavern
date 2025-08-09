@@ -1,6 +1,6 @@
 import { useAppStore } from './store/useAppStore';
-import Header from './comps/Header';
-import Modal from './comps/Modal';
+import Header from './comps/ui/Header';
+import Modal from './comps/ui/Modal';
 import LandingPage from './pages/LandingPage';
 import TavernPage from './pages/TavernPage';
 import QuestPage from './pages/QuestPage';
@@ -16,10 +16,10 @@ export default function App() {
   const resetQuest = useAppStore((s) => s.resetQuest);
 
   return (
-    <div className='min-h-screen flex flex-col items-center justify-center bg-stone-800 p-6 mx-auto'>
+    <div className='min-w-screen min-h-screen flex flex-col items-center justify-center bg-stone-800'>
       <Header />
-      <main className='w-full max-w-2xl flex-1 flex flex-col items-center'>
-        <div className='min-h-max flex flex-col items-center justify-center p-6 mt-12 text-3xl text-white mx-auto leading-11'>
+      <main className='w-full h-full flex flex-1 flex-col items-center justify-center'>
+        <div className='w-full h-full flex flex-1 flex-col items-center justify-center'>
 
           { stage === Stage.Landing ? (
               <LandingPage onEnterTavern={() => { setStage(Stage.Tavern) }} />

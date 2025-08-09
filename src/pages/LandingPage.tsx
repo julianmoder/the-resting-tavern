@@ -32,7 +32,7 @@ export default function LandingPage({ onEnterTavern }: LandingPageProps) {
   };
 
  return (
-    <>
+    <div className='text-white'>
 
       <p className='mb-3 text-center font-bold'>What is your name, weary traveler?</p>
 
@@ -83,6 +83,6 @@ export default function LandingPage({ onEnterTavern }: LandingPageProps) {
         Enter the Tavern
       </button>
 
-    </>
+    </div>
   );
 }

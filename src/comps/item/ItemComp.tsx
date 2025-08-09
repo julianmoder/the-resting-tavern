@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import type { MouseEvent } from 'react';
-import type { Item, ItemDragState, Vector2D } from '../types/base';
-import { ItemType } from '../types/base';
-import ItemCard from './ItemCard';
-import { useHero } from '../hooks/useHero';
-import { useKeyPressed } from '../hooks/useKeyPressed';
+import type { Item, ItemDragState, Vector2D } from '../../types/base';
+import { ItemType } from '../../types/base';
+import ItemCard from '../../comps/item/ItemCard';
+import { useHero } from '../../hooks/useHero';
+import { useKeyPressed } from '../../hooks/useKeyPressed';
 
 type ItemProps = {
   item: Item;
