@@ -1,18 +1,23 @@
 import type { StateCreator } from 'zustand';
 import type { AppState } from './useAppStore';
+import { BattleOutcome } from '../types/base';
+import type { Battle } from '../types/base';
 
 export type BattleSlice = {
-  isPaused: boolean;
-  lastHitAt: number;
+  battle: Battle;
   resetBattle: () => void;
-  damageBoss: (amount: number) => void;
-  damagePlayer: (amount: number) => void;
-  setPaused: (p: boolean) => void;
+  setBattleDamageBoss: (dmg: number | undefined) => void;
+  setBattleDamagePlayer: (dmg: number | undefined) => void;
+  setBattlePaused: (p: boolean) => void;
+  setBattleOutcome: (o: BattleOutcome) => void;
 };
 
 export const createBattleSlice: StateCreator<AppState, [], [], BattleSlice> = (set, get) => ({
-  isPaused: false,
-  lastHitAt: performance.now(),
+  battle: {
+    isPaused: false,
+    lastHitAt: performance.now(),
+    outcome: BattleOutcome.None,
+  },
   resetBattle: () => {
     set((state) => ({
       hero: {
@@ -23,32 +28,78 @@ export const createBattleSlice: StateCreator<AppState, [], [], BattleSlice> = (s
           energy: state.hero.stats.maxEnergy,
         },
       },
-      lastHitAt: performance.now(),
-      isPaused: false,
+      boss: {
+        ...state.boss,
+        stats: {
+          ...state.boss.stats,
+          health: state.boss.stats.maxHealth,
+          energy: state.boss.stats.maxEnergy,
+        },
+      },
+      battle: {
+        isPaused: false,
+        lastHitAt: performance.now(),
+        outcome: BattleOutcome.None,
+      }
     }));
   },
-  damagePlayer: (dmg) => {
+  setBattleDamagePlayer: (dmg: number | undefined = undefined) => {
+    const state = get();
+    let damage = 0;
+    if(typeof dmg === 'number') {
+      damage = dmg;
+    } else {
+      damage = state.boss.stats.attack;
+    }
+    const defense = state.hero.stats.defense;
+    const lostHealth = Math.max(0, damage - defense);
+
     set((state) => ({
       hero: {
         ...state.hero,
         stats: {
           ...state.hero.stats,
-          health: Math.max(0, state.hero.stats.health - dmg),
+          health: Math.max(0, state.hero.stats.health - lostHealth),
         },
       },
     }));
   },
-  damageBoss: (dmg) => {
-    console.log('damageBoss > test');
+  setBattleDamageBoss: (dmg: number | undefined = undefined) => {
+    const state = get();
+    let damage = 0;
+    if(typeof dmg === 'number') {
+      damage = dmg;
+    } else {
+      damage = state.hero.stats.attack;
+    }
+    const defense = state.boss.stats.defense;
+    const lostHealth = Math.max(0, damage - defense);
+
     set((state) => ({
       boss: {
         ...state.boss,
         stats: {
           ...state.boss.stats,
-          health: Math.max(0, state.boss.stats.health - dmg),
+          health: Math.max(0, state.boss.stats.health - lostHealth),
         },
       },
     }));
   },
-  setPaused: (p) => set({ isPaused: p }),
+  setBattlePaused: (newPause: boolean) => {
+    set((state) => ({ 
+      battle: {
+        ...state.battle,
+        isPaused: newPause,
+      } 
+    }));
+  },
+  setBattleOutcome: (newOutcome: BattleOutcome) => {
+    set((state) => ({ 
+      battle: {
+        ...state.battle,
+        isPaused: newOutcome !== BattleOutcome.None,
+        outcome: newOutcome,
+      } 
+    }));
+  },
 });
