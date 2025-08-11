@@ -18,14 +18,16 @@ export const createBossSlice: StateCreator<BossSlice, [], [], BossSlice> = (set,
       energy: 1,
       maxEnergy: 1,
       attack: 1,
-      defence: 1, 
+      defense: 1, 
     },
     mechanics: [],
   },
   createBoss: (newBoss: BossTemplate, hero: Hero) => {
     const newLevel = hero.level;
-    const newMaxHealth = 20 + (newLevel * 5);
-    const newMaxEnergy = 20 + (newLevel * 5);
+    const newMaxHealth = 200 + (newLevel * 5);
+    const newMaxEnergy = 200 + (newLevel * 5);
+    const newAttack = hero.level;
+    const newDefence = Math.floor(hero.level/2);
 
     set((state) => ({
       boss: {
@@ -39,6 +41,8 @@ export const createBossSlice: StateCreator<BossSlice, [], [], BossSlice> = (set,
           maxHealth: newMaxHealth,
           energy: newMaxEnergy,
           maxEnergy: newMaxEnergy,
+          attack: newAttack,
+          defense: newDefence,
         },
         mechanics: newBoss.mechanics,
       }
