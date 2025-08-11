@@ -5,7 +5,7 @@ import { useHero } from '../hooks/useHero';
 import { useBoss } from '../hooks/useBoss';
 import { bossTemplates } from '../utils/bossTemplates';
 import { useUI } from '../hooks/useUI';
-import CharacterOverview from '../comps/character/CharacterOverview';
+import HeroOverview from '../comps/hero/HeroOverview';
 import SideBar from '../comps/ui/SideBar';
 
 type TavernPageProps = {
@@ -35,9 +35,9 @@ export default function TavernPage({ onStartQuest }: TavernPageProps) {
 
       <SideBar />
 
-      {/* Charakter Overview */}
-      {ui.sidebar.showCharacter && (
-          <CharacterOverview />
+      {/* Hero Overview */}
+      {ui.sidebar.Hero && (
+          <HeroOverview />
       )}
 
       {/* Main Content */}

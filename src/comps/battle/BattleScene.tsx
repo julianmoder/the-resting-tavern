@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { PixiBoot } from '../../engine/pixi/pixiApp';
-import CharacterView from '../character/CharacterView';
+import HeroView from '../hero/HeroView';
 import BossView from '../boss/BossView';
 import { useAppStore } from '../../store/useAppStore';
 import { useHero } from '../../hooks/useHero';

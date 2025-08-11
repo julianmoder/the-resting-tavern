@@ -5,7 +5,7 @@ import { useInventory } from '../../hooks/useInventory';
 import ItemComp from '../../comps/item/ItemComp';
 import type { Item, ItemDragState } from '../../types/base';
 import { ItemType } from '../../types/base';
-import CharacterEquipmentSlot from '../../comps/character/CharacterEquipmentSlot';
+import HeroEquipmentSlot from '../../comps/hero/HeroEquipmentSlot';
 
 export default function CharacterOverview() {
   const settings = useSettings();
@@ -209,13 +209,13 @@ export default function CharacterOverview() {
           <div>Intelligence: {effectiveStats.int}</div>
           <div>Dexterity: {effectiveStats.dex}</div>
           <div id="character-equipment-slots" className="relative mt-6 flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0 items-center justify-center">
-            <CharacterEquipmentSlot
+            <HeroEquipmentSlot
               item={weapon ? weapon : null}
               slotType="weapon"
               slotRef={weaponRef}
               cellSize ={cellSize}
             />
-            <CharacterEquipmentSlot
+            <HeroEquipmentSlot
               item={armor ? armor : null}
               slotType="armor"
               slotRef={armorRef}

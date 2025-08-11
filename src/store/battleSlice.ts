@@ -7,7 +7,7 @@ export type BattleSlice = {
   battle: Battle;
   resetBattle: () => void;
   setBattleDamageBoss: (dmg: number | undefined) => void;
-  setBattleDamagePlayer: (dmg: number | undefined) => void;
+  setBattleDamageHero: (dmg: number | undefined) => void;
   setBattlePaused: (p: boolean) => void;
   setBattleOutcome: (o: BattleOutcome) => void;
 };
@@ -43,7 +43,7 @@ export const createBattleSlice: StateCreator<AppState, [], [], BattleSlice> = (s
       }
     }));
   },
-  setBattleDamagePlayer: (dmg: number | undefined = undefined) => {
+  setBattleDamageHero: (dmg: number | undefined = undefined) => {
     const state = get();
     let damage = 0;
     if(typeof dmg === 'number') {

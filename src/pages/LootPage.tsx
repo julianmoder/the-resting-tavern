@@ -4,7 +4,7 @@ import { useSettings } from '../hooks/useSettings';
 import { useHero } from '../hooks/useHero';
 import { useInventory } from '../hooks/useInventory'
 import type { Quest, Item } from '../types/base';
-import CharacterOverview from '../comps/character/CharacterOverview';
+import HeroOverview from '../comps/hero/HeroOverview';
 import ItemComp from '../comps/item/ItemComp';
 import { useUI } from '../hooks/useUI';
 import SideBar from '../comps/ui/SideBar';
@@ -54,9 +54,9 @@ export default function LootPage({ quest, onLootTake }: LootPageProps) {
 
       <SideBar />
 
-      {/* Charakter Overview + Inventory */}
-      {ui.sidebar.showCharacter && (
-        <CharacterOverview />
+      {/* Hero Overview + Inventory */}
+      {ui.sidebar.showHero && (
+        <HeroOverview />
       )}
 
       <div className='mb-12 text-center'>

@@ -1,5 +1,5 @@
 export interface UIHelper {
   sidebar: {
-    showCharacter: boolean
+    showHero: boolean
   }
 }
