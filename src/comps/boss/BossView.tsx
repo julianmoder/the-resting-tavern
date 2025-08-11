@@ -2,6 +2,7 @@ import { useLayoutEffect, useRef } from 'react';
 import { useAppStore } from '../../store/useAppStore';
 import { BossRig } from '../../engine/pixi/bossRig';
 import { PixiBoot } from '../../engine/pixi/pixiApp';
+import { useBattle } from '../../hooks/useBattle'
 
 type Props = {
   boot: PixiBoot;
@@ -11,8 +12,8 @@ type Props = {
 };
 
 export default function BossView({ boot, x, y, intent = 'idle' }: Props) {
+  const battle = useBattle();
   const rigRef = useRef<BossRig | null>(null);
-  const damageBoss = useAppStore((s) => s.damageBoss); 
 
   useLayoutEffect(() => {
     const stage = boot.stage;
@@ -24,7 +25,7 @@ export default function BossView({ boot, x, y, intent = 'idle' }: Props) {
     rig.play(intent);
 
     rig.onClick = () => {
-      damageBoss(10);
+      battle.damageBoss(10);
       rig.play('hurt');
       setTimeout(() => rig.play('idle'), 150);
     };
