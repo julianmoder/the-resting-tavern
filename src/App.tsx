@@ -28,7 +28,7 @@ export default function App() {
             ) : stage === Stage.Quest ? (
               <QuestPage quest={quest} onQuestComplete={() => { setStage(Stage.Boss) }} />
             ) : stage === Stage.Boss ? (
-              <BossPage quest={quest} onBossWin={() => { setStage(Stage.Loot) }} />
+              <BossPage quest={quest} onBossWin={() => { setStage(Stage.Loot) }} onBossLose={() => { setStage(Stage.Break) }} />
             ) : stage === Stage.Loot ? (
               <LootPage quest={quest} onLootTake={() => { setStage(Stage.Break); }} />
             ) : stage === Stage.Break ? (

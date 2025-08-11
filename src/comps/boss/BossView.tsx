@@ -25,7 +25,7 @@ export default function BossView({ boot, x, y, intent = 'idle' }: Props) {
     rig.play(intent);
 
     rig.onClick = () => {
-      battle.damageBoss(10);
+      battle.damageBoss(999);
       rig.play('hurt');
       setTimeout(() => rig.play('idle'), 150);
     };

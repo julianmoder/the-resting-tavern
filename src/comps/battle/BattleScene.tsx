@@ -3,11 +3,16 @@ import { PixiBoot } from '../../engine/pixi/pixiApp';
 import CharacterView from '../character/CharacterView';
 import BossView from '../boss/BossView';
 import { useAppStore } from '../../store/useAppStore';
-import { useBattle } from '../../hooks/useBattle'
+import { useHero } from '../../hooks/useHero';
+import { useBoss } from '../../hooks/useBoss';
+import { useBattle } from '../../hooks/useBattle';
+import { BattleOutcome } from '../../types/base';
 
 type Props = { className?: string };
 
 export default function BattleScene({ className = '' }: Props) {
+  const hero = useHero();
+  const boss = useBoss();
   const battle = useBattle();
   const hostRef = useRef<HTMLDivElement | null>(null);
   const [boot, setBoot] = useState<PixiBoot | null>(null);
@@ -53,23 +58,16 @@ export default function BattleScene({ className = '' }: Props) {
 
   // set defeat or victory
   useEffect(() => {
-    const unsub = useAppStore.subscribe(
-      (state: any) => ({
-        heroHp: state.hero?.stats?.health,
-        bossHp: state.boss?.stats?.health,
-        outcome: state.battle?.outcome,
-      }),
-      (oldState) => {
-        if (oldState.outcome !== 'none') return;
-        if (typeof oldState.heroHp === 'number' && oldState.heroHp <= 0) {
-          battle.setOutcome?.(BattleOutcome.Defeat);
-        } else if (typeof oldState.bossHp === 'number' && oldState.bossHp <= 0) {
-          battle.setOutcome?.(BattleOutcome.Victory);
-        }
-      }
-    );
-    return () => unsub();
-  }, []);
+    if (battle.outcome !== BattleOutcome.None) return;
+  
+    if (hero.stats.health <= 0) {
+      battle.setOutcome(BattleOutcome.Defeat);
+      console.log('BattleScene > outcome: defeat');
+    } else if (boss.stats.health <= 0) {
+      battle.setOutcome(BattleOutcome.Victory);
+      console.log('BattleScene > outcome: victory');
+    }
+  }, [hero, boss, battle]);
 
   // pause on tab or website visibility change (e.g. change browser tab)
   useEffect(() => {

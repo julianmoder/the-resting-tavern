@@ -10,9 +10,10 @@ import { useBattle } from '../hooks/useBattle';
 type BossPageProps = {
   quest: Quest;
   onBossWin: () => void;
+  onBossLose: () => void;
 };
 
-export default function BossPage({ quest, onBossWin }: BossPageProps) {
+export default function BossPage({ quest, onBossWin, onBossLose }: BossPageProps) {
   const hero = useHero();
   const boss = useBoss();
   const battle = useBattle();
@@ -24,7 +25,7 @@ export default function BossPage({ quest, onBossWin }: BossPageProps) {
 
   return (
     <div className="relative w-full text-white">
-      <BattleHud boss={boss} />
+      <BattleHud />
       <div className="w-full max-w-screen-xl mx-auto">
         <div className="w-full aspect-video flex flex-1 flex-col items-center">
           <p className="absolute top-1 pl-2 text-sm text-emerald-400 z-50">{quest.name}</p>
@@ -40,21 +41,13 @@ export default function BossPage({ quest, onBossWin }: BossPageProps) {
             </h2>
             <div className="space-x-3">
               {battle.outcome === 'victory' ? (
-                <button
-                  onClick={onBossWin}
-                  className="px-4 py-2 rounded-full bg-emerald-600 hover:bg-emerald-500"
-                >
-                  Continue
+                <button onClick={onBossWin} className="px-4 py-2 rounded-full bg-emerald-600 hover:bg-emerald-500">
+                  Loot
                 </button>
               ) : (
-                <>
-                  <button
-                    onClick={() => battle.setOutcome('none')}
-                    className="px-4 py-2 rounded-full bg-stone-600 hover:bg-stone-500"
-                  >
-                    Retry
-                  </button>
-                </>
+                <button onClick={onBossLose} className="px-4 py-2 rounded-full bg-stone-600 hover:bg-stone-500">
+                  Rest
+                </button>
               )}
             </div>
           </div>
