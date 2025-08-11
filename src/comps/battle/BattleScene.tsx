@@ -32,28 +32,75 @@ export default function BattleScene({ className = '' }: Props) {
     return () => { cancelled = true; b.destroy(); setBoot(null); };
   }, []);
 
-  // boss auto attack
+  // idle loop
   useEffect(() => {
     if (!boot?.app) return;
     const { app } = boot;
 
-    let accMs = 0;
-    const ATTACK_PERIOD_MS = 3500;
+    let bossAcc = 0;
+    let heroAcc = 0;
 
     const tick = (t: any) => {
-      const state: any = useAppStore.getState();
-      if (state.isPaused) return;
-      if (state.boss.stats.health !== undefined && state.boss.stats.health <= 0) return;
+      if (battle.isPaused) return;
+      if (battle.outcome !== BattleOutcome.None) return;
+      if (!hero.stats || !boss.stats) return;
 
-      accMs += t?.elapsedMS ?? 16.7;
-      if (accMs >= ATTACK_PERIOD_MS) {
-        battle.damagePlayer();
-        accMs = 0;
+      const dt = t?.elapsedMS ?? 16.7;
+
+      // hero auto attack
+      // damage: heroDamage = hero.level + weapon.power
+      // interval: weapon.attackSpeed (fallback 0.6 aps)
+      const weapon = hero.equipment?.weapon;
+      const heroAps = weapon?.attackSpeed ?? 0.6;
+      const heroIntervalMs = Math.max(500, Math.round(1000 / Math.max(0.1, heroAps)));
+      heroAcc += dt;
+
+      if (heroAcc >= heroIntervalMs) {
+        heroAcc = 0;
+
+        const heroDmgBase = (hero.level ?? 1) + (weapon?.power ?? 0);
+        const bossDef = boss.stats.defense ?? 0;
+        const heroDmg = Math.max(0, heroDmgBase - bossDef);
+
+        // minimum 1 damage
+        const heroDamage = heroDmg > 0 ? heroDmg : 1;
+        battle.damageBoss(heroDamage);
+      }
+
+      // boss auto attack or random mechanic
+      const bossAps = boss.stats.attackSpeed ?? 0.5;
+      const bossIntervalMs = Math.max(500, Math.round(1000 / Math.max(0.1, bossAps)));
+      bossAcc += dt;
+
+      if (bossAcc >= bossIntervalMs) {
+        bossAcc = 0;
+
+        // roll boss mechanic
+        const mechs = boss.mechanics ?? [];
+        const picked = mechs.find((m: any) => Math.random() < (m.chance ?? 0));
+
+        if (picked) {
+          // hier NUR triggern/anmelden – eigentliche Interaktion/Overlay kommt als nächster Schritt
+          // Du kannst dir im State merken, dass eine Mechanik aktiv ist:
+          // z.B. s.setBattleActiveMechanic(picked)
+          // Für jetzt loggen wir es nur:
+          console.debug('[Boss] mechanic triggered:', picked.name);
+          return;
+        }
+
+        // boss auto attack
+        const bossDmgBase = boss.stats.attack ?? 1;
+        const heroDef = hero.stats.defense ?? 0;
+        const bossDmg = Math.max(0, bossDmgBase - heroDef);
+
+        // minimum 1 damage
+        const bossDamage = bossDmg > 0 ? bossDmg : 1;
+        battle.damageHero(bossDamage);
       }
     };
 
     app.ticker.add(tick);
-    return () => { app.ticker ? app.ticker.remove(tick) : ''; };
+    return () => app.ticker?.remove(tick);
   }, [boot]);
 
   // set defeat or victory
@@ -62,10 +109,8 @@ export default function BattleScene({ className = '' }: Props) {
   
     if (hero.stats.health <= 0) {
       battle.setOutcome(BattleOutcome.Defeat);
-      console.log('BattleScene > outcome: defeat');
     } else if (boss.stats.health <= 0) {
       battle.setOutcome(BattleOutcome.Victory);
-      console.log('BattleScene > outcome: victory');
     }
   }, [hero, boss, battle]);
 
@@ -83,8 +128,8 @@ export default function BattleScene({ className = '' }: Props) {
       <div ref={hostRef} className="relative w-full h-full overflow-hidden bg-stone-900" />
       {boot?.isReady && (
         <>
-          <CharacterView boot={boot} x={240}  y={600} intent="idle" />
-          <BossView      boot={boot} x={1000} y={600} intent="idle" />
+          <HeroView boot={boot} pos={hero.position} intent="idle" />
+          <BossView boot={boot} pos={boss.position} intent="idle" />
         </>
       )}
     </div>

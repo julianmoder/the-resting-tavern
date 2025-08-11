@@ -27,15 +27,21 @@ const defaultConfig: DropConfig = {
 };
 
 function generateItem(template: ItemTemplate): Item {
+  const isWeapon = template.type === ItemType.Weapon;
+  const aps = isWeapon ? template.attackSpeed : undefined;
+  const newPower = calcPower(template.level, template.type, template.basePower);
+  const newDps = calcDps(newPower, aps);
+
   const item = {
     ...template,
     id: uuidv4(),
-    power: calcPower(template.level, template.type, template.basePower),
-      modifier: {
-        str: template.affixes?.includes('str') ? calcModifier(template.level) : 0,
-        int: template.affixes?.includes('int') ? calcModifier(template.level) : 0,
-        dex: template.affixes?.includes('dex') ? calcModifier(template.level) : 0,
-      },
+    power: newPower,
+    dps: newDps,
+    modifier: {
+      str: template.affixes?.includes('str') ? calcModifier(template.level) : 0,
+      int: template.affixes?.includes('int') ? calcModifier(template.level) : 0,
+      dex: template.affixes?.includes('dex') ? calcModifier(template.level) : 0,
+    },
     position: {
       x: 0,
       y: 0,
@@ -44,6 +50,10 @@ function generateItem(template: ItemTemplate): Item {
   };
 
   return item;
+}
+
+function calcDps(power: number, aps: number) {
+  return Math.round(power * aps);
 }
 
 function calcPower(level: number, type: ItemType, basePower: number): number {

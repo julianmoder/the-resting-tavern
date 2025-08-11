@@ -18,9 +18,12 @@ export default function BossPage({ quest, onBossWin, onBossLose }: BossPageProps
   const boss = useBoss();
   const battle = useBattle();
 
+  //for debugging
   useEffect(() => {
-    if (!hero?.stats || !boss?.stats) return;
-    battle.reset(hero.stats.maxHealth, boss.stats.maxHealth);
+    if (import.meta.env.DEV) {
+      if (!hero?.stats || !boss?.stats) return;
+      battle.reset(hero.stats.maxHealth, boss.stats.maxHealth);
+    }
   }, [hero?.stats?.maxHealth, boss?.stats?.maxHealth]);
 
   return (

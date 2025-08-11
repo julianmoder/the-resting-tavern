@@ -15,9 +15,13 @@ export interface BossStats {
   energy: number,
   maxEnergy: number,
   attack: number,
+  attackSpeed: number, // attacks per second range: 0.2 to 1.0
   defense: number,
 }
 
 export interface BossMechanic {
   name: string,
+  chance: number, // range: 0.0 to 1.0
+  windup: number, // ms
+  duration: number, // ms
 }
