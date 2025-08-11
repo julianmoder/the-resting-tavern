@@ -33,56 +33,50 @@ export default function LandingPage({ onEnterTavern }: LandingPageProps) {
 
  return (
     <div className='text-white'>
-
-      <p className='mb-3 text-center font-bold'>What is your name, weary traveler?</p>
-
-      <div className='flex space-x-2 mt-6'>
-
-        <input className='p-2 text-center text-orange-500 focus:text-orange-500 focus:outline-orange-500 focus:outline-2 font-semibold border-solid border-3 leading-1 rounded-xl'
-          type='text'
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder={'Enter your hero\'s name'}
-        />
-
-        <button
-          className='hover:bg-orange-500 text-white px-3 rounded-full font-normal text-3xl'
-          onClick={genHeroName}
-        >
-          🎲
-        </button>
-
-      </div>
-
-      <div className="flex space-x-2 mt-9 justify-center">
-        {heroClasses.map((heroClass) => (
+      <div className='flex flex-1 flex-col justify-center items-center'>
+        <p className='mb-3 text-center font-bold'>What is your name, weary traveler?</p>
+        <div className='relative flex mt-6'>
+          <input className='p-2 px-10 text-center text-orange-500 focus:text-orange-500 focus:outline-orange-500 focus:outline-2 font-semibold border-solid border-3 leading-1 rounded-xl'
+            type='text'
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder={'Enter your hero\'s name'}
+          />
           <button
-            key={heroClass}
-            className={`px-9 py-3 rounded-full font-semibold
-              ${selectedClass === heroClass
-                ? 'bg-orange-500 text-white hover:bg-orange-600'
-                : 'bg-gray-600 text-gray-400 hover:bg-orange-600 hover:text-white'}
-            `}
-            onClick={() => {
-              setSelectedClass(heroClass);
-            }}
+            className='absolute top-1 right-0 px-1 text-2xl'
+            onClick={genHeroName}
           >
-            {heroClass.charAt(0).toUpperCase() + heroClass.slice(1)}
+            🎲
           </button>
-        ))}
+        </div>
+        <div className="flex space-x-2 mt-9 justify-center">
+          {heroClasses.map((heroClass) => (
+            <button
+              key={heroClass}
+              className={`px-9 py-3 rounded-full font-semibold
+                ${selectedClass === heroClass
+                  ? 'bg-orange-500 text-white hover:bg-orange-600'
+                  : 'bg-gray-600 text-gray-400 hover:bg-orange-600 hover:text-white'}
+              `}
+              onClick={() => {
+                setSelectedClass(heroClass);
+              }}
+            >
+              {heroClass.charAt(0).toUpperCase() + heroClass.slice(1)}
+            </button>
+          ))}
+        </div>
+        <button className={`mt-18 px-9 py-3 rounded-full font-semibold 
+          ${ isHeroNameValid 
+            ? 'bg-orange-500 text-white :bg-orange-600' 
+            : 'bg-gray-600 text-gray-400 cursor-not-allowed' }
+          `}
+          onClick={() => isHeroNameValid && enterTavern(name.trim(), selectedClass)}
+          disabled={!isHeroNameValid}
+        >
+          Enter the Tavern
+        </button>
       </div>
-
-      <button className={`mt-18 px-9 py-3 rounded-full font-semibold 
-        ${ isHeroNameValid
-            ? 'bg-orange-500 text-white :bg-orange-600'
-            : 'bg-gray-600 text-gray-400 cursor-not-allowed'
-        }`}
-        onClick={() => isHeroNameValid && enterTavern(name.trim(), selectedClass)}
-        disabled={!isHeroNameValid}
-      >
-        Enter the Tavern
-      </button>
-
     </div>
   );
 }
