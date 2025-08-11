@@ -1,18 +1,21 @@
 import { useHero } from '../../hooks/useHero';
 import { useBoss } from '../../hooks/useBoss';
 import UnitPlate from '../ui/UnitPlate';
+import BattleOutcomeOverlay from '../battle/BattleOutcomeOverlay';
 
 type BattleHudProps = {
   className?: string;
+  onBossWin: () => void;
+  onBossLose: () => void;
 };
 
-export default function BattleHud({ className = '' }: BattleHudProps) {
+export default function BattleHud({ className = '', onBossWin, onBossLose }: BattleHudProps) {
   const hero = useHero();
   const boss = useBoss();
 
   return (
-    <div className={`absolute top-2 left-2 right-2 z-50 ${className}`}>
-      <div className="flex flex-cols-2 justify-between">
+    <div className={`absolute z-50 w-full h-full pointer-events-none ${className}`}>
+      <div className="flex flex-cols-2 justify-between p-2">
         <div>
           <UnitPlate
             name={hero?.name}
@@ -36,6 +39,8 @@ export default function BattleHud({ className = '' }: BattleHudProps) {
           />
         </div>
       </div>
+      <BattleFloatingOverlay boot={boot} heroPos={hero.position} bossPos={boss.position} durationMs={500} />
+      <BattleOutcomeOverlay onBossWin={onBossWin} onBossLose={onBossLose} />
     </div>
   );
 }
