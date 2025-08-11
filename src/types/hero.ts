@@ -24,6 +24,8 @@ export interface HeroStats {
   maxHealth: number,
   energy: number,
   maxEnergy: number,
+  attack: number,
+  defense: number,
   str: number,
   int: number,
   dex: number,

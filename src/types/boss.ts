@@ -14,6 +14,8 @@ export interface BossStats {
   maxHealth: number,
   energy: number,
   maxEnergy: number,
+  attack: number,
+  defense: number,
 }
 
 export interface BossMechanic {
