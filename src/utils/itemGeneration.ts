@@ -58,8 +58,8 @@ function calcDps(power: number, aps: number) {
 
 function calcPower(level: number, type: ItemType, basePower: number): number {
   // Sigmoid-Kurve
-  const min = 10, max = 50;
-  const curve = (max - min) * Math.tanh(level / 10) + min;
+  const min = 0, max = 100;
+  const curve = (max - min) * Math.tanh(level / 50) + min;
   const value = curve * (0.9 + Math.random() * 0.2);
 
   const power = (type === 'armor') ? basePower + (value / 2) : basePower + value;

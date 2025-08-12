@@ -29,7 +29,6 @@ export const useAppStore = create<AppState>()(
       name: 'resting-tavern-store',
       partialize: (state) => ({
         settings: state.settings,
-        ui: state.ui,
         modal: state.modal,
         stage: state.stage,
         hero: state.hero,

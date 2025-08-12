@@ -10,7 +10,7 @@ export type { Inventory, Vector2D } from './inventory';
 export type { Quest, Loot } from './quest';
 export type { Boss, BossTemplate, BossStats, BossMechanic } from './boss';
 export { BattleOutcome } from './battle';
-export type { Battle } from './battle';
+export type { Battle, BattleHit } from './battle';
 
 export enum Stage {
   Landing = 'landing',

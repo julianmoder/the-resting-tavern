@@ -25,6 +25,7 @@ export const createHeroSlice: StateCreator<HeroSlice, [], [], HeroSlice> = (set,
     xp: 0,
     level: 1,
     leveledUp: false,
+    position: { x: 250, y: 600 }, //  initial position for battle
     stats: {
       health: 60,
       maxHealth: 60,

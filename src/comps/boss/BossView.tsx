@@ -1,17 +1,17 @@
 import { useLayoutEffect, useRef } from 'react';
 import { useAppStore } from '../../store/useAppStore';
+import type { Vector2D } from '../../types/base';
 import { BossRig } from '../../engine/pixi/bossRig';
 import { PixiBoot } from '../../engine/pixi/pixiApp';
-import { useBattle } from '../../hooks/useBattle'
+import { useBattle } from '../../hooks/useBattle';
 
 type Props = {
   boot: PixiBoot;
-  x: number;
-  y: number;
+  pos: Vector2D;
   intent?: 'idle' | 'attack' | 'block' | 'hurt';
 };
 
-export default function BossView({ boot, x, y, intent = 'idle' }: Props) {
+export default function BossView({ boot, pos, intent = 'idle' }: Props) {
   const battle = useBattle();
   const rigRef = useRef<BossRig | null>(null);
 
@@ -21,7 +21,7 @@ export default function BossView({ boot, x, y, intent = 'idle' }: Props) {
 
     const rig = new BossRig();
     rig.mount(stage);
-    rig.setPosition(x, y);
+    rig.setPosition(pos.x, pos.y);
     rig.play(intent);
 
     rig.onClick = () => {
@@ -39,8 +39,8 @@ export default function BossView({ boot, x, y, intent = 'idle' }: Props) {
   }, [boot.stage]);
 
   useLayoutEffect(() => {
-    rigRef.current?.setPosition(x, y);
-  }, [x, y]);
+    rigRef.current?.setPosition(pos.x, pos.y);
+  }, [pos.x, pos.y]);
 
   useLayoutEffect(() => {
     rigRef.current?.play(intent);

@@ -1,7 +1,7 @@
 import type { StateCreator } from 'zustand';
 import type { AppState } from './useAppStore';
 import { BattleOutcome } from '../types/base';
-import type { Battle } from '../types/base';
+import type { Battle, BattleHit } from '../types/base';
 
 export type BattleSlice = {
   battle: Battle;
@@ -17,6 +17,8 @@ export const createBattleSlice: StateCreator<AppState, [], [], BattleSlice> = (s
     isPaused: false,
     lastHitAt: performance.now(),
     outcome: BattleOutcome.None,
+    lastHeroHit: undefined,
+    lastBossHit: undefined,
   },
   resetBattle: () => {
     set((state) => ({
@@ -40,6 +42,8 @@ export const createBattleSlice: StateCreator<AppState, [], [], BattleSlice> = (s
         isPaused: false,
         lastHitAt: performance.now(),
         outcome: BattleOutcome.None,
+        lastHeroHit: undefined,
+        lastBossHit: undefined,
       }
     }));
   },
@@ -62,6 +66,11 @@ export const createBattleSlice: StateCreator<AppState, [], [], BattleSlice> = (s
           health: Math.max(0, state.hero.stats.health - lostHealth),
         },
       },
+      battle: {
+        ...state.battle,
+        lastHitAt: performance.now(),
+        lastHeroHit: (lostHealth > 0) ? { target: 'hero', amount: lostHealth, at: performance.now() } : state.battle.lastHeroHit,
+      }
     }));
   },
   setBattleDamageBoss: (dmg: number | undefined = undefined) => {
@@ -83,6 +92,10 @@ export const createBattleSlice: StateCreator<AppState, [], [], BattleSlice> = (s
           health: Math.max(0, state.boss.stats.health - lostHealth),
         },
       },
+      battle: {
+        ...state.battle,
+        lastBossHit: (lostHealth > 0) ? { target: 'boss', amount: lostHealth, at: performance.now() } : state.battle.lastBossHit,
+      }
     }));
   },
   setBattlePaused: (newPause: boolean) => {

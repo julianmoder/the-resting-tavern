@@ -85,4 +85,12 @@ export class PixiBoot {
       this.container = null;
     }
   }
+
+  worldToScreen(x: number, y: number) {
+    if (!this.app || !this.app.stage || !this.container) return { left: 0, top: 0 };
+    const s = this.app.stage;
+    const left = s.position.x + x * s.scale.x;
+    const top  = s.position.y + y * s.scale.y;
+    return { left, top };
+  }
 }
