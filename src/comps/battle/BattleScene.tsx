@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { PixiBoot } from '../../engine/pixi/pixiApp';
 import { useUI } from '../../hooks/useUI';
 import HeroView from '../hero/HeroView';
@@ -93,7 +93,8 @@ export default function BattleScene({ className = '' }: Props) {
 
         // boss auto attack
         const bossDmgBase = state.boss.stats.attack ?? 1;
-        const heroDef = state.hero.stats.defense ?? 0;
+        const armor = state.hero.equipment?.armor;
+        const heroDef = armor?.power ?? 0;
         const bossDmg = Math.max(0, bossDmgBase - heroDef);
 
         // minimum 1 damage

@@ -1,4 +1,3 @@
-import { useAppStore } from '../../store/useAppStore';
 import { useUI } from '../../hooks/useUI';
 import { useHero } from '../../hooks/useHero';
 import { useBoss } from '../../hooks/useBoss';
@@ -17,8 +16,8 @@ export default function BattleHud({ className = '', onBossWin, onBossLose }: Bat
   const ui = useUI();
   const hero = useHero();
   const boss = useBoss();
-  const boot = useAppStore((s) => s.boot);
-
+  if(!ui.pixi.boot) return;
+  
   return (
     <div className={`absolute z-50 w-full h-full pointer-events-none ${className}`}>
       <div className="flex flex-cols-2 justify-between p-2">

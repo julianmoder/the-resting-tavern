@@ -1,7 +1,6 @@
 import type { StateCreator } from 'zustand';
 import type { UIHelper } from '../types/base';
 import { PixiBoot } from '../engine/pixi/pixiApp';
-import type { StateCreator } from 'zustand';
 
 export interface UISlice {
   ui: UIHelper;

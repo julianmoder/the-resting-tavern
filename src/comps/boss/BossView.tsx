@@ -1,5 +1,4 @@
 import { useLayoutEffect, useRef } from 'react';
-import { useAppStore } from '../../store/useAppStore';
 import type { Vector2D } from '../../types/base';
 import { BossRig } from '../../engine/pixi/bossRig';
 import { PixiBoot } from '../../engine/pixi/pixiApp';

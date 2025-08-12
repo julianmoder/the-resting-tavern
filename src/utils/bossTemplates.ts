@@ -2,7 +2,13 @@ export const bossTemplates = [
   {
     name: 'Doomscroll',
     stats: {
-      attackSpeed: 0.20,
+      health: 1, // calculated
+      maxHealth: 1, // calculated
+      energy: 1, // calculated
+      maxEnergy: 1, // calculated
+      attack: 1, // calculated
+      attackSpeed: 0.2,
+      defense: 1, // calculated 
     },
     mechanics: [
       { 

@@ -1,7 +1,7 @@
 import type { StateCreator } from 'zustand';
 import type { AppState } from './useAppStore';
 import { BattleOutcome } from '../types/base';
-import type { Battle, BattleHit } from '../types/base';
+import type { Battle } from '../types/base';
 
 export type BattleSlice = {
   battle: Battle;
@@ -12,7 +12,7 @@ export type BattleSlice = {
   setBattleOutcome: (o: BattleOutcome) => void;
 };
 
-export const createBattleSlice: StateCreator<AppState, [], [], BattleSlice> = (set, get) => ({
+export const createBattleSlice: StateCreator<AppState, [], [], BattleSlice> = (set) => ({
   battle: {
     isPaused: false,
     lastHitAt: performance.now(),
@@ -48,53 +48,35 @@ export const createBattleSlice: StateCreator<AppState, [], [], BattleSlice> = (s
     }));
   },
   setBattleDamageHero: (dmg: number | undefined = undefined) => {
-    const state = get();
-    let damage = 0;
-    if(typeof dmg === 'number') {
-      damage = dmg;
-    } else {
-      damage = state.boss.stats.attack;
-    }
-    const defense = state.hero.stats.defense;
-    const lostHealth = Math.max(0, damage - defense);
-
+    if(!dmg) return;
     set((state) => ({
       hero: {
         ...state.hero,
         stats: {
           ...state.hero.stats,
-          health: Math.max(0, state.hero.stats.health - lostHealth),
+          health: Math.max(0, state.hero.stats.health - dmg),
         },
       },
       battle: {
         ...state.battle,
         lastHitAt: performance.now(),
-        lastHeroHit: (lostHealth > 0) ? { target: 'hero', amount: lostHealth, at: performance.now() } : state.battle.lastHeroHit,
+        lastHeroHit: (dmg > 0) ? { target: 'hero', amount: dmg, at: performance.now() } : state.battle.lastHeroHit,
       }
     }));
   },
   setBattleDamageBoss: (dmg: number | undefined = undefined) => {
-    const state = get();
-    let damage = 0;
-    if(typeof dmg === 'number') {
-      damage = dmg;
-    } else {
-      damage = state.hero.stats.attack;
-    }
-    const defense = state.boss.stats.defense;
-    const lostHealth = Math.max(0, damage - defense);
-
+    if(!dmg) return;
     set((state) => ({
       boss: {
         ...state.boss,
         stats: {
           ...state.boss.stats,
-          health: Math.max(0, state.boss.stats.health - lostHealth),
+          health: Math.max(0, state.boss.stats.health - dmg),
         },
       },
       battle: {
         ...state.battle,
-        lastBossHit: (lostHealth > 0) ? { target: 'boss', amount: lostHealth, at: performance.now() } : state.battle.lastBossHit,
+        lastBossHit: (dmg > 0) ? { target: 'boss', amount: dmg, at: performance.now() } : state.battle.lastBossHit,
       }
     }));
   },

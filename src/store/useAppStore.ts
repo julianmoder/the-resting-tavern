@@ -10,7 +10,7 @@ import { createQuestSlice, type QuestSlice } from './questSlice';
 import { createBattleSlice, type BattleSlice } from './battleSlice';
 import { createBossSlice, type BossSlice } from './bossSlice';
 
-interface AppState extends SettingsSlice, UISlice, ModalSlice, StageSlice, HeroSlice, InventorySlice, QuestSlice, BattleSlice, BossSlice {}
+export interface AppState extends SettingsSlice, UISlice, ModalSlice, StageSlice, HeroSlice, InventorySlice, QuestSlice, BattleSlice, BossSlice {}
 
 export const useAppStore = create<AppState>()(
   persist(

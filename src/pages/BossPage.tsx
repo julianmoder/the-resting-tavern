@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
-import { useAppStore } from '../store/useAppStore';
-import type { Quest } from '../types/types';
+import type { Quest } from '../types/base';
 import BattleScene from '../comps/battle/BattleScene';
 import BattleHud from '../comps/battle/BattleHud';
 import { useHero } from '../hooks/useHero';
@@ -21,8 +20,8 @@ export default function BossPage({ quest, onBossWin, onBossLose }: BossPageProps
   //for debugging
   useEffect(() => {
     if (import.meta.env.DEV) {
-      if (!hero?.stats || !boss?.stats) return;
-      battle.reset(hero.stats.maxHealth, boss.stats.maxHealth);
+      if (!hero?.stats?.maxHealth || !boss?.stats?.maxHealth) return;
+      battle.reset();
     }
   }, [hero?.stats?.maxHealth, boss?.stats?.maxHealth]);
 

@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useAppStore } from '../../store/useAppStore';
+import type { Vector2D } from '../../types/base';
 import { PixiBoot } from '../../engine/pixi/pixiApp';
 
 type FloatingNumber = {
@@ -13,8 +14,8 @@ type FloatingNumber = {
 
 type BattleFloatingOverlayProps = {
   boot: PixiBoot;
-  heroPos: { x: number; y: number };
-  bossPos: { x: number; y: number };
+  heroPos: Vector2D;
+  bossPos: Vector2D;
   durationMs?: number; 
 };
 

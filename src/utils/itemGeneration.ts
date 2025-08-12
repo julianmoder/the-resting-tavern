@@ -28,7 +28,7 @@ const defaultConfig: DropConfig = {
 
 function generateItem(template: ItemTemplate): Item {
   const isWeapon = template.type === ItemType.Weapon;
-  const aps = isWeapon ? template.attackSpeed : undefined;
+  const aps = isWeapon ? template.attackSpeed : 0;
   const newPower = calcPower(template.level, template.type, template.basePower);
   const newDps = calcDps(newPower, aps);
 
@@ -52,7 +52,8 @@ function generateItem(template: ItemTemplate): Item {
   return item;
 }
 
-function calcDps(power: number, aps: number) {
+function calcDps(power: number, aps: number | undefined) {
+  if(!aps) return; 
   return Math.round(power * aps);
 }
 

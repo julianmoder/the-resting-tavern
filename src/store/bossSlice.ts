@@ -1,13 +1,13 @@
 import type { StateCreator } from 'zustand';
 import { v4 as uuidv4 } from 'uuid';
-import type { Boss, BossStats, BossTemplate, Hero } from '../types/base';
+import type { Boss, BossTemplate, Hero } from '../types/base';
 
 export interface BossSlice {
   boss: Boss;
   createBoss: (newBoss: BossTemplate, hero: Hero) => void;
 }
 
-export const createBossSlice: StateCreator<BossSlice, [], [], BossSlice> = (set, get) => ({
+export const createBossSlice: StateCreator<BossSlice, [], [], BossSlice> = (set) => ({
   boss: {
     id: 'noID',
     name: 'Unnamed Boss',

@@ -2,14 +2,14 @@ import type { Vector2D } from './base';
 
 export interface Boss extends BossTemplate {
   id: string,
-  stats: BossStats,
   level: number,
-  postition: Vector2D,
+  position: Vector2D,
 }
 
 export interface BossTemplate {
   name: string,
-  mechanics: BossMecanic[],
+  stats: BossStats,
+  mechanics: BossMechanic[],
 }
 
 export interface BossStats {

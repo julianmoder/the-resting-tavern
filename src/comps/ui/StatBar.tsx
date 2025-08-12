@@ -1,5 +1,3 @@
-import React from 'react';
-
 type StatBarProps = {
   label: string;
   value: number;
