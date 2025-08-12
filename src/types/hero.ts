@@ -2,7 +2,7 @@ import type { Item, Vector2D } from './base';
 
 export enum HeroClass {
   Warrior = 'warrior',
-  Wizzard = 'wizzard',
+  Wizard = 'wizard',
   Ranger = 'ranger',
 }
 

@@ -47,7 +47,7 @@ export default function ItemCard({ item, visible, x, y, anchorRef, onRequestClos
       : item?.rarity === 'epic'
       ? 'border border-3 border-purple-500'
       : item?.rarity === 'rare'
-      ? 'border border-3 border-blue-50-950'
+      ? 'border border-3 border-blue-500'
       : item?.rarity === 'uncommon'
       ? 'border border-3 border-green-500'
       : 'border border-3 border-stone-400';
