@@ -104,7 +104,9 @@ export default function BattleScene({ className = '' }: Props) {
     };
 
     app.ticker.add(tick);
-    return () => app.ticker?.remove(tick);
+    return () => {
+      app.ticker?.remove(tick);
+    };
   }, [ui.pixi.boot]);
 
   // set defeat or victory

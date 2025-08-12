@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { species } from 'fantastical';
 import { useHero } from '../hooks/useHero';
 import { useInventory } from '../hooks/useInventory'
 import { HeroClass } from '../types/base';
@@ -14,7 +13,8 @@ export default function LandingPage({ onEnterTavern }: LandingPageProps) {
   const hero = useHero();
   const inventory = useInventory();
 
-  const genHeroName = () => {
+  const genHeroName = async () => {
+    const { species } = await import('fantastical');
     const randomHeroName = species.human({'allowMultipleNames':true})
     setName(randomHeroName);
   };

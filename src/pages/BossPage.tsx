@@ -1,10 +1,11 @@
-import { useEffect } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import type { Quest } from '../types/base';
-import BattleScene from '../comps/battle/BattleScene';
-import BattleHud from '../comps/battle/BattleHud';
 import { useHero } from '../hooks/useHero';
 import { useBoss } from '../hooks/useBoss';
 import { useBattle } from '../hooks/useBattle';
+
+const BattleScene = lazy(() => import('../comps/battle/BattleScene'));
+const BattleHud   = lazy(() => import('../comps/battle/BattleHud'));
 
 type BossPageProps = {
   quest: Quest;
@@ -27,13 +28,15 @@ export default function BossPage({ quest, onBossWin, onBossLose }: BossPageProps
 
   return (
     <div className="relative w-full text-white">
-      <BattleHud onBossWin={onBossWin} onBossLose={onBossLose} />
-      <div className="w-full max-w-screen-xl mx-auto">
-        <div className="w-full aspect-video flex flex-1 flex-col items-center">
-          <p className="absolute top-1 pl-2 text-sm text-emerald-400 z-50">{quest.name}</p>
-          <BattleScene className="w-full h-full" />
+      <Suspense fallback={<p className="text-white">Loading battle…</p>}>
+        <BattleHud onBossWin={onBossWin} onBossLose={onBossLose} />
+        <div className="w-full max-w-screen-xl mx-auto">
+          <div className="w-full aspect-video flex flex-1 flex-col items-center">
+            <p className="absolute top-1 pl-2 text-sm text-emerald-400 z-50">{quest.name}</p>
+            <BattleScene className="w-full h-full" />
+          </div>
         </div>
-      </div>
+      </Suspense>
     </div>
   );
 }
