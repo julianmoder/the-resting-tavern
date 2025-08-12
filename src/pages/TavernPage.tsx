@@ -36,7 +36,7 @@ export default function TavernPage({ onStartQuest }: TavernPageProps) {
       <SideBar />
 
       {/* Hero Overview */}
-      {ui.sidebar.Hero && (
+      {ui.sidebar.showHero && (
           <HeroOverview />
       )}
 
