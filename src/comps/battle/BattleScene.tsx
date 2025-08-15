@@ -1,4 +1,7 @@
 import { useEffect, useRef } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import { BattleOutcome, InteractionId, BossMechanicPhase } from '../../types/base';
+import type { BossMechanic, Interaction } from '../../types/base';
 import { PixiBoot } from '../../engine/pixi/pixiApp';
 import { useUI } from '../../hooks/useUI';
 import HeroView from '../hero/HeroView';
@@ -7,7 +10,10 @@ import { useAppStore } from '../../store/useAppStore';
 import { useHero } from '../../hooks/useHero';
 import { useBoss } from '../../hooks/useBoss';
 import { useBattle } from '../../hooks/useBattle';
-import { BattleOutcome } from '../../types/base';
+import { ReactionClick } from '../../engine/interactions/reactionClick';
+import { KeyMash } from '../../engine/interactions/keyMash';
+import { DodgeDirection } from '../../engine/interactions/dodgeDirection';
+
 
 type Props = { className?: string };
 
@@ -17,6 +23,78 @@ export default function BattleScene({ className = '' }: Props) {
   const boss = useBoss();
   const battle = useBattle();
   const hostRef = useRef<HTMLDivElement | null>(null);
+  const activeMechInteractionRef = useRef<Interaction | null>(null);
+  const mechanicActiveRef = useRef(false);
+  const mechanicFailDamage = Math.floor(hero.stats.maxHealth / 5);
+
+  function launchMechanic(mechanic: BossMechanic) {
+    setTimeout(() => {
+      const interaction = mechanic.interaction;
+      let mechInteraction: Interaction;
+      if (interaction === InteractionId.ReactionClick) mechInteraction = new ReactionClick();
+      else if (interaction === InteractionId.KeyMash) mechInteraction = new KeyMash();
+      else mechInteraction = new DodgeDirection();
+
+      activeMechInteractionRef.current?.cleanup();
+      activeMechInteractionRef.current = mechInteraction;
+
+      const duration = mechanic.duration ?? 2500;
+      const now = performance.now();
+      const deadline = now + duration;
+
+      battle.setMechanic({ 
+        deadline: deadline,
+        phase: BossMechanicPhase.Interaction, 
+      });
+
+      mechInteraction.start({
+        now,
+        deadline,
+        onSuccess: () => {
+          // TODO: add level dependency for damage
+          battle.damageBoss(mechanic.damageBaseBoss);
+          battle.setMechanic({ 
+            phase: BossMechanicPhase.Success, 
+            overlay: {
+              text: mechanic.successText,
+              flash: 'success',
+              shake: false,
+            }
+          });
+          cleanupMechanic();
+        },
+        onFail: () => {
+          // TODO: add level dependency for damage
+          battle.damageHero(mechanic.damageBaseHero);
+          battle.setMechanic({ 
+            phase: BossMechanicPhase.Fail, 
+            overlay: {
+              text: mechanic.failText,
+              flash: 'fail',
+              shake: true,
+            }
+          });
+          cleanupMechanic();
+        },
+      });
+
+      const prompt = mechInteraction.getPrompt();
+
+      battle.setMechanic({
+        overlay: {
+          text: prompt,
+        },
+      });
+    }, mechanic.windup ?? 0);
+  }
+
+  function cleanupMechanic() {
+    activeMechInteractionRef.current?.cleanup();
+    activeMechInteractionRef.current = null;
+    mechanicActiveRef.current = false;
+    battle.setMechanic({ deadline: null });
+    setTimeout(() => { battle.resetMechanic() }, 3000);
+  }
 
   // pixi boot
   useEffect(() => {
@@ -30,7 +108,7 @@ export default function BattleScene({ className = '' }: Props) {
       ui.pixi.setBoot(b);
     })();
 
-    return () => { cancelled = true; b.destroy(); ui.pixi.setBoot(null); };
+    return () => { cancelled = true; b.destroy(); cleanupMechanic(); ui.pixi.setBoot(null); };
   }, []);
 
   // idle loop
@@ -49,6 +127,17 @@ export default function BattleScene({ className = '' }: Props) {
       if (!state.hero.stats || !state.boss.stats) return;
 
       const dt = t?.elapsedMS ?? 16.7;
+
+      const now = performance.now();
+      if (mechanicActiveRef.current) {
+        activeMechInteractionRef.current?.update(dt, now);
+        // timeout
+        if (state.battle.mechanic.deadline && now > state.battle.mechanic.deadline) {
+          // fail as fallback
+          battle.damageHero(mechanicFailDamage);
+          cleanupMechanic();
+        }
+      }
 
       // hero auto attack
       // damage: heroDamage = hero.level + weapon.power
@@ -83,15 +172,38 @@ export default function BattleScene({ className = '' }: Props) {
         const picked = mechs.find((m: any) => Math.random() < (m.chance ?? 0));
 
         if (picked) {
-          // hier NUR triggern/anmelden – eigentliche Interaktion/Overlay kommt als nächster Schritt
-          // Du kannst dir im State merken, dass eine Mechanik aktiv ist:
-          // z.B. s.setBattleActiveMechanic(picked)
-          // Für jetzt loggen wir es nur:
-          console.log('[Boss] mechanic triggered:', picked.name);
+          if (!mechanicActiveRef.current) {
+            const newMechanic = {
+              id: uuidv4(),
+              phase: BossMechanicPhase.Windup,
+              deadline: null,
+              active: true,
+              overlay: {
+                text: picked.windupText ?? undefined,
+                flash: picked.flash ?? null,
+                shake: picked.shake ?? false,
+              },
+              name: picked.name,
+              chance: picked.chance,
+              windup: picked.windup,
+              interaction: picked.interaction,
+              duration: picked.duration,
+              damageBaseBoss: picked.damageBaseBoss ?? 0,
+              damageBaseHero: picked.damageBaseHero ?? 0,
+              windupText: picked.windupText ?? undefined,
+              successText: picked.successText ?? undefined,
+              failText: picked.failText ?? undefined,
+            }
+            battle.setMechanic(newMechanic);
+            console.log(newMechanic);
+            launchMechanic(newMechanic);
+            mechanicActiveRef.current = true;
+          }
           return;
         }
 
         // boss auto attack
+        if (mechanicActiveRef.current) return;
         const bossDmgBase = state.boss.stats.attack ?? 1;
         const armor = state.hero.equipment?.armor;
         const heroDef = armor?.power ?? 0;
@@ -122,6 +234,18 @@ export default function BattleScene({ className = '' }: Props) {
       battle.setPause(true);
     }
   }, [hero, boss, battle]);
+
+  // handle interactio inputs
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => activeMechInteractionRef.current?.handleInput(e);
+    const onMouse = (e: MouseEvent) => activeMechInteractionRef.current?.handleInput(e);
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('mousedown', onMouse);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('mousedown', onMouse);
+    };
+  }, []);
 
   // pause on tab or website visibility change (e.g. change browser tab)
   useEffect(() => {

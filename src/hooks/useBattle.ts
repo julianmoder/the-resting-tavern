@@ -7,7 +7,9 @@ export function useBattle() {
   const setBattleDamageBoss = useAppStore(s => s.setBattleDamageBoss);
   const setBattlePaused = useAppStore(s => s.setBattlePaused);
   const setBattleOutcome = useAppStore(s => s.setBattleOutcome);
-
+  const setBattleAnimIntent = useAppStore(s => s.setBattleAnimIntent);
+  const setBattleMechanic = useAppStore(s => s.setBattleMechanic);
+  const resetBattleMechanic = useAppStore(s => s.resetBattleMechanic);
   
   return {
     ...battle,
@@ -16,5 +18,8 @@ export function useBattle() {
     damageBoss: setBattleDamageBoss,
     setPause: setBattlePaused,
     setOutcome: setBattleOutcome,
+    setAnimIntent: setBattleAnimIntent,
+    setMechanic: setBattleMechanic,
+    resetMechanic: resetBattleMechanic,
   }
 }

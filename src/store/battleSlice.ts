@@ -1,7 +1,7 @@
 import type { StateCreator } from 'zustand';
 import type { AppState } from './useAppStore';
-import { BattleOutcome } from '../types/base';
-import type { Battle } from '../types/base';
+import { BattleOutcome, BossMechanicPhase, AnimIntent } from '../types/base';
+import type { Battle, BossMechanic, BossMechanicOverlay, AnimIntent } from '../types/base';
 
 export type BattleSlice = {
   battle: Battle;
@@ -10,15 +10,36 @@ export type BattleSlice = {
   setBattleDamageHero: (dmg: number | undefined) => void;
   setBattlePaused: (p: boolean) => void;
   setBattleOutcome: (o: BattleOutcome) => void;
+  setBattleAnimIntent: (who: 'hero'|'boss', intent: AnimIntent) => void;
+  setBattleMechanic: (mechanic: BossMechanic) => void;
+  resetBattleMechanic: () => void;
 };
 
 export const createBattleSlice: StateCreator<AppState, [], [], BattleSlice> = (set) => ({
   battle: {
     isPaused: false,
-    lastHitAt: performance.now(),
+    lastHitAt: 0,
     outcome: BattleOutcome.None,
     lastHeroHit: undefined,
     lastBossHit: undefined,
+    heroIntent: AnimIntent.Idle,
+    bossIntent: AnimIntent.Idle,
+    mechanic: { 
+      id: null,
+      phase: BossMechanicPhase.Idle,
+      deadline: null, 
+      active: false, 
+      overlay: {
+        text: undefined, 
+        flash: null, 
+        shake: false,
+      }, 
+      name: undefined,
+      chance: null,
+      windup: null,
+      interaction: undefined,
+      duration: null,
+    },
   },
   resetBattle: () => {
     set((state) => ({
@@ -44,6 +65,24 @@ export const createBattleSlice: StateCreator<AppState, [], [], BattleSlice> = (s
         outcome: BattleOutcome.None,
         lastHeroHit: undefined,
         lastBossHit: undefined,
+        heroIntent: AnimIntent.Idle,
+        bossIntent: AnimIntent.Idle,
+        mechanic: { 
+          id: null,
+          phase: BossMechanicPhase.Idle,
+          deadline: null, 
+          active: false, 
+          overlay: {
+            text: undefined, 
+            flash: null, 
+            shake: false,
+          }, 
+          name: undefined,
+          chance: null,
+          windup: null,
+          interaction: undefined,
+          duration: null,
+        },
       }
     }));
   },
@@ -95,6 +134,49 @@ export const createBattleSlice: StateCreator<AppState, [], [], BattleSlice> = (s
         isPaused: newOutcome !== BattleOutcome.None,
         outcome: newOutcome,
       } 
+    }));
+  },
+  setBattleAnimIntent: (who: 'hero'|'boss', intent: AnimIntent) => {
+    set((state) => ({
+      battle: {
+        ...state.battle,
+        heroIntent: who === 'hero' ? intent : state.battle.heroIntent,
+        bossIntent:   who === 'boss'   ? intent : state.battle.bossIntent,
+      }
+    }));
+  },
+  setBattleMechanic: (partial: Partial<BossMechanic>) => {
+    set((state) => ({
+      battle: {
+        ...state.battle,
+        mechanic: {
+          ...state.battle.mechanic,
+          ...partial
+        }
+      }
+    }));
+  },
+  resetBattleMechanic: () => {
+    set((state) => ({
+      battle: {
+        ...state.battle,
+        mechanic: { 
+          id: null,
+          phase: BossMechanicPhase.Idle,
+          deadline: null, 
+          active: false, 
+          overlay: {
+            text: undefined, 
+            flash: null, 
+            shake: false,
+          }, 
+          name: undefined,
+          chance: null,
+          windup: null,
+          interaction: undefined,
+          duration: null,
+        },
+      }
     }));
   },
 });

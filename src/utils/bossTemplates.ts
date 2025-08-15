@@ -1,3 +1,5 @@
+import { InteractionId } from '../types/base';
+
 export const bossTemplates = [
   {
     name: 'Doomscroll',
@@ -12,10 +14,37 @@ export const bossTemplates = [
     },
     mechanics: [
       { 
-        name:'Curse of Dehydration',
-        chance: 0.15,
-        windup: 1500,
+        name:'Test Mechanic: Reaction',
+        chance: 0.20,
+        windup: 3000,
+        interaction: InteractionId.ReactionClick,
         duration: 2000,
+        windupText: 'windup > Test Mechanic: Reaction',
+        successText: 'success > Test Mechanic: Reaction',
+        failText: 'fail > Test Mechanic: Reaction',
+        damageBaseHero: 3,
+      },
+      { 
+        name:'Test Mechanic: Mash',
+        chance: 0.15,
+        windup: 3000,
+        interaction: InteractionId.KeyMash,
+        duration: 3000,
+        windupText: 'windup > Test Mechanic: Mash',
+        successText: 'success > Test Mechanic: Mash',
+        failText: 'fail > Test Mechanic: Mash',
+        damageBaseHero: 3,
+      },
+      { 
+        name:'Test Mechanic: Dodge',
+        chance: 0.10,
+        windup: 3000,
+        interaction: InteractionId.DodgeDirection,
+        duration: 4000,
+        windupText: 'windup > Test Mechanic: Dodge',
+        successText: 'success > windup > Test Mechanic: Dodge',
+        failText: 'fail > windup > Test Mechanic: Dodge',
+        damageBaseHero: 3,
       },
     ],
   }
