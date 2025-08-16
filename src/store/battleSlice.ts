@@ -1,7 +1,7 @@
 import type { StateCreator } from 'zustand';
 import type { AppState } from './useAppStore';
 import { BattleOutcome, BossMechanicPhase, AnimIntent } from '../types/base';
-import type { Battle, BossMechanic } from '../types/base';
+import type { Battle, BossMechanic, BossMechanicOverlay } from '../types/base';
 
 export type BattleSlice = {
   battle: Battle;
@@ -13,7 +13,7 @@ export type BattleSlice = {
   setBattleAnimIntent: (who: 'hero'|'boss', intent: AnimIntent) => void;
   setBattleMechanic: (partial: Partial<BossMechanic>) => void;
   resetBattleMechanic: () => void;
-  setBattleMechanicOverlay: (partial: Partial<BossMechanic>) => void;
+  setBattleMechanicOverlay: (partial: Partial<BossMechanicOverlay>) => void;
 };
 
 export const createBattleSlice: StateCreator<AppState, [], [], BattleSlice> = (set) => ({

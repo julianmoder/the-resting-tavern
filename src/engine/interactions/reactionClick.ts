@@ -6,6 +6,7 @@ export class ReactionClick implements Interaction {
   private ctx!: InteractionCtx;
   private success = false;
   private buttonEl: HTMLButtonElement | null = null;
+  private onCleanup: (() => void) | null = null;
 
   start(ctx: InteractionCtx) {
     this.ctx = ctx;

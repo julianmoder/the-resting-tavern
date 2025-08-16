@@ -182,7 +182,7 @@ export default function BattleScene({ className = '' }: Props) {
             const newMechanic = {
               id: uuidv4(),
               phase: BossMechanicPhase.Windup,
-              deadline: now + picked.windup,
+              deadline: now + (picked.windup ?? 0),
               active: true,
               overlay: {
                 text: picked.windupText ?? undefined,

@@ -11,8 +11,6 @@ export interface InteractionCtx {
 export interface Interaction {
   name: InteractionName,
   start(ctx: InteractionCtx): void,
-  handleInput(e: KeyboardEvent | MouseEvent): void,
-  update(dt: number, now: number): void,
   cleanup(): void,
   getPrompt(): string,
 }

@@ -1,9 +1,9 @@
 import { useEffect, useState, useRef, useMemo } from 'react';
 import { useAppStore } from '../../store/useAppStore';
 import { useBattle } from '../../hooks/useBattle';
-import type { Vector2D } from '../../types/base';
 import { PixiBoot } from '../../engine/pixi/pixiApp';
 import { BossMechanicPhase } from '../../types/base';
+import type { Vector2D } from '../../types/base';
 import SpeechBubble from '../ui/SpeechBubble';
 
 type FloatingNumber = {
@@ -17,18 +17,14 @@ type FloatingNumber = {
 
 type BattleFloatingOverlayProps = {
   boot: PixiBoot;
+  heroPos: Vector2D;
+  bossPos: Vector2D;
   durationMs?: number; 
 };
 
 export default function BattleFloatingOverlay({ boot, durationMs = 1000 }: BattleFloatingOverlayProps) {
   const [floatingNumbers, setFloatingNumbers] = useState<FloatingNumber[]>([]);
   const battle = useBattle();
-  const [now, setNow] = useState(performance.now());
-
-  const timeLeft = useMemo(() => {
-    if (!battle.mechanic.deadline) return null;
-    return Math.max(0, battle.mechanic.deadline - now);
-  }, [battle.mechanic.deadline, now]);
 
   const totalDuration = useMemo(() => {
     const total = battle.mechanic.phase === BossMechanicPhase.Windup ? battle.mechanic.windup : battle.mechanic.duration;
@@ -45,14 +41,6 @@ export default function BattleFloatingOverlay({ boot, durationMs = 1000 }: Battl
   const bossHp = useAppStore(s => s.boss?.stats?.health);
   const prevHeroHp = useRef(heroHp);
   const prevBossHp = useRef(bossHp);
-
-  // clock
-  useEffect(() => {
-    if (!boot?.app) return;
-    const tick = () => setNow(performance.now());
-    boot.app.ticker.add(tick);
-    return () => boot.app.ticker.remove(tick);
-  }, [boot]);
 
   // hero floating numbers
   useEffect(() => {
@@ -124,8 +112,9 @@ export default function BattleFloatingOverlay({ boot, durationMs = 1000 }: Battl
           x={bossScreen.left}
           y={bossScreen.top}
           side="right"
-          color="stone-700"
-          borderColor="stone-300"
+          color="bg-stone-600"
+          borderColor="border-stone-400"
+          timerColor="bg-stone-400"
           text={battle!.mechanic!.overlay!.text!}
           total={typeof totalDuration === 'number' ? totalDuration : undefined}
         />
@@ -135,8 +124,9 @@ export default function BattleFloatingOverlay({ boot, durationMs = 1000 }: Battl
           x={heroScreen.left}
           y={heroScreen.top}
           side="left"
-          color="blue-600"
-          borderColor="blue-500"
+          color="bg-blue-600"
+          borderColor="border-blue-400"
+          timerColor="bg-blue-400"
           text={battle!.mechanic!.overlay!.text!}
           total={typeof totalDuration === 'number' ? totalDuration : undefined}
         />
@@ -146,8 +136,9 @@ export default function BattleFloatingOverlay({ boot, durationMs = 1000 }: Battl
           x={heroScreen.left}
           y={heroScreen.top}
           side="left"
-          color="blue-600"
-          borderColor="blue-500"
+          color="bg-blue-600"
+          borderColor="border-blue-400"
+          timerColor="bg-blue-400"
           text={battle!.mechanic!.overlay!.text!}
         />
       )}
@@ -156,8 +147,9 @@ export default function BattleFloatingOverlay({ boot, durationMs = 1000 }: Battl
           x={bossScreen.left}
           y={bossScreen.top}
           side="right"
-          color="stone-700"
-          borderColor="stone-300"
+          color="bg-stone-600"
+          borderColor="border-stone-400"
+          timerColor="bg-stone-400"
           text={battle!.mechanic!.overlay!.text!}
         />
       )}
