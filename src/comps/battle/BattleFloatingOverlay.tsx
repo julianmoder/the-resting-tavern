@@ -104,14 +104,6 @@ export default function BattleFloatingOverlay({ boot, heroPos, bossPos, duration
     };
   }, [boot, heroPos, bossPos]);
 
-  const glowClass =
-    battle.mechanic.overlay.flash === 'success'
-      ? 'after:content-[""] after:absolute after:inset-0 after:bg-emerald-500/25 after:animate-[flash_500ms_ease-out]'
-      : battle.mechanic.overlay.flash === 'fail'
-      ? 'after:content-[""] after:absolute after:inset-0 after:bg-rose-600/25 after:animate-[flash_500ms_ease-out]'
-      : '';
-  const shakeClass = battle.mechanic.overlay.shake ? 'animate-[shake_300ms_ease]' : '';
-
   return (
     <div className="pointer-events-none absolute inset-0 z-50">
       {battle.mechanic.phase !== BossMechanicPhase.Idle && (

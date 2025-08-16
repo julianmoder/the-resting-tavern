@@ -9,10 +9,10 @@ export type { Item, ItemModifier, ItemTemplate, ItemDragState, DropConfig } from
 export type { Inventory, Vector2D } from './inventory';
 export type { Quest, Loot } from './quest';
 export { BossMechanicPhase } from './boss';
-export type { Boss, BossTemplate, BossStats, BossMechanic, BossMechanicState, BossMechanicOverlay } from './boss';
+export type { Boss, BossTemplate, BossStats, BossMechanic, BossMechanicOverlay } from './boss';
 export { BattleOutcome } from './battle';
 export type { Battle, BattleHit } from './battle';
-export { InteractionId } from './interaction';
+export { InteractionName } from './interaction';
 export type { Interaction, InteractionCtx } from './interaction';
 export { AnimIntent } from './animation';
 

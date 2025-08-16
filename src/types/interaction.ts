@@ -6,14 +6,15 @@ export interface InteractionCtx {
 }
 
 export interface Interaction {
-  id: string,
+  name: InteractionName,
   start(ctx: InteractionCtx): void,
   handleInput(e: KeyboardEvent | MouseEvent): void,
   update(dt: number, now: number): void,
   cleanup(): void,
+  getPrompt(): string,
 }
 
-export enum InteractionId {
+export enum InteractionName {
   ReactionClick = 'reaction-click',
   KeyMash = 'key-mash',
   DodgeDirection = 'dodge-direction',

@@ -1,8 +1,8 @@
-import { InteractionId } from '../../types/base';
+import { InteractionName } from '../../types/base';
 import type { Interaction, InteractionCtx } from '../../types/base';
 
 export class ReactionClick implements Interaction {
-  id = InteractionId.ReactionClick;
+  name = InteractionName.ReactionClick;
   private ctx!: InteractionCtx;
   private done = false;
   private armedAt = 0;

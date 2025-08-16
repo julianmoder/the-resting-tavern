@@ -1,4 +1,6 @@
-import type { Vector2D, Interaction } from './base';
+import { InteractionName } from './base';
+import type { Vector2D } from './base';
+
 
 export interface Boss extends BossTemplate {
   id: string,
@@ -26,7 +28,7 @@ export interface BossMechanicTemplate {
   name: string,
   chance: number | null, // range: 0.0 to 1.0
   windup: number | null, // ms
-  interaction?: Interaction,
+  interaction?: InteractionName,
   duration: number | null, // ms
   damageBaseBoss?: number | null,
   damageBaseHero?: number | null,

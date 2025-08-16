@@ -1,8 +1,8 @@
-import { InteractionId } from '../../types/base';
+import { InteractionName } from '../../types/base';
 import type { Interaction, InteractionCtx } from '../../types/base';
 
 export class KeyMash implements Interaction {
-  id = InteractionId.KeyMash;
+  name = InteractionName.KeyMash;
   private ctx!: InteractionCtx;
   private done = false;
   private targetKey = 'e';

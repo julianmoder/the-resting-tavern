@@ -1,17 +1,17 @@
 import type { StateCreator } from 'zustand';
 import type { AppState } from './useAppStore';
 import { BattleOutcome, BossMechanicPhase, AnimIntent } from '../types/base';
-import type { Battle, BossMechanic, BossMechanicOverlay, AnimIntent } from '../types/base';
+import type { Battle, BossMechanic } from '../types/base';
 
 export type BattleSlice = {
   battle: Battle;
   resetBattle: () => void;
-  setBattleDamageBoss: (dmg: number | undefined) => void;
-  setBattleDamageHero: (dmg: number | undefined) => void;
+  setBattleDamageBoss: (dmg: number | null | undefined) => void;
+  setBattleDamageHero: (dmg: number | null | undefined) => void;
   setBattlePaused: (p: boolean) => void;
   setBattleOutcome: (o: BattleOutcome) => void;
   setBattleAnimIntent: (who: 'hero'|'boss', intent: AnimIntent) => void;
-  setBattleMechanic: (mechanic: BossMechanic) => void;
+  setBattleMechanic: (mechanic: Partial<BossMechanic>) => void;
   resetBattleMechanic: () => void;
 };
 
@@ -34,7 +34,7 @@ export const createBattleSlice: StateCreator<AppState, [], [], BattleSlice> = (s
         flash: null, 
         shake: false,
       }, 
-      name: undefined,
+      name: 'Unnamed Mechanic',
       chance: null,
       windup: null,
       interaction: undefined,
@@ -77,7 +77,7 @@ export const createBattleSlice: StateCreator<AppState, [], [], BattleSlice> = (s
             flash: null, 
             shake: false,
           }, 
-          name: undefined,
+          name: 'Unnamed Mechanic',
           chance: null,
           windup: null,
           interaction: undefined,
@@ -86,7 +86,7 @@ export const createBattleSlice: StateCreator<AppState, [], [], BattleSlice> = (s
       }
     }));
   },
-  setBattleDamageHero: (dmg: number | undefined = undefined) => {
+  setBattleDamageHero: (dmg: number | null | undefined = undefined) => {
     if(!dmg) return;
     set((state) => ({
       hero: {
@@ -103,7 +103,7 @@ export const createBattleSlice: StateCreator<AppState, [], [], BattleSlice> = (s
       }
     }));
   },
-  setBattleDamageBoss: (dmg: number | undefined = undefined) => {
+  setBattleDamageBoss: (dmg: number | null | undefined = undefined) => {
     if(!dmg) return;
     set((state) => ({
       boss: {

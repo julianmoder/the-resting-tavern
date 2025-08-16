@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { BattleOutcome, InteractionId, BossMechanicPhase } from '../../types/base';
+import { BattleOutcome, InteractionName, BossMechanicPhase } from '../../types/base';
 import type { BossMechanic, Interaction } from '../../types/base';
 import { PixiBoot } from '../../engine/pixi/pixiApp';
 import { useUI } from '../../hooks/useUI';
@@ -31,8 +31,8 @@ export default function BattleScene({ className = '' }: Props) {
     setTimeout(() => {
       const interaction = mechanic.interaction;
       let mechInteraction: Interaction;
-      if (interaction === InteractionId.ReactionClick) mechInteraction = new ReactionClick();
-      else if (interaction === InteractionId.KeyMash) mechInteraction = new KeyMash();
+      if (interaction === InteractionName.ReactionClick) mechInteraction = new ReactionClick();
+      else if (interaction === InteractionName.KeyMash) mechInteraction = new KeyMash();
       else mechInteraction = new DodgeDirection();
 
       activeMechInteractionRef.current?.cleanup();
@@ -57,7 +57,7 @@ export default function BattleScene({ className = '' }: Props) {
             phase: BossMechanicPhase.Success, 
             overlay: {
               text: mechanic.successText,
-              flash: 'success',
+              flash: BossMechanicPhase.Success,
               shake: false,
             }
           });
@@ -70,7 +70,7 @@ export default function BattleScene({ className = '' }: Props) {
             phase: BossMechanicPhase.Fail, 
             overlay: {
               text: mechanic.failText,
-              flash: 'fail',
+              flash: BossMechanicPhase.Fail,
               shake: true,
             }
           });
@@ -180,8 +180,8 @@ export default function BattleScene({ className = '' }: Props) {
               active: true,
               overlay: {
                 text: picked.windupText ?? undefined,
-                flash: picked.flash ?? null,
-                shake: picked.shake ?? false,
+                flash: null,
+                shake: false,
               },
               name: picked.name,
               chance: picked.chance,

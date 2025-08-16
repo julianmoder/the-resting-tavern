@@ -1,10 +1,10 @@
-import { InteractionId } from '../../types/base';
+import { InteractionName } from '../../types/base';
 import type { Interaction, InteractionCtx } from '../../types/base';
 
 type Direction = 'left'|'right'|'up'|'down';
 
 export class DodgeDirection implements Interaction {
-  id = InteractionId.DodgeDirection;
+  name = InteractionName.DodgeDirection;
   private ctx!: InteractionCtx;
   private done = false;
   private attackFrom: Direction = 'left';

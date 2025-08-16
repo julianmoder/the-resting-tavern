@@ -1,5 +1,5 @@
 import { AnimIntent } from './animation';
-import type { BossMechanicState } from './interaction';
+import type { BossMechanic } from './boss';
 
 export interface Battle {
   isPaused: boolean,
@@ -9,7 +9,7 @@ export interface Battle {
   lastBossHit?: BattleHit,
   heroIntent: AnimIntent;
   bossIntent: AnimIntent;
-  mechanic: BossMechanicState;
+  mechanic: BossMechanic;
 }
 
 export enum BattleOutcome {

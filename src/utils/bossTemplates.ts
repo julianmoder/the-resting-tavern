@@ -1,4 +1,4 @@
-import { InteractionId } from '../types/base';
+import { InteractionName } from '../types/base';
 
 export const bossTemplates = [
   {
@@ -17,7 +17,7 @@ export const bossTemplates = [
         name:'Test Mechanic: Reaction',
         chance: 0.20,
         windup: 3000,
-        interaction: InteractionId.ReactionClick,
+        interaction: InteractionName.ReactionClick,
         duration: 2000,
         windupText: 'windup > Test Mechanic: Reaction',
         successText: 'success > Test Mechanic: Reaction',
@@ -28,7 +28,7 @@ export const bossTemplates = [
         name:'Test Mechanic: Mash',
         chance: 0.15,
         windup: 3000,
-        interaction: InteractionId.KeyMash,
+        interaction: InteractionName.KeyMash,
         duration: 3000,
         windupText: 'windup > Test Mechanic: Mash',
         successText: 'success > Test Mechanic: Mash',
@@ -39,7 +39,7 @@ export const bossTemplates = [
         name:'Test Mechanic: Dodge',
         chance: 0.10,
         windup: 3000,
-        interaction: InteractionId.DodgeDirection,
+        interaction: InteractionName.DodgeDirection,
         duration: 4000,
         windupText: 'windup > Test Mechanic: Dodge',
         successText: 'success > windup > Test Mechanic: Dodge',
