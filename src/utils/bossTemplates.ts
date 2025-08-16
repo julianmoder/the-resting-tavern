@@ -15,7 +15,7 @@ export const bossTemplates = [
     mechanics: [
       { 
         name:'Test Mechanic: Reaction',
-        chance: 0.20,
+        chance: 0.00,
         windup: 3000,
         interaction: InteractionName.ReactionClick,
         duration: 2000,
@@ -26,7 +26,7 @@ export const bossTemplates = [
       },
       { 
         name:'Test Mechanic: Mash',
-        chance: 0.15,
+        chance: 0.99,
         windup: 3000,
         interaction: InteractionName.KeyMash,
         duration: 3000,
@@ -37,7 +37,7 @@ export const bossTemplates = [
       },
       { 
         name:'Test Mechanic: Dodge',
-        chance: 0.10,
+        chance: 0.00,
         windup: 3000,
         interaction: InteractionName.DodgeDirection,
         duration: 4000,

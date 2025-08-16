@@ -28,6 +28,8 @@ export default function BattleScene({ className = '' }: Props) {
   const mechanicFailDamage = Math.floor(hero.stats.maxHealth / 5);
 
   function launchMechanic(mechanic: BossMechanic) {
+    const now = performance.now();
+    const windupLeft = Math.max(0, (mechanic.deadline ?? now) - now); // echte Restzeit
     setTimeout(() => {
       const interaction = mechanic.interaction;
       let mechInteraction: Interaction;
@@ -54,7 +56,8 @@ export default function BattleScene({ className = '' }: Props) {
           // TODO: add level dependency for damage
           battle.damageBoss(mechanic.damageBaseBoss);
           battle.setMechanic({ 
-            phase: BossMechanicPhase.Success, 
+            phase: BossMechanicPhase.Success,
+            deadline: null, 
             overlay: {
               text: mechanic.successText,
               flash: BossMechanicPhase.Success,
@@ -67,7 +70,8 @@ export default function BattleScene({ className = '' }: Props) {
           // TODO: add level dependency for damage
           battle.damageHero(mechanic.damageBaseHero);
           battle.setMechanic({ 
-            phase: BossMechanicPhase.Fail, 
+            phase: BossMechanicPhase.Fail,
+            deadline: null, 
             overlay: {
               text: mechanic.failText,
               flash: BossMechanicPhase.Fail,
@@ -76,23 +80,22 @@ export default function BattleScene({ className = '' }: Props) {
           });
           cleanupMechanic();
         },
+        hostEl: document.getElementById('battle-hud') ?? document.body,
+        worldToScreen: (x: number, y: number) => ui.pixi.boot!.worldToScreen(x, y),
+        bossPos: { x: boss.position.x, y: boss.position.y },
       });
 
       const prompt = mechInteraction.getPrompt();
-
-      battle.setMechanic({
-        overlay: {
-          text: prompt,
-        },
+      battle.mechanic.overlay.set({
+        text: prompt,
       });
-    }, mechanic.windup ?? 0);
+    }, windupLeft ?? 0);
   }
 
   function cleanupMechanic() {
     activeMechInteractionRef.current?.cleanup();
     activeMechInteractionRef.current = null;
     mechanicActiveRef.current = false;
-    battle.setMechanic({ deadline: null });
     setTimeout(() => { battle.resetMechanic() }, 3000);
   }
 
@@ -130,9 +133,10 @@ export default function BattleScene({ className = '' }: Props) {
 
       const now = performance.now();
       if (mechanicActiveRef.current) {
-        activeMechInteractionRef.current?.update(dt, now);
         // timeout
-        if (state.battle.mechanic.deadline && now > state.battle.mechanic.deadline) {
+        if (state.battle.mechanic.phase === BossMechanicPhase.Interaction 
+          && state.battle.mechanic.deadline 
+          && now > state.battle.mechanic.deadline) {
           // fail as fallback
           battle.damageHero(mechanicFailDamage);
           cleanupMechanic();
@@ -168,15 +172,17 @@ export default function BattleScene({ className = '' }: Props) {
         bossAcc = 0;
 
         // roll boss mechanic
+        if (state.battle.mechanic?.phase !== BossMechanicPhase.Idle) return;
         const mechs = state.boss.mechanics ?? [];
         const picked = mechs.find((m: any) => Math.random() < (m.chance ?? 0));
 
         if (picked) {
           if (!mechanicActiveRef.current) {
+            const now = performance.now();
             const newMechanic = {
               id: uuidv4(),
               phase: BossMechanicPhase.Windup,
-              deadline: null,
+              deadline: now + picked.windup,
               active: true,
               overlay: {
                 text: picked.windupText ?? undefined,
@@ -234,18 +240,6 @@ export default function BattleScene({ className = '' }: Props) {
       battle.setPause(true);
     }
   }, [hero, boss, battle]);
-
-  // handle interactio inputs
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => activeMechInteractionRef.current?.handleInput(e);
-    const onMouse = (e: MouseEvent) => activeMechInteractionRef.current?.handleInput(e);
-    document.addEventListener('keydown', onKey);
-    document.addEventListener('mousedown', onMouse);
-    return () => {
-      document.removeEventListener('keydown', onKey);
-      document.removeEventListener('mousedown', onMouse);
-    };
-  }, []);
 
   // pause on tab or website visibility change (e.g. change browser tab)
   useEffect(() => {

@@ -11,8 +11,9 @@ export type BattleSlice = {
   setBattlePaused: (p: boolean) => void;
   setBattleOutcome: (o: BattleOutcome) => void;
   setBattleAnimIntent: (who: 'hero'|'boss', intent: AnimIntent) => void;
-  setBattleMechanic: (mechanic: Partial<BossMechanic>) => void;
+  setBattleMechanic: (partial: Partial<BossMechanic>) => void;
   resetBattleMechanic: () => void;
+  setBattleMechanicOverlay: (partial: Partial<BossMechanic>) => void;
 };
 
 export const createBattleSlice: StateCreator<AppState, [], [], BattleSlice> = (set) => ({
@@ -170,12 +171,26 @@ export const createBattleSlice: StateCreator<AppState, [], [], BattleSlice> = (s
             flash: null, 
             shake: false,
           }, 
-          name: undefined,
+          name: 'Unnamed Mechanic',
           chance: null,
           windup: null,
           interaction: undefined,
           duration: null,
         },
+      }
+    }));
+  },
+  setBattleMechanicOverlay: (partial: Partial<BossMechanicOverlay>) => {
+    set((state) => ({
+      battle: {
+        ...state.battle,
+        mechanic: {
+          ...state.battle.mechanic,
+          overlay: {
+            ...state.battle.mechanic.overlay,
+            ...partial
+          }
+        }
       }
     }));
   },

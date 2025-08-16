@@ -10,9 +10,17 @@ export function useBattle() {
   const setBattleAnimIntent = useAppStore(s => s.setBattleAnimIntent);
   const setBattleMechanic = useAppStore(s => s.setBattleMechanic);
   const resetBattleMechanic = useAppStore(s => s.resetBattleMechanic);
+  const setBattleMechanicOverlay = useAppStore(s => s.setBattleMechanicOverlay);
   
   return {
     ...battle,
+    mechanic: {
+      ...battle.mechanic,
+      overlay: {
+        ...battle.mechanic.overlay,
+        set: setBattleMechanicOverlay, 
+      }
+    },
     reset: resetBattle,
     damageHero: setBattleDamageHero,
     damageBoss: setBattleDamageBoss,

@@ -32,7 +32,7 @@ export default function BattleHud({ className = '', onBossWin, onBossLose }: Bat
   if(!ui.pixi.boot) return;
   
   return (
-    <div className={`absolute z-50 w-full h-full pointer-events-none ${className} ${shakeClass}`}>
+    <div id='battle-hud'className={`absolute z-50 inset-0 pointer-events-none ${className} ${shakeClass}`}>
       <div className="flex flex-cols-2 justify-between p-2">
         <div>
           <UnitPlate unit={hero} align="left" />

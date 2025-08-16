@@ -3,6 +3,9 @@ export interface InteractionCtx {
   deadline: number,
   onSuccess: () => void,
   onFail: () => void,
+  hostEl: HTMLElement;
+  worldToScreen: (x: number, y: number) => { left: number; top: number };
+  bossPos: { x: number; y: number };
 }
 
 export interface Interaction {

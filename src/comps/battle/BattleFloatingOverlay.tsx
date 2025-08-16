@@ -4,7 +4,7 @@ import { useBattle } from '../../hooks/useBattle';
 import type { Vector2D } from '../../types/base';
 import { PixiBoot } from '../../engine/pixi/pixiApp';
 import { BossMechanicPhase } from '../../types/base';
-
+import SpeechBubble from '../ui/SpeechBubble';
 
 type FloatingNumber = {
   id: string;
@@ -17,12 +17,10 @@ type FloatingNumber = {
 
 type BattleFloatingOverlayProps = {
   boot: PixiBoot;
-  heroPos: Vector2D;
-  bossPos: Vector2D;
   durationMs?: number; 
 };
 
-export default function BattleFloatingOverlay({ boot, heroPos, bossPos, durationMs = 1000 }: BattleFloatingOverlayProps) {
+export default function BattleFloatingOverlay({ boot, durationMs = 1000 }: BattleFloatingOverlayProps) {
   const [floatingNumbers, setFloatingNumbers] = useState<FloatingNumber[]>([]);
   const battle = useBattle();
   const [now, setNow] = useState(performance.now());
@@ -32,19 +30,29 @@ export default function BattleFloatingOverlay({ boot, heroPos, bossPos, duration
     return Math.max(0, battle.mechanic.deadline - now);
   }, [battle.mechanic.deadline, now]);
 
+  const totalDuration = useMemo(() => {
+    const total = battle.mechanic.phase === BossMechanicPhase.Windup ? battle.mechanic.windup : battle.mechanic.duration;
+    if (!total) return undefined;
+    return total;
+  }, [battle.mechanic.phase, battle.mechanic.windup, battle.mechanic.duration]);
+
+  const heroPos = useAppStore(s => s.hero?.position);
+  const bossPos = useAppStore(s => s.boss?.position);
+  const heroScreen = boot.worldToScreen(heroPos.x + 150, heroPos.y - 250);
+  const bossScreen = boot.worldToScreen(bossPos.x - 150, bossPos.y - 250);
+
   const heroHp = useAppStore(s => s.hero?.stats?.health);
   const bossHp = useAppStore(s => s.boss?.stats?.health);
-
   const prevHeroHp = useRef(heroHp);
   const prevBossHp = useRef(bossHp);
 
-  // animation frame
+  // clock
   useEffect(() => {
-    let raf = 0;
-    const tick = () => { setNow(performance.now()); raf = requestAnimationFrame(tick); };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, []);
+    if (!boot?.app) return;
+    const tick = () => setNow(performance.now());
+    boot.app.ticker.add(tick);
+    return () => boot.app.ticker.remove(tick);
+  }, [boot]);
 
   // hero floating numbers
   useEffect(() => {
@@ -104,29 +112,56 @@ export default function BattleFloatingOverlay({ boot, heroPos, bossPos, duration
     };
   }, [boot, heroPos, bossPos]);
 
+  const showBossWindup = battle.mechanic.phase === BossMechanicPhase.Windup && battle.mechanic?.overlay?.text;
+  const showHeroInteraction = battle.mechanic.phase === BossMechanicPhase.Interaction && battle.mechanic?.overlay?.text;
+  const showHeroSuccess = battle.mechanic.phase === BossMechanicPhase.Success && battle.mechanic?.overlay?.text;
+  const showBossFail = battle.mechanic.phase === BossMechanicPhase.Fail && battle.mechanic?.overlay?.text;
+
   return (
     <div className="pointer-events-none absolute inset-0 z-50">
-      {battle.mechanic.phase !== BossMechanicPhase.Idle && (
-        <div className="absolute left-1/2 top-8 -translate-x-1/2 text-center pointer-events-none">
-          <div className="inline-flex flex-col items-center gap-1 rounded-2xl bg-stone-900/70 border border-stone-700 px-4 py-2 shadow-lg">
-            {battle.mechanic.overlay?.text ? <div className="text-white font-semibold">{battle.mechanic.overlay.text}</div> : null}
-            {timeLeft !== null && battle.mechanic.phase !== BossMechanicPhase.Success && battle.mechanic.phase !== BossMechanicPhase.Fail ? (
-              <div className="text-xs text-stone-400">{(timeLeft / 1000).toFixed(1)} s</div>
-            ) : null}
-            {/* Optional: Button für ReactionClick – pointer-events aktiv NUR am Button */}
-            {battle.mechanic.phase === BossMechanicPhase.Interaction && battle.mechanic.overlay?.text?.toLowerCase().includes('klick') ? (
-              <button
-                className="pointer-events-auto mt-2 px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs"
-                onMouseDown={() => {
-                  // BattleScene hört global auf mousedown → reicht
-                }}
-              >
-                Klick!
-              </button>
-            ) : null}
-          </div>
-        </div>
+      {showBossWindup && (
+        <SpeechBubble
+          x={bossScreen.left}
+          y={bossScreen.top}
+          side="right"
+          color="stone-700"
+          borderColor="stone-300"
+          text={battle!.mechanic!.overlay!.text!}
+          total={typeof totalDuration === 'number' ? totalDuration : undefined}
+        />
       )}
+      {showHeroInteraction && (
+        <SpeechBubble
+          x={heroScreen.left}
+          y={heroScreen.top}
+          side="left"
+          color="blue-600"
+          borderColor="blue-500"
+          text={battle!.mechanic!.overlay!.text!}
+          total={typeof totalDuration === 'number' ? totalDuration : undefined}
+        />
+      )}
+      {showHeroSuccess && (
+        <SpeechBubble
+          x={heroScreen.left}
+          y={heroScreen.top}
+          side="left"
+          color="blue-600"
+          borderColor="blue-500"
+          text={battle!.mechanic!.overlay!.text!}
+        />
+      )}
+      {showBossFail && (
+        <SpeechBubble
+          x={bossScreen.left}
+          y={bossScreen.top}
+          side="right"
+          color="stone-700"
+          borderColor="stone-300"
+          text={battle!.mechanic!.overlay!.text!}
+        />
+      )}
+
       {floatingNumbers.map((f) => (
         <div key={f.id}
           className={`absolute select-none font-bold ${
