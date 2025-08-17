@@ -1,7 +1,7 @@
 import type { StateCreator } from 'zustand';
 import { v4 as uuidv4 } from 'uuid';
-import type { Hero, HeroStats, HeroClass, Item } from '../types/base';
-import { ItemType } from '../types/base';
+import type { Hero, HeroStats, Item } from '../types/base';
+import { ItemType, HeroClass } from '../types/base';
 import { tryLevelUp } from '../utils/levelProgression';
 
 export interface HeroSlice {
@@ -25,11 +25,12 @@ export const createHeroSlice: StateCreator<HeroSlice, [], [], HeroSlice> = (set,
     xp: 0,
     level: 1,
     leveledUp: false,
+    position: { x: 250, y: 600 }, //  initial position for battle
     stats: {
-      health: 10,
-      maxHealth: 10,
-      energy: 10,
-      maxEnergy: 10,
+      health: 60,
+      maxHealth: 60,
+      energy: 120,
+      maxEnergy: 120,
       str: 5,
       int: 5,
       dex: 5,
@@ -69,13 +70,13 @@ export const createHeroSlice: StateCreator<HeroSlice, [], [], HeroSlice> = (set,
     if(tryLevelUpResult.leveledUp) {
       newMaxHealth = newMaxHealth + Math.floor(tryLevelUpResult.level / 2);
       newMaxEnergy = newMaxEnergy + Math.floor(tryLevelUpResult.level / 2);
-      newStr = (state.hero.class === 'warrior') 
+      newStr = (state.hero.class === HeroClass.Warrior) 
         ? newStr + Math.floor(tryLevelUpResult.level / 2) 
         : newStr + Math.floor(tryLevelUpResult.level / 3);
-      newInt = (state.hero.class === 'wizzard') 
+      newInt = (state.hero.class === HeroClass.Wizard) 
         ? newInt + Math.floor(tryLevelUpResult.level / 2) 
         : newInt + Math.floor(tryLevelUpResult.level / 3);
-      newDex = (state.hero.class === 'ranger') 
+      newDex = (state.hero.class === HeroClass.Ranger) 
         ? newDex + Math.floor(tryLevelUpResult.level / 2) 
         : newDex + Math.floor(tryLevelUpResult.level / 3);
     }

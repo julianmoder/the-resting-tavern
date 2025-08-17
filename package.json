@@ -10,7 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@pixi/assets": "^7.4.3",
     "fantastical": "^2.0.1",
+    "pixi.js": "^8.12.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "uuid": "^11.1.0",

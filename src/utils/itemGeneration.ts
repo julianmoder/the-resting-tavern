@@ -27,15 +27,21 @@ const defaultConfig: DropConfig = {
 };
 
 function generateItem(template: ItemTemplate): Item {
+  const isWeapon = template.type === ItemType.Weapon;
+  const aps = isWeapon ? template.attackSpeed : 0;
+  const newPower = calcPower(template.level, template.type, template.basePower);
+  const newDps = calcDps(newPower, aps);
+
   const item = {
     ...template,
     id: uuidv4(),
-    power: calcPower(template.level, template.type, template.basePower),
-      modifier: {
-        str: template.affixes?.includes('str') ? calcModifier(template.level) : 0,
-        int: template.affixes?.includes('int') ? calcModifier(template.level) : 0,
-        dex: template.affixes?.includes('dex') ? calcModifier(template.level) : 0,
-      },
+    power: newPower,
+    dps: newDps,
+    modifier: {
+      str: template.affixes?.includes('str') ? calcModifier(template.level) : 0,
+      int: template.affixes?.includes('int') ? calcModifier(template.level) : 0,
+      dex: template.affixes?.includes('dex') ? calcModifier(template.level) : 0,
+    },
     position: {
       x: 0,
       y: 0,
@@ -46,10 +52,15 @@ function generateItem(template: ItemTemplate): Item {
   return item;
 }
 
+function calcDps(power: number, aps: number | undefined) {
+  if(!aps) return; 
+  return Math.round(power * aps);
+}
+
 function calcPower(level: number, type: ItemType, basePower: number): number {
   // Sigmoid-Kurve
-  const min = 10, max = 50;
-  const curve = (max - min) * Math.tanh(level / 10) + min;
+  const min = 0, max = 100;
+  const curve = (max - min) * Math.tanh(level / 50) + min;
   const value = curve * (0.9 + Math.random() * 0.2);
 
   const power = (type === 'armor') ? basePower + (value / 2) : basePower + value;

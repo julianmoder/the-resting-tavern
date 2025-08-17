@@ -1,4 +1,4 @@
-import { useModal } from '../hooks/useModal';
+import { useModal } from '../../hooks/useModal';
 
 export default function Modal() {
   const { modal, hideModal } = useModal();

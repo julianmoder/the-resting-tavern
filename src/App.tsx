@@ -1,13 +1,16 @@
+import { Suspense, lazy } from 'react';
 import { useAppStore } from './store/useAppStore';
-import Header from './comps/Header';
-import Modal from './comps/Modal';
-import LandingPage from './pages/LandingPage';
-import TavernPage from './pages/TavernPage';
-import QuestPage from './pages/QuestPage';
-import BossPage from './pages/BossPage';
-import LootPage from './pages/LootPage';
-import BreakPage from './pages/BreakPage';
+import Header from './comps/ui/Header';
+import Modal from './comps/ui/Modal';
 import { Stage } from './types/base';
+
+ const LandingPage = lazy(() => import('./pages/LandingPage'));
+ const TavernPage = lazy(() => import('./pages/TavernPage'));
+ const QuestPage = lazy(() => import('./pages/QuestPage'));
+ const BossPage = lazy(() => import('./pages/BossPage'));
+ const LootPage = lazy(() => import('./pages/LootPage'));
+ const BreakPage = lazy(() => import('./pages/BreakPage'));
+
 
 export default function App() {
   const stage = useAppStore((s) => s.stage);
@@ -16,28 +19,29 @@ export default function App() {
   const resetQuest = useAppStore((s) => s.resetQuest);
 
   return (
-    <div className='min-h-screen flex flex-col items-center justify-center bg-stone-800 p-6 mx-auto'>
+    <div className='min-w-screen min-h-screen flex flex-col items-center justify-center bg-stone-800'>
       <Header />
-      <main className='w-full max-w-2xl flex-1 flex flex-col items-center'>
-        <div className='min-h-max flex flex-col items-center justify-center p-6 mt-12 text-3xl text-white mx-auto leading-11'>
-
-          { stage === Stage.Landing ? (
-              <LandingPage onEnterTavern={() => { setStage(Stage.Tavern) }} />
-            ) : stage === Stage.Tavern ? (
-              <TavernPage onStartQuest={() => { setStage(Stage.Quest); }} />
-            ) : stage === Stage.Quest ? (
-              <QuestPage quest={quest} onQuestComplete={() => { setStage(Stage.Boss) }} />
-            ) : stage === Stage.Boss ? (
-              <BossPage quest={quest} onBossWin={() => { setStage(Stage.Loot) }} />
-            ) : stage === Stage.Loot ? (
-              <LootPage quest={quest} onLootTake={() => { setStage(Stage.Break); }} />
-            ) : stage === Stage.Break ? (
-              <BreakPage onGoBack={() => { resetQuest(); setStage(Stage.Tavern); }}/>
-            ) : (
-              <p>no content</p>
-            )
-          }
-
+      <main className='w-full h-full flex flex-1 flex-col items-center justify-center'>
+        <div className='w-full h-full flex flex-1 flex-col items-center justify-center'>
+          <Suspense fallback={<p className="text-white">Loading…</p>}>
+            { stage === Stage.Landing ? (
+                <LandingPage onEnterTavern={() => { setStage(Stage.Tavern) }} />
+              ) : stage === Stage.Tavern ? (
+                <TavernPage onStartQuest={() => { setStage(Stage.Quest); }} />
+              ) : stage === Stage.Quest ? (
+                <QuestPage quest={quest} onQuestComplete={() => { setStage(Stage.Boss) }} />
+              ) : stage === Stage.Boss ? (
+                <BossPage quest={quest} onBossWin={() => { setStage(Stage.Loot) }} onBossLose={() => { setStage(Stage.Break) }} />
+              ) : stage === Stage.Loot ? (
+                <LootPage quest={quest} onLootTake={() => { setStage(Stage.Break); }} />
+              ) : stage === Stage.Break ? (
+                <BreakPage onGoBack={() => { resetQuest(); setStage(Stage.Tavern); }}/>
+              ) : (
+                <p>no content</p>
+              )
+            }
+          </Suspense>
+          
           <Modal />
 
         </div>

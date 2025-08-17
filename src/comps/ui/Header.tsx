@@ -1,6 +1,6 @@
 function Header() {
   return (
-    <header className="w-full px-6 flex flex-row items-center justify-start">
+    <header className="w-full px-3 py-3 flex flex-row items-center justify-start">
       <div className="flex items-center space-x-3">
         <div className="h-15 w-15 bg-stone-900 rounded-full flex items-center justify-center text-white font-bold text-4xl">
           R

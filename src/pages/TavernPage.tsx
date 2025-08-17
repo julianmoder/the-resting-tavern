@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { questQuestions } from '../utils/questQuestions';
 import { useAppStore } from '../store/useAppStore';
 import { useHero } from '../hooks/useHero';
+import { useBoss } from '../hooks/useBoss';
+import { bossTemplates } from '../utils/bossTemplates';
 import { useUI } from '../hooks/useUI';
-import CharacterOverview from '../comps/CharacterOverview';
-import SideBar from '../comps/SideBar';
+import HeroOverview from '../comps/hero/HeroOverview';
+import SideBar from '../comps/ui/SideBar';
 
 type TavernPageProps = {
   onStartQuest: () => void;
@@ -16,22 +18,26 @@ export default function TavernPage({ onStartQuest }: TavernPageProps) {
   const [questDuration, setQuestDuration] = useState(25);
   const canStart = questNameInput.trim().length > 0;
   const setQuest = useAppStore(s => s.setQuest);
+  const resetBattle = useAppStore(s => s.resetBattle);
   const hero = useHero();
+  const boss = useBoss();
   const ui = useUI();
 
   const startQuest = () => {
     setQuest(questNameInput, questDuration, hero);
+    boss.create(bossTemplates[0], hero);
+    resetBattle();
     onStartQuest();
   }
 
   return (
-    <>
+    <div className='text-white'>
 
       <SideBar />
 
-      {/* Charakter Overview */}
-      {ui.sidebar.showCharacter && (
-          <CharacterOverview />
+      {/* Hero Overview */}
+      {ui.sidebar.showHero && (
+          <HeroOverview />
       )}
 
       {/* Main Content */}
@@ -74,6 +80,6 @@ export default function TavernPage({ onStartQuest }: TavernPageProps) {
         </button>
 
       </div>
-    </>
+    </div>
   );
 }

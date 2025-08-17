@@ -1,8 +1,8 @@
-import type { Item } from './base';
+import type { Item, Vector2D } from './base';
 
 export enum HeroClass {
   Warrior = 'warrior',
-  Wizzard = 'wizzard',
+  Wizard = 'wizard',
   Ranger = 'ranger',
 }
 
@@ -17,6 +17,7 @@ export interface Hero {
   inventoryID: string | null,
   equipment: Equipment,
   coins: number,
+  position: Vector2D,
 }
 
 export interface HeroStats {

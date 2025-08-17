@@ -33,21 +33,23 @@ export default function BreakPage({ onGoBack }: BreakPageProps) {
   // END Keyboard Handler: Down Arrow
 
   return (
-    <>
-      <h2 className='text-2xl font-bold mb-4'>Rest Break</h2>
-      <div className='text-6xl font-mono'>
-        {minutes}:{seconds < 10 ? '0' : ''}{seconds}
+    <div className='text-white'>
+      <div className='flex flex-1 flex-col justify-center items-center'>
+        <h2 className='text-2xl font-bold mb-4'>Rest Break</h2>
+        <div className='text-6xl font-mono'>
+          {minutes}:{seconds < 10 ? '0' : ''}{seconds}
+        </div>
+        {secondsLeft === 0 && (
+          <button
+            className='mt-6 bg-green-500 hover:bg-green-600 px-9 py-3 rounded-full'
+            onClick={() => {
+              onGoBack();
+            }}
+          >
+            Let's go back to the tavern
+          </button>
+        )}
       </div>
-      {secondsLeft === 0 && (
-        <button
-          className='mt-6 bg-green-500 hover:bg-green-600 px-9 py-3 rounded-full'
-          onClick={() => {
-            onGoBack();
-          }}
-        >
-          Let's go back to the tavern
-        </button>
-      )}
-    </>
+    </div>
   );
 }

@@ -50,16 +50,17 @@ export default function QuestPage({ quest, onQuestComplete }: QuestPageProps) {
   // END Keyboard Handler: Up / Down Arrows
 
   return (
-    <>
-      <p className='mb-3 text-lg'>Quest in progress...</p>
-      <p className='font-bold text-emerald-400'>{quest.name}</p>
-      <p className='mb-12 text-sm text-gray-400'>
-        Focus time: {quest.duration} minutes – Break time: {quest.breakTime} minutes
-      </p>
-      <div className='text-9xl font-mono font-bold'>
-        {minutes}:{seconds < 10 ? '0' : ''}{seconds}
+    <div className='text-white'>
+      <div className ='flex flex-1 flex-col justify-center items-center'>
+        <p className='mb-3 text-lg'>Quest in progress...</p>
+        <p className='font-bold text-emerald-400'>{quest.name}</p>
+        <p className='mb-12 text-sm text-gray-400'>
+          Focus time: {quest.duration} minutes – Break time: {quest.breakTime} minutes
+        </p>
+        <div className='text-9xl font-mono font-bold'>
+          {minutes}:{seconds < 10 ? '0' : ''}{seconds}
+        </div>
       </div>
-      
-    </>
+    </div>
   );
 }

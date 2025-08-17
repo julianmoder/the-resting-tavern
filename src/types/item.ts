@@ -30,6 +30,7 @@ export interface Item extends ItemTemplate {
   modifier: ItemModifier,
   position: Vector2D,
   slot: ItemType | null,
+  dps?: number,
 }
 
 export interface ItemModifier {
@@ -45,6 +46,7 @@ export interface ItemTemplate {
   rarity: string,
   level: number,
   basePower: number,
+  attackSpeed?: number, //attacks per second range: 0.3 to 1.3
   affixes: string[],
   fluff: string,
   dropChance: number,

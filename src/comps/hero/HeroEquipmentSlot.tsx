@@ -1,4 +1,4 @@
-import type { Item } from '../types/base';
+import type { Item } from '../../types/base';
 
 type CharacterEquipmentSlotProps = {
   item?: Item | null,

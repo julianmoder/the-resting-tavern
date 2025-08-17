@@ -1,25 +1,40 @@
 import type { StateCreator } from 'zustand';
 import type { UIHelper } from '../types/base';
-
+import { PixiBoot } from '../engine/pixi/pixiApp';
 
 export interface UISlice {
   ui: UIHelper;
-  toggleSideBarCharacter: () => void;
+  setPixiBoot: (boot: PixiBoot | null) => void;
+  toggleSideBarHero: () => void;
 }
 
 export const createUISlice: StateCreator<UISlice, [], [], UISlice> = (set) => ({
-  ui: {
+ui: {
+    pixi: {
+      boot: null,
+    },
     sidebar: {
-      showCharacter: false,
-    }
+      showHero: false,
+    },
   },
-  toggleSideBarCharacter: () => {
+  setPixiBoot: (newBoot) => {
+    set((state) => ({ 
+      ui: {
+        ...state.ui,
+        pixi: {
+          ...state.ui.pixi,
+          boot: newBoot,
+        }
+      } 
+    }))
+  },
+  toggleSideBarHero: () => {
     set((state) => ({ 
       ui: {
         ...state.ui,
         sidebar: {
           ...state.ui.sidebar,
-          showCharacter: !state.ui.sidebar.showCharacter,
+          showHero: !state.ui.sidebar.showHero,
         }
       }
     }))

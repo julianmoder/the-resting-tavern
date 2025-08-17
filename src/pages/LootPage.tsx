@@ -4,10 +4,10 @@ import { useSettings } from '../hooks/useSettings';
 import { useHero } from '../hooks/useHero';
 import { useInventory } from '../hooks/useInventory'
 import type { Quest, Item } from '../types/base';
-import CharacterOverview from '../comps/CharacterOverview';
-import ItemComp from '../comps/ItemComp';
+import HeroOverview from '../comps/hero/HeroOverview';
+import ItemComp from '../comps/item/ItemComp';
 import { useUI } from '../hooks/useUI';
-import SideBar from '../comps/SideBar';
+import SideBar from '../comps/ui/SideBar';
 import { useModal } from '../hooks/useModal';
 
 
@@ -50,13 +50,13 @@ export default function LootPage({ quest, onLootTake }: LootPageProps) {
   }
 
   return (
-    <>
+    <div className='text-white'>
 
       <SideBar />
 
-      {/* Charakter Overview + Inventory */}
-      {ui.sidebar.showCharacter && (
-        <CharacterOverview />
+      {/* Hero Overview + Inventory */}
+      {ui.sidebar.showHero && (
+        <HeroOverview />
       )}
 
       <div className='mb-12 text-center'>
@@ -84,6 +84,6 @@ export default function LootPage({ quest, onLootTake }: LootPageProps) {
         </div>
         ))}
       </div>
-    </>
+    </div>
   );
 }
