@@ -1,11 +1,11 @@
-import { ActionAnim, GripAnim, GripSetup, AnimIntent, RigEvent, HeroSlotName, HeroAttachPoint } from '../../types/base';
-import type { AnimName, AnimTrack, IHeroRig, PlayOptions as RigPlayOptions, HeroArmorSpec, HeroWeaponSpec } from '../../types/base';
+import { GripAnim, GripSetup, AnimIntent, RigEvent, HeroSlotName, HeroAttachPoint } from '../../types/base';
+import type { AnimName, AnimTrack, IHeroRig, HeroArmorSpec, HeroWeaponSpec } from '../../types/base';
 import type { ArmatureDisplayLike, DragonBonesFactoryLike } from './dragonbonesAdapter';
-import { buildArmatureDisplay, DefaultDragonBonesEventBridge, onEvent, offEvent, playAnimation, replaceSlotDisplay } from './dragonbonesAdapter';
+import { buildArmatureDisplay, DefaultDragonBonesEventBridge, onEvent, playAnimation, replaceSlotDisplay } from './dragonbonesAdapter';
+import { resolveHeroSlots } from './slotMap';
 
 class Emitter {
   private map = new Map<string, Set<(p: any) => void>>();
-
   on(evt: string, cb: (p: any) => void) {
     if (!this.map.has(evt)) this.map.set(evt, new Set());
     this.map.get(evt)!.add(cb);
@@ -46,17 +46,6 @@ function isGrip(anim: AnimName): anim is GripAnim {
     anim === GripAnim.GripTwoHanded ||
     anim === GripAnim.GripBow ||
     anim === GripAnim.GripStaff
-  );
-}
-
-function isAction(anim: AnimName): anim is ActionAnim {
-  return (
-    anim === ActionAnim.Attack ||
-    anim === ActionAnim.AttackSlash ||
-    anim === ActionAnim.AttackThrust ||
-    anim === ActionAnim.Block ||
-    anim === ActionAnim.Cast ||
-    anim === ActionAnim.Shoot
   );
 }
 
@@ -174,6 +163,7 @@ export class HeroRig implements IHeroRig {
 
     const apply = (gameplaySlot: string, displayKey: string) => {
       for (const physicalSlot of resolveHeroSlots(gameplaySlot)) {
+        if (!this.display) return;
         replaceSlotDisplay(
           this.factory,
           this.display,

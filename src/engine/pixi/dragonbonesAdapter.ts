@@ -215,7 +215,7 @@ export function replaceSlotDisplay(
 ): void {
   const slot = display.armature.getSlot(slotName);
   if (!slot) {
-    if (process.env.NODE_ENV !== 'production') {
+    if (import.meta.env.DEV) {
       // eslint-disable-next-line no-console
       console.warn(`[DB] Slot not found: ${slotName}`);
     }

@@ -1,3 +1,5 @@
+import { AnimIntent } from './animation';
+
 export enum GripSetup {
   OneHanded = 'one_handed',
   OneHandedShield = 'one_handed_shield',
@@ -42,7 +44,7 @@ export interface HeroArmorSpec {
   type: 'armor';
   parts: Partial<{
     chest: string;
-    pants: string;
+    legs: string;
     arms: string;
     back: string;
     head: string;
@@ -55,11 +57,17 @@ export type HeroEquipSpec = HeroWeaponSpec | HeroArmorSpec;
 export interface IHeroRig {
   mount(layer: unknown): void;
   setPosition(x: number, y: number): void;
-
-  play(anim: AnimName, loop?: boolean, mix?: number): void;
+  play(anim: AnimIntent, loop?: boolean, mix?: number): void;
   on(event: RigEvent, cb: (payload: any) => void): void;
   off(event: RigEvent, cb: (payload: any) => void): void;
-
   equipWeapon(spec: HeroWeaponSpec): void;
   equipArmor(spec: HeroArmorSpec): void;
+}
+
+export interface IBossRig {
+  mount(layer: unknown): void;
+  setPosition(x: number, y: number): void;
+  play(anim: AnimIntent, loop?: boolean, mix?: number): void;
+  on(event: RigEvent, cb: (payload: any) => void): void;
+  off(event: RigEvent, cb: (payload: any) => void): void;
 }

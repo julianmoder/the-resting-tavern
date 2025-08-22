@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef } from 'react';
 import type { Vector2D } from '../../types/base';
 import { HeroRig } from '../../engine/pixi/heroRig';
 import { createHeroRig } from '../../engine/pixi/initRigs';
-import { AnimIntent } from '../../types/base';
+import { AnimIntent, RigEvent } from '../../types/base';
 import { PixiBoot } from '../../engine/pixi/pixiApp';
 import { PixiFactory } from 'pixi-dragonbones-runtime';
 import type { DragonBonesFactoryLike } from '../../engine/pixi/dragonbonesAdapter';
@@ -14,7 +14,7 @@ type Props = {
   intent?: AnimIntent;
 };
 
-const HeroAnimIntent: Record<AnimIntent, string> = {
+const HeroAnimIntent: Record<AnimIntent, AnimIntent> = {
   [AnimIntent.Idle]: AnimIntent.Idle,
   [AnimIntent.Windup]: AnimIntent.Idle, 
   [AnimIntent.Mechanic]: AnimIntent.Idle,
@@ -33,7 +33,7 @@ export default function HeroView({ boot, pos, intent = AnimIntent.Idle }: Props)
   const battle = useBattle();
   const rigRef = useRef<HeroRig | null>(null);
   const playTokenRef = useRef(0);
-  const completeHandlerRef = useRef<(p: any) => void>();
+  const completeHandlerRef = useRef<((p: any) => void) | null>(null);
   const aliveRef = useRef(true);
 
   // set armature and rig
@@ -105,9 +105,9 @@ export default function HeroView({ boot, pos, intent = AnimIntent.Idle }: Props)
         if (playTokenRef.current !== token) return;
         battle.setAnimIntent('hero', AnimIntent.Idle);
       };
-      if (completeHandlerRef.current) rig.off('complete', completeHandlerRef.current);
+      if (completeHandlerRef.current) rig.off(RigEvent.Complete, completeHandlerRef.current);
       completeHandlerRef.current = onComplete;
-      rig.on('complete', onComplete);
+      rig.on(RigEvent.Complete, onComplete);
     }
   }, [intent, battle.setAnimIntent]);
 

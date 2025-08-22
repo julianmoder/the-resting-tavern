@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef } from 'react';
 import type { Vector2D } from '../../types/base';
 import { BossRig } from '../../engine/pixi/bossRig';
 import { createBossRig } from '../../engine/pixi/initRigs';
-import { AnimIntent } from '../../types/base';
+import { AnimIntent, RigEvent } from '../../types/base';
 import { PixiBoot } from '../../engine/pixi/pixiApp';
 import { PixiFactory } from 'pixi-dragonbones-runtime';
 import type { DragonBonesFactoryLike } from '../../engine/pixi/dragonbonesAdapter';
@@ -14,7 +14,7 @@ type Props = {
   intent?: AnimIntent;
 };
 
-const BossAnimIntent: Record<AnimIntent, string> = {
+const BossAnimIntent: Record<AnimIntent, AnimIntent> = {
   [AnimIntent.Idle]: AnimIntent.Idle,
   [AnimIntent.Windup]: AnimIntent.Idle, 
   [AnimIntent.Mechanic]: AnimIntent.Idle,
@@ -30,10 +30,10 @@ const BossAnimIntent: Record<AnimIntent, string> = {
 const loops = new Set<AnimIntent>([ AnimIntent.Idle, AnimIntent.Windup, AnimIntent.Mechanic, AnimIntent.Victory, AnimIntent.Defeat ]);
 
 export default function BossView({ boot, pos, intent = AnimIntent.Idle }: Props) {
-  const { setAnimIntent } = useBattle();
+  const battle = useBattle();
   const rigRef = useRef<BossRig | null>(null);
   const playTokenRef = useRef(0);
-  const completeHandlerRef = useRef<(p: any) => void>();
+  const completeHandlerRef = useRef<((p: any) => void) | null>(null);
   const aliveRef = useRef(true);
 
   // set armature and rig
@@ -103,13 +103,13 @@ export default function BossView({ boot, pos, intent = AnimIntent.Idle }: Props)
     if (!loop) {
       const onComplete = () => {
         if (playTokenRef.current !== token) return;
-        setAnimIntent('boss', AnimIntent.Idle);
+        battle.setAnimIntent('boss', AnimIntent.Idle);
       };
-      if (completeHandlerRef.current) rig.off('complete', completeHandlerRef.current);
+      if (completeHandlerRef.current) rig.off(RigEvent.Complete, completeHandlerRef.current);
       completeHandlerRef.current = onComplete;
-      rig.on('complete', onComplete);
+      rig.on(RigEvent.Complete, onComplete);
     }
-  }, [intent, setAnimIntent]);
+  }, [intent, battle.setAnimIntent]);
 
   return null;
 }

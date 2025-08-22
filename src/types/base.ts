@@ -17,7 +17,7 @@ export type { Interaction, InteractionCtx } from './interaction';
 export { AnimIntent, GripAnim, ActionAnim } from './animation';
 export type { AnimName, AnimTrack, PlayOptions } from './animation';
 export { GripSetup, RigEvent, HeroSlotName, HeroAttachPoint } from './rig';
-export type { HeroWeaponSpec, HeroArmorSpec, HeroEquipSpec, IHeroRig } from './rig';
+export type { HeroWeaponSpec, HeroArmorSpec, HeroEquipSpec, IHeroRig, IBossRig } from './rig';
 
 export enum Stage {
   Landing = 'landing',

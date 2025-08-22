@@ -1,9 +1,7 @@
-import { ActionAnim, GripAnim, GripSetup, AnimIntent, RigEvent } from '../../types/base';
-import type { AnimName, AnimTrack, IBossRig, PlayOptions as RigPlayOptions } from '../../types/base';
+import { AnimIntent, RigEvent } from '../../types/base';
+import type { AnimName, AnimTrack, IBossRig } from '../../types/base';
 import type { ArmatureDisplayLike, DragonBonesFactoryLike } from './dragonbonesAdapter';
-import { buildArmatureDisplay, DefaultDragonBonesEventBridge, onEvent, offEvent, playAnimation, replaceSlotDisplay } from './dragonbonesAdapter';
-
-// import type { Container } from 'pixi.js';
+import { buildArmatureDisplay, DefaultDragonBonesEventBridge, onEvent, playAnimation } from './dragonbonesAdapter';
 
 class Emitter {
   private map = new Map<string, Set<(p: any) => void>>();
@@ -21,7 +19,7 @@ class Emitter {
 
 function resolveTrack(anim: AnimName): AnimTrack {
   if (isAnimIntent(anim)) return 0;
-  return 2; // Bosse nutzen häufig direkt Actions; separate Upper-Body-Layer optional
+  return 2;
 }
 
 function isAnimIntent(anim: AnimName): anim is AnimIntent {
@@ -99,11 +97,5 @@ export class BossRig implements IBossRig {
 
   off(event: RigEvent, cb: (payload: any) => void): void {
     this.events.off(event, cb);
-  }
-
-  playAction(anim: ActionAnim, opts?: RigPlayOptions): void {
-    const loop = opts?.loop ?? false;
-    const mix = opts?.mix ?? 0.2;
-    this.play(anim, loop, mix);
   }
 }
