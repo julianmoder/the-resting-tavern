@@ -1,45 +1,8 @@
-/**
- * The Resting Tavern — HeroRig (Adapter-basiert, Pixi v8 + DragonBones)
- * ---------------------------------------------------------------------
- * - Nutzt den Adapter aus /src/engine/pixi/dragonbonesAdapter.ts
- * - Spielt Animationen via playAnimation()
- * - Tauscht Attachments via replaceSlotDisplay()
- * - Bridge für DB-Events vorhanden; kann bei Bedarf in on()/off() integriert werden.
- */
+import { ActionAnim, GripAnim, GripSetup, LocomotionAnim, RigEvent, HeroSlotName, HeroAttachPoint } from '../../types/rig';
+import type { AnimName, AnimTrack, IHeroRig, PlayOptions as RigPlayOptions, HeroArmorSpec, HeroWeaponSpec } from '../../types/rig';
+import type { ArmatureDisplayLike, DragonBonesFactoryLike } from './dragonbonesAdapter';
+import { buildArmatureDisplay, DefaultDragonBonesEventBridge, onEvent, offEvent, playAnimation, replaceSlotDisplay } from './dragonbonesAdapter';
 
-import type {
-  ActionAnim,
-  AnimName,
-  AnimTrack,
-  GripAnim,
-  GripSetup,
-  IHeroRig,
-  LocomotionAnim,
-  PlayOptions as RigPlayOptions,
-  RigEvent,
-  HeroArmorSpec,
-  HeroWeaponSpec,
-  HeroSlotName,
-  HeroAttachPoint,
-} from '../../types/rig';
-
-import type {
-  ArmatureDisplayLike,
-  DragonBonesFactoryLike,
-} from './dragonbonesAdapter';
-import {
-  buildArmatureDisplay,
-  DefaultDragonBonesEventBridge,
-  onEvent,
-  offEvent,
-  playAnimation,
-  replaceSlotDisplay,
-} from './dragonbonesAdapter';
-
-// Optional: Pixi v8 Container-Typen einkommentieren, wenn ihr streng typisieren wollt
-// import type { Container } from 'pixi.js';
-
-/** Kleine Event-Emitter-Utility (ohne externe Abhängigkeit) */
 class Emitter {
   private map = new Map<string, Set<(p: any) => void>>();
 
@@ -55,7 +18,6 @@ class Emitter {
   }
 }
 
-/** Track-Ermittlung anhand des Animationsnamens */
 function resolveTrack(anim: AnimName): AnimTrack {
   if (isLocomotion(anim)) return 0;
   if (isGrip(anim)) return 1;
@@ -93,7 +55,6 @@ function isAction(anim: AnimName): anim is ActionAnim {
   );
 }
 
-/** GripSetup → Standard-Grip-Animation für den Hero */
 function gripAnimFor(setup: GripSetup): GripAnim {
   switch (setup) {
     case GripSetup.OneHanded:
@@ -111,25 +72,19 @@ function gripAnimFor(setup: GripSetup): GripAnim {
   }
 }
 
-/** Konstruktor-Parameter, um Adapter & Packnamen einzuspeisen */
 export interface HeroRigParams {
   factory: DragonBonesFactoryLike;
-  dragonBonesName: string; // z. B. 'hero'
-  armatureName: string;    // z. B. 'hero_armature'
+  dragonBonesName: string;
+  armatureName: string;
 }
 
-/**
- * HeroRig:
- * - Erstellt sein ArmatureDisplay via Adapter
- * - Nutzt Adapter für Animations- & Slot-Operationen
- */
 export class HeroRig implements IHeroRig {
   private factory: DragonBonesFactoryLike;
   private dragonBonesName: string;
   private armatureName: string;
 
   private display: ArmatureDisplayLike | null = null;
-  private layer: unknown = null; // z. B. Pixi Container
+  private layer: unknown = null;
   private events = new Emitter();
 
   private pos = { x: 0, y: 0 };
@@ -139,45 +94,37 @@ export class HeroRig implements IHeroRig {
     this.dragonBonesName = params.dragonBonesName;
     this.armatureName = params.armatureName;
 
-    // ArmatureDisplay bauen
     this.display = buildArmatureDisplay(this.factory, {
       armatureName: this.armatureName,
       dragonBonesName: this.dragonBonesName,
     });
 
-    // Beispiel: DB-Events → interne Bridge (optional)
     onEvent(this.display, 'complete', (evt) => this.events.emit('complete', evt), DefaultDragonBonesEventBridge);
     onEvent(this.display, 'frame', (evt) => this.events.emit('marker', evt), DefaultDragonBonesEventBridge);
   }
 
-  /** Mountet das Rig in eine Rendering-Layer/Stage (Pixi v8: Container.addChild) */
-  mount(layer: unknown /* Container */): void {
+  mount(layer: unknown): void {
     this.layer = layer;
-    // @ts-ignore (kein harter Pixi-Import, aber übliche API: addChild)
-    this.layer?.addChild?.(this.display as any); // Pixi v8: nur Container haben Kinder
+    // @ts-ignore
+    this.layer?.addChild?.(this.display as any);
   }
 
   setPosition(x: number, y: number): void {
     this.pos.x = x;
     this.pos.y = y;
     if (this.display) {
-      // @ts-ignore (typfreie Weitergabe)
+      // @ts-ignore
       this.display.x = x;
       // @ts-ignore
       this.display.y = y;
     }
   }
 
-  /**
-   * Startet eine Animation (Track-Aufteilung bleibt konzeptionell; DB selbst kennt keine numerischen Tracks).
-   * Wir nutzen Adapter.playAnimation; Loop → playTimes=0, Mix → fadeIn time (falls unterstützt).
-   */
-  play(anim: AnimName, loop: boolean = false, mix: number = 0.2): void {
+ play(anim: AnimName, loop: boolean = false, mix: number = 0.2): void {
     if (!this.display) return;
     const track = resolveTrack(anim);
     playAnimation(this.display, anim, { loop, mix });
 
-    // Debug/Marker
     this.events.emit('marker', { type: 'play', anim, track, loop, mix });
   }
 
@@ -195,7 +142,6 @@ export class HeroRig implements IHeroRig {
 
     if (!this.display) return;
 
-    // Rechte Hand
     replaceSlotDisplay(
       this.factory,
       this.display,
@@ -205,7 +151,6 @@ export class HeroRig implements IHeroRig {
       this.armatureName
     );
 
-    // Linke Hand (optional)
     if (spec.leftAttachmentKey) {
       replaceSlotDisplay(
         this.factory,
@@ -216,37 +161,30 @@ export class HeroRig implements IHeroRig {
         this.armatureName
       );
     }
-
-    // FX kann hier via extra Slot/Emitter angebunden werden (Adapter-spezifisch)
   }
 
-  equipArmor(spec: HeroArmorSpec): void {
+  equipArmor(spec: HeroArmorSpec) {
     if (!this.display) return;
-    const p = spec.parts || {};
-    if (p.chest) {
-      replaceSlotDisplay(this.factory, this.display, HeroSlotName.ArmorChest, p.chest, this.dragonBonesName, this.armatureName);
-    }
-    if (p.pants) {
-      replaceSlotDisplay(this.factory, this.display, HeroSlotName.ArmorPants, p.pants, this.dragonBonesName, this.armatureName);
-    }
-    if (p.arms) {
-      replaceSlotDisplay(this.factory, this.display, HeroSlotName.ArmorArms, p.arms, this.dragonBonesName, this.armatureName);
-    }
-    if (p.back) {
-      replaceSlotDisplay(this.factory, this.display, HeroSlotName.ArmorBack, p.back, this.dragonBonesName, this.armatureName);
-    }
-    if (p.head) {
-      replaceSlotDisplay(this.factory, this.display, HeroSlotName.ArmorHead, p.head, this.dragonBonesName, this.armatureName);
-    }
-    if (p.boots) {
-      replaceSlotDisplay(this.factory, this.display, HeroSlotName.ArmorBoots, p.boots, this.dragonBonesName, this.armatureName);
-    }
-  }
+    const { parts } = spec;
 
-  /** Komfort-Helfer für Actions (nicht verpflichtend) */
-  playAction(anim: ActionAnim, opts?: RigPlayOptions): void {
-    const loop = opts?.loop ?? false;
-    const mix = opts?.mix ?? 0.2;
-    this.play(anim, loop, mix);
+    const apply = (gameplaySlot: string, displayKey: string) => {
+      for (const physicalSlot of resolveHeroSlots(gameplaySlot)) {
+        replaceSlotDisplay(
+          this.factory,
+          this.display,
+          physicalSlot,
+          displayKey,
+          this.dragonBonesName,
+          this.armatureName
+        );
+      }
+    };
+
+    if (parts.chest) apply(HeroSlotName.ArmorChest, parts.chest);
+    if (parts.legs) apply(HeroSlotName.ArmorLegs, parts.legs);
+    if (parts.arms)  apply(HeroSlotName.ArmorArms,  parts.arms);
+    if (parts.back)  apply(HeroSlotName.ArmorBack,  parts.back);
+    if (parts.head)  apply(HeroSlotName.ArmorHead,  parts.head);
+    if (parts.boots) apply(HeroSlotName.ArmorBoots, parts.boots);
   }
 }

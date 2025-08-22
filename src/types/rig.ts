@@ -76,7 +76,7 @@ export enum HeroSlotName {
   HandRMainhand = 'hand_r_mainhand',
   HandLOffhand = 'hand_l_offhand',
   ArmorChest = 'armor_chest',
-  ArmorPants = 'armor_pants',
+  ArmorLegs = 'armor_legs',
   ArmorArms = 'armor_arms',
   ArmorBack = 'armor_back',
   ArmorHead = 'armor_head',
@@ -132,14 +132,3 @@ export interface IHeroRig {
   equipWeapon(spec: HeroWeaponSpec): void;
   equipArmor(spec: HeroArmorSpec): void;
 }
-
-//
-// BOSS — Slots & Specs (absichtlich generischer gehalten; Bosse variieren stark)
-//
-
-/**
- * Boss-Slots als Ausgangspunkt.
- * Je Boss könnt ihr eine spezifische Ableitung/Erweiterung definieren (z. B. Tentakel, Kanonen, Kristalle).
- */
-export enum BossSlotName {
-  Weapon
