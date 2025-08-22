@@ -20,6 +20,7 @@ export enum GripAnim {
 }
 
 export enum ActionAnim {
+  Attack = 'attack',
   AttackSlash = 'attack_slash',
   AttackThrust = 'attack_thrust',
   Block = 'block',

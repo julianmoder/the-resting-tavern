@@ -14,25 +14,26 @@ type Props = {
   intent?: AnimIntent;
 };
 
-const HeroAnimIntend: Record<AnimIntent, string> = {
-  [AnimIntent.Idle]: 'idle',
-  [AnimIntent.Windup]: 'idle', 
-  [AnimIntent.Mechanic]: 'idle',
-  [AnimIntent.MechSuccess]:'block', 
-  [AnimIntent.MechFail]: 'hurt', 
-  [AnimIntent.Attack]: 'attack', 
-  [AnimIntent.Block]: 'block',
-  [AnimIntent.Hurt]: 'hurt',
-  [AnimIntent.Win]: 'idle', 
-  [AnimIntent.Defeat]: 'idle',
+const HeroAnimIntent: Record<AnimIntent, string> = {
+  [AnimIntent.Idle]: AnimIntent.Idle,
+  [AnimIntent.Windup]: AnimIntent.Idle, 
+  [AnimIntent.Mechanic]: AnimIntent.Idle,
+  [AnimIntent.MechSuccess]:AnimIntent.Block, 
+  [AnimIntent.MechFail]: AnimIntent.Hurt, 
+  [AnimIntent.Attack]: AnimIntent.Attack, 
+  [AnimIntent.Block]: AnimIntent.Block,
+  [AnimIntent.Hurt]: AnimIntent.Hurt,
+  [AnimIntent.Victory]: AnimIntent.Idle, 
+  [AnimIntent.Defeat]: AnimIntent.Idle,
 };
 
-const isLooping = (intend: AnimIntent) => intend === AnimIntent.Idle || intend === AnimIntent.Windup || intend === AnimIntent.Mechanic || intend === AnimIntent.Win || intend === AnimIntent.Defeat;
+const loops = new Set<AnimIntent>([ AnimIntent.Idle, AnimIntent.Windup, AnimIntent.Mechanic, AnimIntent.Victory, AnimIntent.Defeat ]);
 
-export default function HeroView({ boot, pos, intent = 'idle' }: Props) {
-  const { setAnimIntent } = useBattle();
+export default function HeroView({ boot, pos, intent = AnimIntent.Idle }: Props) {
+  const battle = useBattle();
   const rigRef = useRef<HeroRig | null>(null);
   const playTokenRef = useRef(0);
+  const completeHandlerRef = useRef<(p: any) => void>();
   const aliveRef = useRef(true);
 
   // set armature and rig
@@ -90,27 +91,25 @@ export default function HeroView({ boot, pos, intent = 'idle' }: Props) {
 
   // set animation
   useLayoutEffect(() => {
-      const rig = rigRef.current;
-      if (!rig) return;
+    const rig = rigRef.current;
+    if (!rig) return;
 
-      const name = HeroAnimIntend[intent] ?? 'idle';
-      const token = ++playTokenRef.current;
+    const name = HeroAnimIntent[intent] ?? AnimIntent.Idle;
+    const loop = loops.has(intent);
+    const token = ++playTokenRef.current;
 
-      rig.play?.(name, { once: !isLooping(intent) });
+    rig.play(name, loop, 0.2);
 
-      if (!isLooping(intent)) {
-        const onComplete = () => {
-          if (playTokenRef.current !== token) return;
-          setAnimIntent('hero', AnimIntent.Idle);
-        };
-
-        if (rig.once) {
-          rig.once('complete', onComplete);
-        } else if (rig.addEventListener) {
-          rig.addEventListener('complete', onComplete, { once: true } as any);
-        }
-      }
-    }, [intent]);
+    if (!loop) {
+      const onComplete = () => {
+        if (playTokenRef.current !== token) return;
+        battle.setAnimIntent('hero', AnimIntent.Idle);
+      };
+      if (completeHandlerRef.current) rig.off('complete', completeHandlerRef.current);
+      completeHandlerRef.current = onComplete;
+      rig.on('complete', onComplete);
+    }
+  }, [intent, battle.setAnimIntent]);
 
   return null;
 }

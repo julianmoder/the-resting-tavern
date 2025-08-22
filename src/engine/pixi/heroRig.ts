@@ -51,6 +51,7 @@ function isGrip(anim: AnimName): anim is GripAnim {
 
 function isAction(anim: AnimName): anim is ActionAnim {
   return (
+    anim === ActionAnim.Attack ||
     anim === ActionAnim.AttackSlash ||
     anim === ActionAnim.AttackThrust ||
     anim === ActionAnim.Block ||

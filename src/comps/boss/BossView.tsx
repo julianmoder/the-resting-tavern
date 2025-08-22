@@ -14,25 +14,26 @@ type Props = {
   intent?: AnimIntent;
 };
 
-const BossAnimIntend: Record<AnimIntent, string> = {
-  [AnimIntent.Idle]: 'idle',
-  [AnimIntent.Windup]: 'idle', 
-  [AnimIntent.Mechanic]: 'idle',
-  [AnimIntent.MechSuccess]:'attack', 
-  [AnimIntent.MechFail]: 'hurt', 
-  [AnimIntent.Attack]: 'attack', 
-  [AnimIntent.Block]: 'block',
-  [AnimIntent.Hurt]: 'hurt',
-  [AnimIntent.Win]: 'idle', 
-  [AnimIntent.Defeat]: 'idle',
+const BossAnimIntent: Record<AnimIntent, string> = {
+  [AnimIntent.Idle]: AnimIntent.Idle,
+  [AnimIntent.Windup]: AnimIntent.Idle, 
+  [AnimIntent.Mechanic]: AnimIntent.Idle,
+  [AnimIntent.MechSuccess]:AnimIntent.Attack, 
+  [AnimIntent.MechFail]: AnimIntent.Attack, 
+  [AnimIntent.Attack]: AnimIntent.Attack, 
+  [AnimIntent.Block]: AnimIntent.Block,
+  [AnimIntent.Hurt]: AnimIntent.Hurt,
+  [AnimIntent.Victory]: AnimIntent.Idle, 
+  [AnimIntent.Defeat]: AnimIntent.Idle,
 };
 
-const isLooping = (intend: AnimIntent) => intend === AnimIntent.Idle || intend === AnimIntent.Windup || intend === AnimIntent.Mechanic || intend === AnimIntent.Win || intend === AnimIntent.Defeat;
+const loops = new Set<AnimIntent>([ AnimIntent.Idle, AnimIntent.Windup, AnimIntent.Mechanic, AnimIntent.Victory, AnimIntent.Defeat ]);
 
-export default function BossView({ boot, pos, intent = 'idle' }: Props) {
+export default function BossView({ boot, pos, intent = AnimIntent.Idle }: Props) {
   const { setAnimIntent } = useBattle();
   const rigRef = useRef<BossRig | null>(null);
   const playTokenRef = useRef(0);
+  const completeHandlerRef = useRef<(p: any) => void>();
   const aliveRef = useRef(true);
 
   // set armature and rig
@@ -90,27 +91,25 @@ export default function BossView({ boot, pos, intent = 'idle' }: Props) {
 
   // set animation
   useLayoutEffect(() => {
-      const rig = rigRef.current;
-      if (!rig) return;
+    const rig = rigRef.current;
+    if (!rig) return;
 
-      const name = BossAnimIntend[intent] ?? 'idle';
-      const token = ++playTokenRef.current;
+    const name = BossAnimIntent[intent] ?? AnimIntent.Idle;
+    const loop = loops.has(intent);
+    const token = ++playTokenRef.current;
 
-      rig.play?.(name, { once: !isLooping(intent) });
+    rig.play(name, loop, 0.2);
 
-      if (!isLooping(intent)) {
-        const onComplete = () => {
-          if (playTokenRef.current !== token) return;
-          setAnimIntent('boss', AnimIntent.Idle);
-        };
-
-        if (rig.once) {
-          rig.once('complete', onComplete);
-        } else if (rig.addEventListener) {
-          rig.addEventListener('complete', onComplete, { once: true } as any);
-        }
-      }
-    }, [intent]);
+    if (!loop) {
+      const onComplete = () => {
+        if (playTokenRef.current !== token) return;
+        setAnimIntent('boss', AnimIntent.Idle);
+      };
+      if (completeHandlerRef.current) rig.off('complete', completeHandlerRef.current);
+      completeHandlerRef.current = onComplete;
+      rig.on('complete', onComplete);
+    }
+  }, [intent, setAnimIntent]);
 
   return null;
 }

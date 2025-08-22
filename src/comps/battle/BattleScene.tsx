@@ -57,9 +57,11 @@ export default function BattleScene({ className = '' }: Props) {
         deadline,
         onSuccess: () => {
           // TODO: add level dependency for damage
-          battle.damageBoss(mechanic.damageBaseBoss);
-          battle.setAnimIntent('hero', AnimIntent.MechSuccess);
-          battle.setAnimIntent('boss', AnimIntent.MechFail);
+          battle.setAnimIntent('boss', AnimIntent.MechSuccess);
+          setTimeout(() => {
+            battle.setAnimIntent('hero', AnimIntent.MechSuccess);
+            battle.damageBoss(mechanic.damageBaseBoss);
+          },200);
           battle.setMechanic({ 
             phase: BossMechanicPhase.Success,
             deadline: null, 
@@ -73,9 +75,11 @@ export default function BattleScene({ className = '' }: Props) {
         },
         onFail: () => {
           // TODO: add level dependency for damage
-          battle.damageHero(mechanic.damageBaseHero);
-          battle.setAnimIntent('hero', AnimIntent.MechFail);
-          battle.setAnimIntent('boss', AnimIntent.MechSuccess);
+          battle.setAnimIntent('boss', AnimIntent.MechFail);
+          setTimeout(() => {
+            battle.setAnimIntent('hero', AnimIntent.MechFail);
+            battle.damageHero(mechanic.damageBaseHero);
+          },800);
           battle.setMechanic({ 
             phase: BossMechanicPhase.Fail,
             deadline: null, 
@@ -145,13 +149,17 @@ export default function BattleScene({ className = '' }: Props) {
           && state.battle.mechanic.deadline 
           && now > state.battle.mechanic.deadline) {
           // fail as fallback
-          battle.damageHero(mechanicFailDamage);
-          battle.setAnimIntent('hero', AnimIntent.Hurt);
+          battle.setAnimIntent('boss', AnimIntent.Attack);
+          setTimeout(() => {
+            battle.setAnimIntent('hero', AnimIntent.Hurt);
+            battle.damageHero(mechanicFailDamage);
+          },800);
           cleanupMechanic();
         }
       }
 
       // hero auto attack
+      if (state.battle.mechanic?.phase !== BossMechanicPhase.Idle) return;
       // damage: heroDamage = hero.level + weapon.power
       // interval: weapon.attackSpeed (fallback 0.6 aps)
       const weapon = state.hero.equipment?.weapon;
@@ -168,8 +176,11 @@ export default function BattleScene({ className = '' }: Props) {
 
         // minimum 1 damage
         const heroDamage = heroDmg > 0 ? heroDmg : 1;
-        battle.damageBoss(heroDamage);
-        battle.setAnimIntent('boss', AnimIntent.Hurt);
+        battle.setAnimIntent('hero', AnimIntent.Attack);
+        setTimeout(() => {
+          battle.setAnimIntent('boss', AnimIntent.Hurt);
+          battle.damageBoss(heroDamage);
+        },800);
       }
 
       // boss auto attack or random mechanic
@@ -228,8 +239,11 @@ export default function BattleScene({ className = '' }: Props) {
 
         // minimum 1 damage
         const bossDamage = bossDmg > 0 ? bossDmg : 1;
-        battle.damageHero(bossDamage);
-        battle.setAnimIntent('hero', AnimIntent.Hurt);
+        battle.setAnimIntent('boss', AnimIntent.Attack);
+        setTimeout(() => {
+          battle.setAnimIntent('hero', AnimIntent.Hurt);
+          battle.damageHero(bossDamage);
+        },800);
       }
     };
 
@@ -271,8 +285,8 @@ export default function BattleScene({ className = '' }: Props) {
       <div ref={hostRef} className="relative w-full h-full overflow-hidden bg-stone-900" />
       {ui.pixi.boot?.isReady && (
         <>
-          <HeroView boot={ui.pixi.boot} pos={hero.position} intent="idle" />
-          <BossView boot={ui.pixi.boot} pos={boss.position} intent="idle" />
+          <HeroView boot={ui.pixi.boot} pos={hero.position} intent={battle.heroIntent} />
+          <BossView boot={ui.pixi.boot} pos={boss.position} intent={battle.bossIntent} />
         </>
       )}
     </div>
