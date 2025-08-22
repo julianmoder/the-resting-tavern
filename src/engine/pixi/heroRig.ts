@@ -1,5 +1,5 @@
-import { ActionAnim, GripAnim, GripSetup, LocomotionAnim, RigEvent, HeroSlotName, HeroAttachPoint } from '../../types/rig';
-import type { AnimName, AnimTrack, IHeroRig, PlayOptions as RigPlayOptions, HeroArmorSpec, HeroWeaponSpec } from '../../types/rig';
+import { ActionAnim, GripAnim, GripSetup, AnimIntent, RigEvent, HeroSlotName, HeroAttachPoint } from '../../types/base';
+import type { AnimName, AnimTrack, IHeroRig, PlayOptions as RigPlayOptions, HeroArmorSpec, HeroWeaponSpec } from '../../types/base';
 import type { ArmatureDisplayLike, DragonBonesFactoryLike } from './dragonbonesAdapter';
 import { buildArmatureDisplay, DefaultDragonBonesEventBridge, onEvent, offEvent, playAnimation, replaceSlotDisplay } from './dragonbonesAdapter';
 
@@ -19,19 +19,23 @@ class Emitter {
 }
 
 function resolveTrack(anim: AnimName): AnimTrack {
-  if (isLocomotion(anim)) return 0;
+  if (isAnimIntent(anim)) return 0;
   if (isGrip(anim)) return 1;
   return 2; // Actions
 }
 
-function isLocomotion(anim: AnimName): anim is LocomotionAnim {
+function isAnimIntent(anim: AnimName): anim is AnimIntent {
   return (
-    anim === LocomotionAnim.Idle ||
-    anim === LocomotionAnim.Walk ||
-    anim === LocomotionAnim.Run ||
-    anim === LocomotionAnim.Hurt ||
-    anim === LocomotionAnim.Die ||
-    anim === LocomotionAnim.Win
+    anim === AnimIntent.Idle ||
+    anim === AnimIntent.Windup ||
+    anim === AnimIntent.Mechanic ||
+    anim === AnimIntent.MechSuccess ||
+    anim === AnimIntent.MechFail ||
+    anim === AnimIntent.Attack ||
+    anim === AnimIntent.Block ||
+    anim === AnimIntent.Hurt ||
+    anim === AnimIntent.Victory ||
+    anim === AnimIntent.Defeat
   );
 }
 
@@ -120,7 +124,7 @@ export class HeroRig implements IHeroRig {
     }
   }
 
- play(anim: AnimName, loop: boolean = false, mix: number = 0.2): void {
+  play(anim: AnimName, loop: boolean = false, mix: number = 0.2): void {
     if (!this.display) return;
     const track = resolveTrack(anim);
     playAnimation(this.display, anim, { loop, mix });
@@ -182,9 +186,9 @@ export class HeroRig implements IHeroRig {
 
     if (parts.chest) apply(HeroSlotName.ArmorChest, parts.chest);
     if (parts.legs) apply(HeroSlotName.ArmorLegs, parts.legs);
-    if (parts.arms)  apply(HeroSlotName.ArmorArms,  parts.arms);
-    if (parts.back)  apply(HeroSlotName.ArmorBack,  parts.back);
-    if (parts.head)  apply(HeroSlotName.ArmorHead,  parts.head);
+    if (parts.arms) apply(HeroSlotName.ArmorArms, parts.arms);
+    if (parts.back) apply(HeroSlotName.ArmorBack, parts.back);
+    if (parts.head) apply(HeroSlotName.ArmorHead, parts.head);
     if (parts.boots) apply(HeroSlotName.ArmorBoots, parts.boots);
   }
 }

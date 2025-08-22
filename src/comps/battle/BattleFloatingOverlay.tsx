@@ -34,8 +34,8 @@ export default function BattleFloatingOverlay({ boot, durationMs = 1000 }: Battl
 
   const heroPos = useAppStore(s => s.hero?.position);
   const bossPos = useAppStore(s => s.boss?.position);
-  const heroScreen = boot.worldToScreen(heroPos.x + 150, heroPos.y - 250);
-  const bossScreen = boot.worldToScreen(bossPos.x - 150, bossPos.y - 250);
+  const heroScreen = boot.worldToScreen(heroPos.x + 150, heroPos.y - 275);
+  const bossScreen = boot.worldToScreen(bossPos.x - 150, bossPos.y - 275);
 
   const heroHp = useAppStore(s => s.hero?.stats?.health);
   const bossHp = useAppStore(s => s.boss?.stats?.health);
@@ -47,7 +47,7 @@ export default function BattleFloatingOverlay({ boot, durationMs = 1000 }: Battl
     if (heroHp !== undefined && prevHeroHp.current !== undefined) {
       const diff = prevHeroHp.current - heroHp;
       if (diff > 0) {
-        const { left, top } = boot.worldToScreen(heroPos.x, heroPos.y - 140);
+        const { left, top } = boot.worldToScreen(heroPos.x, heroPos.y - 250);
         const id = `h-${performance.now()}`;
         setFloatingNumbers(prev => [
           ...prev,
@@ -64,7 +64,7 @@ export default function BattleFloatingOverlay({ boot, durationMs = 1000 }: Battl
     if (bossHp !== undefined && prevBossHp.current !== undefined) {
       const diff = prevBossHp.current - bossHp;
       if (diff > 0) {
-        const { left, top } = boot.worldToScreen(bossPos.x, bossPos.y - 180);
+        const { left, top } = boot.worldToScreen(bossPos.x, bossPos.y - 250);
         const id = `b-${performance.now()}`;
         setFloatingNumbers(prev => [
           ...prev,
@@ -83,7 +83,7 @@ export default function BattleFloatingOverlay({ boot, durationMs = 1000 }: Battl
       setFloatingNumbers((prev) =>
         prev.map((f) => {
           const src = f.target === 'hero' ? heroPos : bossPos;
-          const yOffset = f.target === 'hero' ? -140 : -180;
+          const yOffset = f.target === 'hero' ? -250 : -250;
           const p = boot.worldToScreen(src.x, src.y + yOffset);
           return { ...f, x: p.left, y: p.top };
         })

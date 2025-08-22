@@ -14,7 +14,10 @@ export { BattleOutcome } from './battle';
 export type { Battle, BattleHit } from './battle';
 export { InteractionName } from './interaction';
 export type { Interaction, InteractionCtx } from './interaction';
-export { AnimIntent } from './animation';
+export { AnimIntent, GripAnim, ActionAnim } from './animation';
+export type { AnimName, AnimTrack, PlayOptions } from './animation';
+export { GripSetup, RigEvent, HeroSlotName, HeroAttachPoint } from './rig';
+export type { HeroWeaponSpec, HeroArmorSpec, HeroEquipSpec, IHeroRig } from './rig';
 
 export enum Stage {
   Landing = 'landing',

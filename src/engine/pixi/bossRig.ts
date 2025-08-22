@@ -1,35 +1,7 @@
-/**
- * The Resting Tavern — BossRig (Adapter-basiert, Pixi v8 + DragonBones)
- * ---------------------------------------------------------------------
- * - Eigene Klasse für Bosse, getrennt vom HeroRig.
- * - Nutzt den Adapter für Build/Play/Replace/Events.
- * - Einheitlicher Entry-Point equip(spec) für sehr unterschiedliche Bosse.
- */
-
-import type {
-  ActionAnim,
-  AnimName,
-  AnimTrack,
-  BossEquipSpec,
-  BossSlotName,
-  IBossRig,
-  LocomotionAnim,
-  PlayOptions as RigPlayOptions,
-  RigEvent,
-} from '../../types/rig';
-
-import type {
-  ArmatureDisplayLike,
-  DragonBonesFactoryLike,
-} from './dragonbonesAdapter';
-import {
-  buildArmatureDisplay,
-  DefaultDragonBonesEventBridge,
-  onEvent,
-  offEvent,
-  playAnimation,
-  replaceSlotDisplay,
-} from './dragonbonesAdapter';
+import { ActionAnim, GripAnim, GripSetup, AnimIntent, RigEvent } from '../../types/base';
+import type { AnimName, AnimTrack, IBossRig, PlayOptions as RigPlayOptions } from '../../types/base';
+import type { ArmatureDisplayLike, DragonBonesFactoryLike } from './dragonbonesAdapter';
+import { buildArmatureDisplay, DefaultDragonBonesEventBridge, onEvent, offEvent, playAnimation, replaceSlotDisplay } from './dragonbonesAdapter';
 
 // import type { Container } from 'pixi.js';
 
@@ -48,25 +20,29 @@ class Emitter {
 }
 
 function resolveTrack(anim: AnimName): AnimTrack {
-  if (isLocomotion(anim)) return 0;
+  if (isAnimIntent(anim)) return 0;
   return 2; // Bosse nutzen häufig direkt Actions; separate Upper-Body-Layer optional
 }
 
-function isLocomotion(anim: AnimName): anim is LocomotionAnim {
+function isAnimIntent(anim: AnimName): anim is AnimIntent {
   return (
-    anim === LocomotionAnim.Idle ||
-    anim === LocomotionAnim.Walk ||
-    anim === LocomotionAnim.Run ||
-    anim === LocomotionAnim.Hurt ||
-    anim === LocomotionAnim.Die ||
-    anim === LocomotionAnim.Win
+    anim === AnimIntent.Idle ||
+    anim === AnimIntent.Windup ||
+    anim === AnimIntent.Mechanic ||
+    anim === AnimIntent.MechSuccess ||
+    anim === AnimIntent.MechFail ||
+    anim === AnimIntent.Attack ||
+    anim === AnimIntent.Block ||
+    anim === AnimIntent.Hurt ||
+    anim === AnimIntent.Victory ||
+    anim === AnimIntent.Defeat
   );
 }
 
 export interface BossRigParams {
   factory: DragonBonesFactoryLike;
-  dragonBonesName: string; // z. B. 'golem'
-  armatureName: string;    // z. B. 'golem_armature'
+  dragonBonesName: string;
+  armatureName: string;
 }
 
 export class BossRig implements IBossRig {
@@ -93,7 +69,7 @@ export class BossRig implements IBossRig {
     onEvent(this.display, 'frame', (evt) => this.events.emit('marker', evt), DefaultDragonBonesEventBridge);
   }
 
-  mount(layer: unknown /* Container */): void {
+  mount(layer: unknown ): void {
     this.layer = layer;
     // @ts-ignore
     this.layer?.addChild?.(this.display as any);
@@ -123,54 +99,6 @@ export class BossRig implements IBossRig {
 
   off(event: RigEvent, cb: (payload: any) => void): void {
     this.events.off(event, cb);
-  }
-
-  equip(spec: BossEquipSpec): void {
-    if (!this.display) return;
-
-    if (spec.type === 'weapon') {
-      replaceSlotDisplay(
-        this.factory,
-        this.display,
-        BossSlotName.WeaponPrimary,
-        spec.primaryAttachmentKey,
-        this.dragonBonesName,
-        this.armatureName
-      );
-
-      if (spec.secondaryAttachmentKey) {
-        replaceSlotDisplay(
-          this.factory,
-          this.display,
-          BossSlotName.WeaponSecondary,
-          spec.secondaryAttachmentKey,
-          this.dragonBonesName,
-          this.armatureName
-        );
-      }
-    } else if (spec.type === 'armor') {
-      const p = spec.parts || {};
-      if (p.body) {
-        replaceSlotDisplay(
-          this.factory,
-          this.display,
-          BossSlotName.ArmorBody,
-          p.body,
-          this.dragonBonesName,
-          this.armatureName
-        );
-      }
-      if (p.extra) {
-        replaceSlotDisplay(
-          this.factory,
-          this.display,
-          BossSlotName.ArmorExtra,
-          p.extra,
-          this.dragonBonesName,
-          this.armatureName
-        );
-      }
-    }
   }
 
   playAction(anim: ActionAnim, opts?: RigPlayOptions): void {

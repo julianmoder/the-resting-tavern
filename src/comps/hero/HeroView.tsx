@@ -1,33 +1,38 @@
 import { useLayoutEffect, useRef } from 'react';
 import type { Vector2D } from '../../types/base';
 import { HeroRig } from '../../engine/pixi/heroRig';
-import { PixiBoot } from '../../engine/pixi/pixiApp';
 import { createHeroRig } from '../../engine/pixi/initRigs';
-import type { DragonBonesFactoryLike } from '../../engine/pixi/dragonbonesAdapter';
+import { AnimIntent } from '../../types/base';
+import { PixiBoot } from '../../engine/pixi/pixiApp';
 import { PixiFactory } from 'pixi-dragonbones-runtime';
+import type { DragonBonesFactoryLike } from '../../engine/pixi/dragonbonesAdapter';
+import { useBattle } from '../../hooks/useBattle';
 
 type Props = {
   boot: PixiBoot;
   pos: Vector2D;
-  intent?: 'idle' | 'attack' | 'block' | 'hurt';
+  intent?: AnimIntent;
 };
 
-function intentToAnim(intent: Props['intent']): import('../../types/rig').AnimName {
-  switch (intent) {
-    case 'attack':
-      return 'attack_slash';
-    case 'block':
-      return 'block';
-    case 'hurt':
-      return 'hurt';
-    case 'idle':
-    default:
-      return 'idle';
-  }
-}
+const HeroAnimIntend: Record<AnimIntent, string> = {
+  [AnimIntent.Idle]: 'idle',
+  [AnimIntent.Windup]: 'idle', 
+  [AnimIntent.Mechanic]: 'idle',
+  [AnimIntent.MechSuccess]:'block', 
+  [AnimIntent.MechFail]: 'hurt', 
+  [AnimIntent.Attack]: 'attack', 
+  [AnimIntent.Block]: 'block',
+  [AnimIntent.Hurt]: 'hurt',
+  [AnimIntent.Win]: 'idle', 
+  [AnimIntent.Defeat]: 'idle',
+};
+
+const isLooping = (intend: AnimIntent) => intend === AnimIntent.Idle || intend === AnimIntent.Windup || intend === AnimIntent.Mechanic || intend === AnimIntent.Win || intend === AnimIntent.Defeat;
 
 export default function HeroView({ boot, pos, intent = 'idle' }: Props) {
+  const { setAnimIntent } = useBattle();
   const rigRef = useRef<HeroRig | null>(null);
+  const playTokenRef = useRef(0);
   const aliveRef = useRef(true);
 
   // set armature and rig
@@ -62,7 +67,7 @@ export default function HeroView({ boot, pos, intent = 'idle' }: Props) {
 
       rig.mount(stage);
       rig.setPosition(pos.x, pos.y);
-      rig.play(intentToAnim(intent), true, 0.25);
+      rig.play(AnimIntent.Idle, true, 0.25);
       rigRef.current = rig;
     })();
 
@@ -83,12 +88,29 @@ export default function HeroView({ boot, pos, intent = 'idle' }: Props) {
     rigRef.current?.setPosition(pos.x, pos.y);
   }, [pos.x, pos.y]);
 
-  // set idle animation
+  // set animation
   useLayoutEffect(() => {
-    const anim = intentToAnim(intent);
-    const loop = anim === 'idle' ? 0 : 1 ;
-    rigRef.current?.play(anim, loop);
-  }, [intent]);
+      const rig = rigRef.current;
+      if (!rig) return;
+
+      const name = HeroAnimIntend[intent] ?? 'idle';
+      const token = ++playTokenRef.current;
+
+      rig.play?.(name, { once: !isLooping(intent) });
+
+      if (!isLooping(intent)) {
+        const onComplete = () => {
+          if (playTokenRef.current !== token) return;
+          setAnimIntent('hero', AnimIntent.Idle);
+        };
+
+        if (rig.once) {
+          rig.once('complete', onComplete);
+        } else if (rig.addEventListener) {
+          rig.addEventListener('complete', onComplete, { once: true } as any);
+        }
+      }
+    }, [intent]);
 
   return null;
 }

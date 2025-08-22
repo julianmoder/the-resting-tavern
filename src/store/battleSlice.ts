@@ -10,11 +10,13 @@ export type BattleSlice = {
   setBattleDamageHero: (dmg: number | null | undefined) => void;
   setBattlePaused: (p: boolean) => void;
   setBattleOutcome: (o: BattleOutcome) => void;
-  setBattleAnimIntent: (who: 'hero'|'boss', intent: AnimIntent) => void;
+  setBattleAnimIntent: (who: 'hero' | 'boss', intent: AnimIntent) => void;
   setBattleMechanic: (partial: Partial<BossMechanic>) => void;
   resetBattleMechanic: () => void;
   setBattleMechanicOverlay: (partial: Partial<BossMechanicOverlay>) => void;
 };
+
+const _animTimers: Record<'hero' | 'boss', number | null> = { hero: null, boss: null };
 
 export const createBattleSlice: StateCreator<AppState, [], [], BattleSlice> = (set) => ({
   battle: {
@@ -43,6 +45,8 @@ export const createBattleSlice: StateCreator<AppState, [], [], BattleSlice> = (s
     },
   },
   resetBattle: () => {
+    if (_animTimers.hero) { clearTimeout(_animTimers.hero); _animTimers.hero = null; }
+    if (_animTimers.boss) { clearTimeout(_animTimers.boss); _animTimers.boss = null; }
     set((state) => ({
       hero: {
         ...state.hero,
