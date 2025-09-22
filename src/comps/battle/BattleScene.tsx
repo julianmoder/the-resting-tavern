@@ -223,7 +223,6 @@ export default function BattleScene({ className = '' }: Props) {
             battle.setMechanic(newMechanic);
             battle.setAnimIntent('hero', AnimIntent.Windup);
             battle.setAnimIntent('boss', AnimIntent.Windup);
-            console.log(newMechanic);
             launchMechanic(newMechanic);
             mechanicActiveRef.current = true;
           }

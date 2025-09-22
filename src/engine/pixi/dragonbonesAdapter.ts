@@ -131,6 +131,7 @@ export async function loadDragonBonesIntoFactory(
   const texture = texImage as Texture;
 
   // In die Factory schieben
+  if ((factory as any).getDragonBonesData?.(name)) return;
   factory.parseDragonBonesData(skeData, name);
   factory.parseTextureAtlasData(texData, texture, name);
 }
